@@ -3,7 +3,7 @@
  * @constructor
  */
 function MyInterface() {
-    //call CGFinterface constructor 
+    //call CGFinterface constructor
     CGFinterface.call(this);
 }
 
@@ -14,7 +14,7 @@ MyInterface.prototype.constructor = MyInterface;
  * Initializes the interface.
  * @param {CGFapplication} application
  */
-MyInterface.prototype.init = function (application) {
+MyInterface.prototype.init = function(application) {
     // call CGFinterface init
     CGFinterface.prototype.init.call(this, application);
 
@@ -31,7 +31,7 @@ MyInterface.prototype.init = function (application) {
 /**
  * Adds a folder containing the IDs of the lights passed as parameter.
  */
-MyInterface.prototype.addLightsGroup = function (lights) {
+MyInterface.prototype.addLightsGroup = function(lights) {
 
     var group = this.gui.addFolder("Lights");
     group.open();
@@ -46,4 +46,3 @@ MyInterface.prototype.addLightsGroup = function (lights) {
         }
     }
 };
-

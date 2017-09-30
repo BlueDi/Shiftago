@@ -4,7 +4,6 @@
  **/
 function MyGraphLeaf(graph, xmlelem) {
     this.reader = new CGFXMLreader();
-    console.log("?????!!!!! " + Object.keys(graph));
 
     var type = this.reader.getString(xmlelem, 'type');
     var args = this.reader.getString(xmlelem, 'args').split(" ");

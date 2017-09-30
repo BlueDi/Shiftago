@@ -43,7 +43,7 @@ XMLscene.prototype.initLights = function() {
     // Reads the lights from the scene graph.
     for (var key in this.graph.lights) {
         if (i >= 8)
-            break;              // Only eight lights allowed by WebGL.
+            break; // Only eight lights allowed by WebGL.
 
         if (this.graph.lights.hasOwnProperty(key)) {
             var light = this.graph.lights[key];
@@ -125,8 +125,7 @@ XMLscene.prototype.display = function() {
                 if (this.lightValues[key]) {
                     this.lights[i].setVisible(true);
                     this.lights[i].enable();
-                }
-                else {
+                } else {
                     this.lights[i].setVisible(false);
                     this.lights[i].disable();
                 }
@@ -137,8 +136,7 @@ XMLscene.prototype.display = function() {
 
         // Displays the scene.
         this.graph.displayScene();
-    }
-    else {
+    } else {
         // TODO: Fazer um loading aqui
         // Draw axis
         this.axis.display();

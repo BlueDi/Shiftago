@@ -21,7 +21,7 @@ function MySceneGraph(filename, scene) {
 
     this.nodes = [];
 
-    this.idRoot = null;                    // The id of the root element.
+    this.idRoot = null; // The id of the root element.
 
     this.axisCoords = [];
     this.axisCoords['x'] = [1, 0, 0];
@@ -166,28 +166,23 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
     var indexFrustum = nodeNames.indexOf("frustum");
     if (indexFrustum == -1) {
         this.onXMLMinorError("frustum planes missing; assuming 'near = 0.1' and 'far = 500'");
-    }
-    else {
+    } else {
         this.near = this.reader.getFloat(children[indexFrustum], 'near');
         this.far = this.reader.getFloat(children[indexFrustum], 'far');
 
         if (this.near == null) {
             this.near = 0.1;
             this.onXMLMinorError("unable to parse value for near plane; assuming 'near = 0.1'");
-        }
-        else if (this.far == null) {
+        } else if (this.far == null) {
             this.far = 500;
             this.onXMLMinorError("unable to parse value for far plane; assuming 'far = 500'");
-        }
-        else if (isNaN(this.near)) {
+        } else if (isNaN(this.near)) {
             this.near = 0.1;
             this.onXMLMinorError("non-numeric value found for near plane; assuming 'near = 0.1'");
-        }
-        else if (isNaN(this.far)) {
+        } else if (isNaN(this.far)) {
             this.far = 500;
             this.onXMLMinorError("non-numeric value found for far plane; assuming 'far = 500'");
-        }
-        else if (this.near <= 0) {
+        } else if (this.near <= 0) {
             this.near = 0.1;
             this.onXMLMinorError("'near' must be positive; assuming 'near = 0.1'");
         }
@@ -232,8 +227,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
         if (tx == null) {
             tx = 0;
             this.onXMLMinorError("failed to parse x-coordinate of initial translation; assuming tx = 0");
-        }
-        else if (isNaN(tx)) {
+        } else if (isNaN(tx)) {
             tx = 0;
             this.onXMLMinorError("found non-numeric value for x-coordinate of initial translation; assuming tx = 0");
         }
@@ -241,8 +235,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
         if (ty == null) {
             ty = 0;
             this.onXMLMinorError("failed to parse y-coordinate of initial translation; assuming ty = 0");
-        }
-        else if (isNaN(ty)) {
+        } else if (isNaN(ty)) {
             ty = 0;
             this.onXMLMinorError("found non-numeric value for y-coordinate of initial translation; assuming ty = 0");
         }
@@ -250,8 +243,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
         if (tz == null) {
             tz = 0;
             this.onXMLMinorError("failed to parse z-coordinate of initial translation; assuming tz = 0");
-        }
-        else if (isNaN(tz)) {
+        } else if (isNaN(tz)) {
             tz = 0;
             this.onXMLMinorError("found non-numeric value for z-coordinate of initial translation; assuming tz = 0");
         }
@@ -286,8 +278,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
                 if (!rotationDefined[axis])
                     rotationOrder.push(axis);
                 rotationDefined[axis] = true;
-            }
-            else this.onXMLMinorError("failed to parse third initial rotation 'angle'");
+            } else this.onXMLMinorError("failed to parse third initial rotation 'angle'");
         }
     }
 
@@ -301,8 +292,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
                 if (!rotationDefined[axis])
                     rotationOrder.push(axis);
                 rotationDefined[axis] = true;
-            }
-            else this.onXMLMinorError("failed to parse second initial rotation 'angle'");
+            } else this.onXMLMinorError("failed to parse second initial rotation 'angle'");
         }
     }
 
@@ -316,8 +306,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
                 if (!rotationDefined[axis])
                     rotationOrder.push(axis);
                 rotationDefined[axis] = true;
-            }
-            else this.onXMLMinorError("failed to parse first initial rotation 'angle'");
+            } else this.onXMLMinorError("failed to parse first initial rotation 'angle'");
         }
     }
 
@@ -344,8 +333,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
         if (sx == null) {
             sx = 1;
             this.onXMLMinorError("failed to parse x parameter of initial scaling; assuming sx = 1");
-        }
-        else if (isNaN(sx)) {
+        } else if (isNaN(sx)) {
             sx = 1;
             this.onXMLMinorError("found non-numeric value for x parameter of initial scaling; assuming sx = 1");
         }
@@ -353,8 +341,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
         if (sy == null) {
             sy = 1;
             this.onXMLMinorError("failed to parse y parameter of initial scaling; assuming sy = 1");
-        }
-        else if (isNaN(sy)) {
+        } else if (isNaN(sy)) {
             sy = 1;
             this.onXMLMinorError("found non-numeric value for y parameter of initial scaling; assuming sy = 1");
         }
@@ -362,8 +349,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
         if (sz == null) {
             sz = 1;
             this.onXMLMinorError("failed to parse z parameter of initial scaling; assuming sz = 1");
-        }
-        else if (isNaN(sz)) {
+        } else if (isNaN(sz)) {
             sz = 1;
             this.onXMLMinorError("found non-numeric value for z parameter of initial scaling; assuming sz = 1");
         }
@@ -392,8 +378,7 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
                 this.onXMLMinorError("reference length must be a positive value; assuming 'length = 1'");
             else
                 this.referenceLength = length;
-        }
-        else
+        } else
             this.onXMLMinorError("unable to parse reference length; assuming 'length = 1'");
     }
 
@@ -406,7 +391,6 @@ MySceneGraph.prototype.parseInitials = function(initialsNode) {
  * Parses the <ILLUMINATION> block.
  */
 MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
-
     // Reads the ambient and background values.
     var children = illuminationNode.children;
     var nodeNames = [];
@@ -426,8 +410,7 @@ MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
                 return "ambient 'r' must be a value between 0 and 1 on the ILLUMINATION block"
             else
                 this.ambientIllumination[0] = r;
-        }
-        else
+        } else
             this.onXMLMinorError("unable to parse R component of the ambient illumination; assuming R = 0");
 
         // G.
@@ -439,8 +422,7 @@ MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
                 return "ambient 'g' must be a value between 0 and 1 on the ILLUMINATION block"
             else
                 this.ambientIllumination[1] = g;
-        }
-        else
+        } else
             this.onXMLMinorError("unable to parse G component of the ambient illumination; assuming G = 0");
 
         // B.
@@ -452,8 +434,7 @@ MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
                 return "ambient 'b' must be a value between 0 and 1 on the ILLUMINATION block"
             else
                 this.ambientIllumination[2] = b;
-        }
-        else
+        } else
             this.onXMLMinorError("unable to parse B component of the ambient illumination; assuming B = 0");
 
         // A.
@@ -465,11 +446,9 @@ MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
                 return "ambient 'a' must be a value between 0 and 1 on the ILLUMINATION block"
             else
                 this.ambientIllumination[3] = a;
-        }
-        else
+        } else
             this.onXMLMinorError("unable to parse A component of the ambient illumination; assuming A = 1");
-    }
-    else
+    } else
         this.onXMLMinorError("global ambient illumination undefined; assuming Ia = (0, 0, 0, 1)");
 
     // Retrieves the background clear color.
@@ -485,8 +464,7 @@ MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
                 return "background 'r' must be a value between 0 and 1 on the ILLUMINATION block"
             else
                 this.background[0] = r;
-        }
-        else
+        } else
             this.onXMLMinorError("unable to parse R component of the background colour; assuming R = 0");
 
         // G.
@@ -498,8 +476,7 @@ MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
                 return "background 'g' must be a value between 0 and 1 on the ILLUMINATION block"
             else
                 this.background[1] = g;
-        }
-        else
+        } else
             this.onXMLMinorError("unable to parse G component of the background colour; assuming G = 0");
 
         // B.
@@ -511,8 +488,7 @@ MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
                 return "background 'b' must be a value between 0 and 1 on the ILLUMINATION block"
             else
                 this.background[2] = b;
-        }
-        else
+        } else
             this.onXMLMinorError("unable to parse B component of the background colour; assuming B = 0");
 
         // A.
@@ -524,11 +500,9 @@ MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
                 return "background 'a' must be a value between 0 and 1 on the ILLUMINATION block"
             else
                 this.background[3] = a;
-        }
-        else
+        } else
             this.onXMLMinorError("unable to parse A component of the background colour; assuming A = 1");
-    }
-    else
+    } else
         this.onXMLMinorError("background clear colour undefined; assuming (R, G, B, A) = (0, 0, 0, 1)");
 
     console.log("Parsed illumination");
@@ -585,13 +559,11 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
         var enableLight = true;
         if (enableIndex == -1) {
             this.onXMLMinorError("enable value missing for ID = " + lightId + "; assuming 'value = 1'");
-        }
-        else {
+        } else {
             var aux = this.reader.getFloat(grandChildren[enableIndex], 'value');
             if (aux == null) {
                 this.onXMLMinorError("unable to parse value component of the 'enable light' field for ID = " + lightId + "; assuming 'value = 1'");
-            }
-            else if (isNaN(aux))
+            } else if (isNaN(aux))
                 return "'enable value' is a non numeric value on the LIGHTS block";
             else if (aux != 0 && aux != 1)
                 return "'enable value' must be 0 or 1 on the LIGHTS block"
@@ -609,8 +581,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "'x' is a non numeric value on the LIGHTS block";
                 else
                     positionLight.push(x);
-            }
-            else
+            } else
                 return "unable to parse x-coordinate of the light position for ID = " + lightId;
 
             // y
@@ -620,8 +591,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "'y' is a non numeric value on the LIGHTS block";
                 else
                     positionLight.push(y);
-            }
-            else
+            } else
                 return "unable to parse y-coordinate of the light position for ID = " + lightId;
 
             // z
@@ -631,8 +601,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "'z' is a non numeric value on the LIGHTS block";
                 else
                     positionLight.push(z);
-            }
-            else
+            } else
                 return "unable to parse z-coordinate of the light position for ID = " + lightId;
 
             // w
@@ -644,11 +613,9 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "'w' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     positionLight.push(w);
-            }
-            else
+            } else
                 return "unable to parse w-coordinate of the light position for ID = " + lightId;
-        }
-        else
+        } else
             return "light position undefined for ID = " + lightId;
 
         // Retrieves the ambient component.
@@ -663,8 +630,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "ambient 'r' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     ambientIllumination.push(r);
-            }
-            else
+            } else
                 return "unable to parse R component of the ambient illumination for ID = " + lightId;
 
             // G
@@ -676,8 +642,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "ambient 'g' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     ambientIllumination.push(g);
-            }
-            else
+            } else
                 return "unable to parse G component of the ambient illumination for ID = " + lightId;
 
             // B
@@ -689,8 +654,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "ambient 'b' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     ambientIllumination.push(b);
-            }
-            else
+            } else
                 return "unable to parse B component of the ambient illumination for ID = " + lightId;
 
             // A
@@ -701,11 +665,9 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                 else if (a < 0 || a > 1)
                     return "ambient 'a' must be a value between 0 and 1 on the LIGHTS block"
                 ambientIllumination.push(a);
-            }
-            else
+            } else
                 return "unable to parse A component of the ambient illumination for ID = " + lightId;
-        }
-        else
+        } else
             return "ambient component undefined for ID = " + lightId;
 
         // Retrieves the diffuse component
@@ -720,8 +682,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "diffuse 'r' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     diffuseIllumination.push(r);
-            }
-            else
+            } else
                 return "unable to parse R component of the diffuse illumination for ID = " + lightId;
 
             // G
@@ -733,8 +694,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "diffuse 'g' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     diffuseIllumination.push(g);
-            }
-            else
+            } else
                 return "unable to parse G component of the diffuse illumination for ID = " + lightId;
 
             // B
@@ -746,8 +706,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "diffuse 'b' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     diffuseIllumination.push(b);
-            }
-            else
+            } else
                 return "unable to parse B component of the diffuse illumination for ID = " + lightId;
 
             // A
@@ -759,11 +718,9 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "diffuse 'a' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     diffuseIllumination.push(a);
-            }
-            else
+            } else
                 return "unable to parse A component of the diffuse illumination for ID = " + lightId;
-        }
-        else
+        } else
             return "diffuse component undefined for ID = " + lightId;
 
         // Retrieves the specular component
@@ -778,8 +735,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "specular 'r' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     specularIllumination.push(r);
-            }
-            else
+            } else
                 return "unable to parse R component of the specular illumination for ID = " + lightId;
 
             // G
@@ -791,8 +747,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "specular 'g' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     specularIllumination.push(g);
-            }
-            else
+            } else
                 return "unable to parse G component of the specular illumination for ID = " + lightId;
 
             // B
@@ -804,8 +759,7 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "specular 'b' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     specularIllumination.push(b);
-            }
-            else
+            } else
                 return "unable to parse B component of the specular illumination for ID = " + lightId;
 
             // A
@@ -817,11 +771,9 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
                     return "specular 'a' must be a value between 0 and 1 on the LIGHTS block"
                 else
                     specularIllumination.push(a);
-            }
-            else
+            } else
                 return "unable to parse A component of the specular illumination for ID = " + lightId;
-        }
-        else
+        } else
             return "specular component undefined for ID = " + lightId;
 
         // Light global information.
@@ -875,8 +827,7 @@ MySceneGraph.prototype.parseTextures = function(texturesNode) {
                     filepath = this.reader.getString(texSpecs[j], 'path');
                     if (filepath == null)
                         return "unable to parse texture file path for ID = " + textureID;
-                }
-                else if (name == "amplif_factor") {
+                } else if (name == "amplif_factor") {
                     if (amplifFactorS != null || amplifFactorT != null)
                         return "duplicate amplification factors in texture with ID = " + textureID;
 
@@ -891,8 +842,7 @@ MySceneGraph.prototype.parseTextures = function(texturesNode) {
                         return "'amplifFactorT' is a non numeric value";
                     else if (amplifFactorS <= 0 || amplifFactorT <= 0)
                         return "value for amplifFactor must be positive";
-                }
-                else
+                } else
                     this.onXMLMinorError("unknown tag name <" + name + ">");
             }
 
@@ -907,8 +857,7 @@ MySceneGraph.prototype.parseTextures = function(texturesNode) {
 
             this.textures[textureID] = [texture, amplifFactorS, amplifFactorT];
             oneTextureDefined = true;
-        }
-        else
+        } else
             this.onXMLMinorError("unknown tag name <" + nodeName + ">");
     }
 
@@ -1170,8 +1119,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                     return "failed to retrieve root node ID";
                 this.idRoot = root;
             }
-        }
-        else if (nodeName == "NODE") {
+        } else if (nodeName == "NODE") {
             // Retrieves node ID.
             var nodeID = this.reader.getString(children[i], 'id');
             if (nodeID == null)
@@ -1231,24 +1179,21 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                         if (x == null) {
                             this.onXMLMinorError("unable to parse x-coordinate of translation; discarding transform");
                             break;
-                        }
-                        else if (isNaN(x))
+                        } else if (isNaN(x))
                             return "non-numeric value for x-coordinate of translation (node ID = " + nodeID + ")";
 
                         var y = this.reader.getFloat(nodeSpecs[j], 'y');
                         if (y == null) {
                             this.onXMLMinorError("unable to parse y-coordinate of translation; discarding transform");
                             break;
-                        }
-                        else if (isNaN(y))
+                        } else if (isNaN(y))
                             return "non-numeric value for y-coordinate of translation (node ID = " + nodeID + ")";
 
                         var z = this.reader.getFloat(nodeSpecs[j], 'z');
                         if (z == null) {
                             this.onXMLMinorError("unable to parse z-coordinate of translation; discarding transform");
                             break;
-                        }
-                        else if (isNaN(z))
+                        } else if (isNaN(z))
                             return "non-numeric value for z-coordinate of translation (node ID = " + nodeID + ")";
 
                         mat4.translate(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, [x, y, z]);
@@ -1264,8 +1209,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                         if (angle == null) {
                             this.onXMLMinorError("unable to parse rotation angle; discarding transform");
                             break;
-                        }
-                        else if (isNaN(angle))
+                        } else if (isNaN(angle))
                             return "non-numeric value for rotation angle (node ID = " + nodeID + ")";
 
                         mat4.rotate(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, angle * DEGREE_TO_RAD, this.axisCoords[axis]);
@@ -1276,24 +1220,21 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                         if (sx == null) {
                             this.onXMLMinorError("unable to parse x component of scaling; discarding transform");
                             break;
-                        }
-                        else if (isNaN(sx))
+                        } else if (isNaN(sx))
                             return "non-numeric value for x component of scaling (node ID = " + nodeID + ")";
 
                         var sy = this.reader.getFloat(nodeSpecs[j], 'sy');
                         if (sy == null) {
                             this.onXMLMinorError("unable to parse y component of scaling; discarding transform");
                             break;
-                        }
-                        else if (isNaN(sy))
+                        } else if (isNaN(sy))
                             return "non-numeric value for y component of scaling (node ID = " + nodeID + ")";
 
                         var sz = this.reader.getFloat(nodeSpecs[j], 'sz');
                         if (sz == null) {
                             this.onXMLMinorError("unable to parse z component of scaling; discarding transform");
                             break;
-                        }
-                        else if (isNaN(sz))
+                        } else if (isNaN(sz))
                             return "non-numeric value for z component of scaling (node ID = " + nodeID + ")";
 
                         mat4.scale(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, [sx, sy, sz]);
@@ -1325,8 +1266,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                         this.nodes[nodeID].addChild(curId);
                         sizeChildren++;
                     }
-                }
-                else if (descendants[j].nodeName == "LEAF") {
+                } else if (descendants[j].nodeName == "LEAF") {
                     var type = this.reader.getItem(descendants[j], 'type', ['rectangle', 'cylinder', 'sphere', 'triangle']);
 
                     if (type != null) {
@@ -1334,18 +1274,15 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                         this.nodes[nodeID].addLeaf(new MyGraphLeaf(this, descendants[j]));
 
                         sizeChildren++;
-                    }
-                    else
+                    } else
                         this.warn("Error in leaf");
-                }
-                else
+                } else
                     this.onXMLMinorError("unknown tag <" + descendants[j].nodeName + ">");
 
             }
             if (sizeChildren == 0)
                 return "at least one descendant must be defined for each intermediate node";
-        }
-        else
+        } else
             this.onXMLMinorError("unknown tag name <" + nodeName + ">");
     }
 
@@ -1400,7 +1337,7 @@ MySceneGraph.generateRandomString = function(length) {
     // and returns a string of the specified length.
     var numbers = [];
     for (var i = 0; i < length; i++)
-        numbers.push(Math.floor(Math.random() * 256));          // Random ASCII code.
+        numbers.push(Math.floor(Math.random() * 256)); // Random ASCII code.
 
     return String.fromCharCode.apply(null, numbers);
 };
