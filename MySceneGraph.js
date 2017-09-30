@@ -524,7 +524,6 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
 
     // Any number of lights.
     for (var i = 0; i < children.length; i++) {
-
         if (children[i].nodeName != "LIGHT") {
             this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
             continue;

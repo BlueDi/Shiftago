@@ -64,7 +64,6 @@ XMLscene.prototype.initLights = function() {
             i++;
         }
     }
-
 }
 
 /**
@@ -137,7 +136,6 @@ XMLscene.prototype.display = function() {
         // Displays the scene.
         this.graph.displayScene();
     } else {
-        // TODO: Fazer um loading aqui
         // Draw axis
         this.axis.display();
     }

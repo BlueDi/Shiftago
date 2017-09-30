@@ -32,7 +32,6 @@ MyInterface.prototype.init = function(application) {
  * Adds a folder containing the IDs of the lights passed as parameter.
  */
 MyInterface.prototype.addLightsGroup = function(lights) {
-
     var group = this.gui.addFolder("Lights");
     group.open();
 
