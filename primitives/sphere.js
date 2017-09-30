@@ -7,7 +7,7 @@
  * @constructor
  */
 function Sphere(scene, radius, slices, stacks) {
-    CGFobject.call(this,scene);
+    CGFobject.call(this, scene);
 
     this.radius = radius;
     this.slices = slices;
@@ -27,12 +27,12 @@ Sphere.prototype.initBuffers = function() {
     this.normals = [];
     this.indices = [];
 
-    for(var i = 0; i <= this.stacks; i++) {
+    for (var i = 0; i <= this.stacks; i++) {
         var verticalAngle = Math.PI / this.stacks * i;
         var cosvertical = Math.cos(verticalAngle);
         var sinvertical = Math.sin(verticalAngle);
 
-        for(var j = 0; j <= this.slices; j++) {
+        for (var j = 0; j <= this.slices; j++) {
             var horizontalAngle = Math.PI * 2 / this.slices * j;
             var cosH = Math.cos(horizontalAngle);
             var sinH = Math.sin(horizontalAngle);

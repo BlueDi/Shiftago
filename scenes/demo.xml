@@ -11,13 +11,11 @@
         <reference length="5"/>
     </INITIALS>
 
-
     <!-- Illumination and clear colour -->
     <ILLUMINATION>
         <ambient r="0.2" g="0.2" b="0.2" a="1"/>
         <background r="0" g="0" b="0" a="1"/>
     </ILLUMINATION>
-
 
     <!-- Lights -->
     <LIGHTS>
@@ -89,7 +87,6 @@
 
     </TEXTURES>
 
-
     <MATERIALS>
         <!-- Pyramid material -->
         <MATERIAL id="piramideMaterial">
@@ -147,7 +144,6 @@
 
     </MATERIALS>
 
-
     <!-- The nodes -->
     <NODES>
 
@@ -159,7 +155,6 @@
             <TEXTURE id="null"/>
 
             <DESCENDANTS>
-
                 <NODEREF id="luzes"/>
                 <NODEREF id="piramide"/>
                 <NODEREF id="arvores"/>
@@ -270,7 +265,6 @@
 
             <DESCENDANTS>
                 <LEAF id="sphere1" type="sphere" args="2 20 20"/>
-
             </DESCENDANTS>
 
         </NODE>
@@ -336,7 +330,6 @@
             <SCALE sx="0.5" sy="0.5" sz="1.5"/>
 
             <DESCENDANTS>
-
                 <NODEREF id="faceCubo1"/>
                 <NODEREF id="faceCubo2"/>
                 <NODEREF id="faceCubo3"/>

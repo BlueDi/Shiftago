@@ -8,7 +8,7 @@
  * @constructor
  */
 function Rectangle(scene, x1, y1, x2, y2) {
-    CGFobject.call(this,scene);
+    CGFobject.call(this, scene);
 
     this.x1 = x1;
     this.y1 = y1;
@@ -28,10 +28,10 @@ Rectangle.prototype.constructor = Rectangle;
  */
 Rectangle.prototype.updateTextureCoords = function(lengthS, lengthT) {
     this.texCoords = [
-     		lengthS, 0,
-     		0, 0,
-     		0, lengthT,
-     		lengthS, lengthT
+        lengthS, 0,
+        0, 0,
+        0, lengthT,
+        lengthS, lengthT
     ];
 
     this.updateTexCoordsGLBuffers();
@@ -45,7 +45,7 @@ Rectangle.prototype.initBuffers = function() {
         this.x1, this.y1, 0, //0
         this.x1, this.y2, 0, //1
         this.x2, this.y2, 0, //2
-        this.x2, this.y1, 0  //3
+        this.x2, this.y1, 0 //3
     ];
 
     this.indices = [
