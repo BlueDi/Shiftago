@@ -792,6 +792,14 @@ MySceneGraph.prototype.parseLights = function(lightsNode) {
 
 /**
  * Parses the <TEXTURES> block.
+ * Texturas devem estar normalizadas
+ * Associa onde calha a textura no objeto
+ * amplif_factor é a transformação de coordenada da textura para o objeto real.
+ * d = tamanho do objeto real
+ * s = é o tamanho que a textura cobre num objeto 3d
+ * 1 -> af
+ * s <- af_s
+ * Não é para a textura ser esticada para cobrir, é para repetir a textura.
  */
 MySceneGraph.prototype.parseTextures = function(texturesNode) {
     this.textures = [];
@@ -868,6 +876,9 @@ MySceneGraph.prototype.parseTextures = function(texturesNode) {
 
 /**
  * Parses the <MATERIALS> node.
+ * I = KaIa + KdIp cos(O) + KsIp (cos(a))^n
+ * shininess = n
+ * Emissao serve para objetos fluorescentes, nao serve para eliminar objetos, nao elimina os outros objetos
  */
 MySceneGraph.prototype.parseMaterials = function(materialsNode) {
     var children = materialsNode.children;
@@ -1343,9 +1354,57 @@ MySceneGraph.generateRandomString = function(length) {
 
 /**
  * Displays the scene, processing each node, starting in the root node.
+ * TODO ALL
+ * guardar as texturas numa stack
+ * guardar os materiais numa stack
+ * guardar as matrizes transformacao numa stack
  */
-    // entry point for graph rendering
-    // remove log below to avoid performance issues
-    this.log("Graph should be rendered here...");
 MySceneGraph.prototype.displayScene = function() {
+    var id = this.idRoot;
+
+    var transformation = this.nodes[id].transformMatrix;
+    var materialst = this.nodes[id].materialID;
+    var texture = this.nodes[id].textureID;
+    var children = this.nodes[id].children;
+    var leaves = this.nodes[id].leaves;
+
+    this.displayNode(transformation, materialst, texture, children, leaves);
+};
+
+MySceneGraph.prototype.displayNode = function(transformation, material, texture, children, leaves) {
+    if (typeof children != 'undefined' && children.length > 0) {
+        for (child of children) {
+            var matrixtrans = mat4.create();
+            var trans = this.nodes[child].transformMatrix;
+            mat4.multiply(matrixtrans, transformation, trans);
+
+            //Materials
+            var newmaterial;
+            if (this.nodes[child].materialID == "null") {
+                newmaterial = material;
+            } else {
+                newmaterial = this.nodes[child].materialID;
+            }
+
+            //Textures
+            var newTexture;
+            if (this.nodes[child].textureID == "null") {
+                newTexture = texture;
+            } else {
+                newTexture = this.nodes[child].textureID;
+            }
+
+            this.displayNode(matrixtrans, newmaterial, newTexture, this.nodes[child].children, this.nodes[child].leaves);
+        }
+    }
+
+    if (typeof leaves != 'undefined' && leaves.length > 0) {
+        for (leaf of leaves) {
+            this.displayLeaf(leaf, material, texture);
+        }
+    }
+};
+
+MySceneGraph.prototype.displayLeaf = function(leaf, material, texture) {
+    leaf.object.display();
 };
