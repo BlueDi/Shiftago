@@ -1354,57 +1354,75 @@ MySceneGraph.generateRandomString = function(length) {
 
 /**
  * Displays the scene, processing each node, starting in the root node.
- * TODO ALL
- * guardar as texturas numa stack
- * guardar os materiais numa stack
- * guardar as matrizes transformacao numa stack
  */
 MySceneGraph.prototype.displayScene = function() {
-    var id = this.idRoot;
+    this.transformationStack = [];
+    this.materialStack = [];
+    this.textureStack = [];
 
-    var transformation = this.nodes[id].transformMatrix;
-    var materialst = this.nodes[id].materialID;
-    var texture = this.nodes[id].textureID;
-    var children = this.nodes[id].children;
-    var leaves = this.nodes[id].leaves;
+    var temptrans = mat4.create();
+    mat4.identity(temptrans);
+    this.transformationStack.push(temptrans);
 
-    this.displayNode(transformation, materialst, texture, children, leaves);
+    this.displayNode(this.idRoot);
 };
 
-MySceneGraph.prototype.displayNode = function(transformation, material, texture, children, leaves) {
+/**
+ * Displays a node.
+ * @param nodeID id of the node to be displayed
+ */
+MySceneGraph.prototype.displayNode = function(nodeID) {
+    var transformation = this.transformationStack[this.transformationStack.length - 1];
+    var nodeTransformation = this.nodes[nodeID].transformMatrix;
+    var material = this.nodes[nodeID].materialID;
+    var texture = this.nodes[nodeID].textureID;
+    var children = this.nodes[nodeID].children;
+    var leaves = this.nodes[nodeID].leaves;
+
+    var matrixtrans = mat4.create();
+    mat4.multiply(matrixtrans, transformation, nodeTransformation);
+    this.transformationStack.push(matrixtrans);
+
+    this.materialStack.push(material);
+    this.textureStack.push(texture);
+
     if (typeof children != 'undefined' && children.length > 0) {
         for (child of children) {
-            var matrixtrans = mat4.create();
-            var trans = this.nodes[child].transformMatrix;
-            mat4.multiply(matrixtrans, transformation, trans);
-
-            //Materials
-            var newmaterial;
-            if (this.nodes[child].materialID == "null") {
-                newmaterial = material;
-            } else {
-                newmaterial = this.nodes[child].materialID;
-            }
-
-            //Textures
-            var newTexture;
-            if (this.nodes[child].textureID == "null") {
-                newTexture = texture;
-            } else {
-                newTexture = this.nodes[child].textureID;
-            }
-
-            this.displayNode(matrixtrans, newmaterial, newTexture, this.nodes[child].children, this.nodes[child].leaves);
+            this.displayNode(child);
         }
     }
 
     if (typeof leaves != 'undefined' && leaves.length > 0) {
         for (leaf of leaves) {
-            this.displayLeaf(leaf, material, texture);
+            this.displayLeaf(leaf);
         }
     }
+
+    this.transformationStack.pop();
+    this.materialStack.pop();
+    this.textureStack.pop();
 };
 
-MySceneGraph.prototype.displayLeaf = function(leaf, material, texture) {
+/**
+ * Displays a leaf.
+ * @param leaf object leaf to be displayed
+ */
+MySceneGraph.prototype.displayLeaf = function(leaf) {
+    this.scene.pushMatrix();
+    var transformation = this.transformationStack[this.transformationStack.length - 1];
+    this.scene.multMatrix(transformation);
+
+    while (this.materialStack == 'null') {
+        this.materialStack.pop();
+    }
+    var material = this.materialStack[this.materialStack.length - 1];
+
+    while (this.textureStack == 'null') {
+        this.textureStack.pop();
+    }
+    var texture = this.textureStack[this.textureStack.length - 1];
+
     leaf.object.display();
+
+    this.scene.popMatrix();
 };
