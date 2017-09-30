@@ -6,8 +6,7 @@ var ILLUMINATION_INDEX = 1;
 var LIGHTS_INDEX = 2;
 var TEXTURES_INDEX = 3;
 var MATERIALS_INDEX = 4;
-var LEAVES_INDEX = 5;
-var NODES_INDEX = 6;
+var NODES_INDEX = 5;
 
 /**
  * MySceneGraph class, representing the scene graph.
@@ -44,7 +43,7 @@ function MySceneGraph(filename, scene) {
 /*
  * Callback to be executed after successful reading
  */
-MySceneGraph.prototype.onXMLReady = function () {
+MySceneGraph.prototype.onXMLReady = function() {
     console.log("XML Loading finished.");
     var rootElement = this.reader.xmlDoc.documentElement;
 
@@ -65,7 +64,7 @@ MySceneGraph.prototype.onXMLReady = function () {
 /**
  * Parses the LSX file, processing each block.
  */
-MySceneGraph.prototype.parseLSXFile = function (rootElement) {
+MySceneGraph.prototype.parseLSXFile = function(rootElement) {
     if (rootElement.nodeName != "SCENE")
         return "root tag <SCENE> missing";
 
@@ -153,7 +152,7 @@ MySceneGraph.prototype.parseLSXFile = function (rootElement) {
 /**
  * Parses the <INITIALS> block.
  */
-MySceneGraph.prototype.parseInitials = function (initialsNode) {
+MySceneGraph.prototype.parseInitials = function(initialsNode) {
     var children = initialsNode.children;
 
     var nodeNames = [];
@@ -396,7 +395,6 @@ MySceneGraph.prototype.parseInitials = function (initialsNode) {
         }
         else
             this.onXMLMinorError("unable to parse reference length; assuming 'length = 1'");
-
     }
 
     console.log("Parsed initials");
@@ -407,7 +405,7 @@ MySceneGraph.prototype.parseInitials = function (initialsNode) {
 /**
  * Parses the <ILLUMINATION> block.
  */
-MySceneGraph.prototype.parseIllumination = function (illuminationNode) {
+MySceneGraph.prototype.parseIllumination = function(illuminationNode) {
 
     // Reads the ambient and background values.
     var children = illuminationNode.children;
@@ -541,8 +539,7 @@ MySceneGraph.prototype.parseIllumination = function (illuminationNode) {
 /**
  * Parses the <LIGHTS> node.
  */
-MySceneGraph.prototype.parseLights = function (lightsNode) {
-
+MySceneGraph.prototype.parseLights = function(lightsNode) {
     var children = lightsNode.children;
 
     this.lights = [];
@@ -845,8 +842,7 @@ MySceneGraph.prototype.parseLights = function (lightsNode) {
 /**
  * Parses the <TEXTURES> block.
  */
-MySceneGraph.prototype.parseTextures = function (texturesNode) {
-
+MySceneGraph.prototype.parseTextures = function(texturesNode) {
     this.textures = [];
 
     var eachTexture = texturesNode.children;
@@ -925,8 +921,7 @@ MySceneGraph.prototype.parseTextures = function (texturesNode) {
 /**
  * Parses the <MATERIALS> node.
  */
-MySceneGraph.prototype.parseMaterials = function (materialsNode) {
-
+MySceneGraph.prototype.parseMaterials = function(materialsNode) {
     var children = materialsNode.children;
     // Each material.
 
@@ -1159,7 +1154,7 @@ MySceneGraph.prototype.parseMaterials = function (materialsNode) {
 /**
  * Parses the <NODES> block.
  */
-MySceneGraph.prototype.parseNodes = function (nodesNode) {
+MySceneGraph.prototype.parseNodes = function(nodesNode) {
     // Traverses nodes.
     var children = nodesNode.children;
 
@@ -1336,7 +1331,7 @@ MySceneGraph.prototype.parseNodes = function (nodesNode) {
 
                     if (type != null) {
                         this.log("   Leaf: " + type);
-                        this.nodes[nodeID].addChild(new MyGraphLeaf(this, descendants[j]));
+                        this.nodes[nodeID].addLeaf(new MyGraphLeaf(this, descendants[j]));
 
                         sizeChildren++;
                     }
@@ -1351,7 +1346,7 @@ MySceneGraph.prototype.parseNodes = function (nodesNode) {
                 return "at least one descendant must be defined for each intermediate node";
         }
         else
-            this.onXMLMinorError("unknown tag name <" + nodeName);
+            this.onXMLMinorError("unknown tag name <" + nodeName + ">");
     }
 
     console.log("Parsed nodes");
@@ -1361,7 +1356,7 @@ MySceneGraph.prototype.parseNodes = function (nodesNode) {
 /*
  * Callback to be executed on any read error
  */
-MySceneGraph.prototype.onXMLError = function (message) {
+MySceneGraph.prototype.onXMLError = function(message) {
     console.error("XML Loading Error: " + message);
     this.loadedOk = false;
 };
@@ -1369,19 +1364,19 @@ MySceneGraph.prototype.onXMLError = function (message) {
 /**
  * Callback to be executed on any minor error, showing a warning on the console.
  */
-MySceneGraph.prototype.onXMLMinorError = function (message) {
+MySceneGraph.prototype.onXMLMinorError = function(message) {
     console.warn("Warning: " + message);
 };
 
-MySceneGraph.prototype.log = function (message) {
+MySceneGraph.prototype.log = function(message) {
     console.log("   " + message);
 };
 
 /**
- * Generates a default material, with a random name. This material will be passed onto the root node, which
- * may override it.
+ * Generates a default material, with a random name.
+ * This material will be passed onto the root node, which may override it.
  */
-MySceneGraph.prototype.generateDefaultMaterial = function () {
+MySceneGraph.prototype.generateDefaultMaterial = function() {
     var materialDefault = new CGFappearance(this.scene);
     materialDefault.setShininess(1);
     materialDefault.setSpecular(0, 0, 0, 1);
@@ -1400,7 +1395,7 @@ MySceneGraph.prototype.generateDefaultMaterial = function () {
 /**
  * Generates a random string of the specified length.
  */
-MySceneGraph.generateRandomString = function (length) {
+MySceneGraph.generateRandomString = function(length) {
     // Generates an array of random integer ASCII codes of the specified length
     // and returns a string of the specified length.
     var numbers = [];
@@ -1413,8 +1408,8 @@ MySceneGraph.generateRandomString = function (length) {
 /**
  * Displays the scene, processing each node, starting in the root node.
  */
-MySceneGraph.prototype.displayScene = function () {
     // entry point for graph rendering
     // remove log below to avoid performance issues
     this.log("Graph should be rendered here...");
+MySceneGraph.prototype.displayScene = function() {
 };

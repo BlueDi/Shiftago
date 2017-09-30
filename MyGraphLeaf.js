@@ -2,7 +2,6 @@
  * MyGraphLeaf class, representing a leaf in the scene graph.
  * @constructor
  **/
-
 function MyGraphLeaf(graph, xmlelem) {
     this.reader = new CGFXMLreader();
     console.log("?????!!!!! " + Object.keys(graph));

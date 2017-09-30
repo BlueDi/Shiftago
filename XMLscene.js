@@ -18,7 +18,7 @@ XMLscene.prototype.constructor = XMLscene;
 /**
  * Initializes the scene, setting some WebGL defaults, initializing the camera and the axis.
  */
-XMLscene.prototype.init = function (application) {
+XMLscene.prototype.init = function(application) {
     CGFscene.prototype.init.call(this, application);
 
     this.initCameras();
@@ -36,7 +36,7 @@ XMLscene.prototype.init = function (application) {
 /**
  * Initializes the scene lights with the values read from the LSX file.
  */
-XMLscene.prototype.initLights = function () {
+XMLscene.prototype.initLights = function() {
     var i = 0;
     // Lights index.
 
@@ -70,14 +70,14 @@ XMLscene.prototype.initLights = function () {
 /**
  * Initializes the scene cameras.
  */
-XMLscene.prototype.initCameras = function () {
+XMLscene.prototype.initCameras = function() {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 }
 
 /* Handler called when the graph is finally loaded.
  * As loading is asynchronous, this may be called already after the application has started the run loop
  */
-XMLscene.prototype.onGraphLoaded = function () {
+XMLscene.prototype.onGraphLoaded = function() {
     this.camera.near = this.graph.near;
     this.camera.far = this.graph.far;
     this.axis = new CGFaxis(this, this.graph.referenceLength);
@@ -96,7 +96,7 @@ XMLscene.prototype.onGraphLoaded = function () {
 /**
  * Displays the scene.
  */
-XMLscene.prototype.display = function () {
+XMLscene.prototype.display = function() {
     // ---- BEGIN Background, camera and axis setup
 
     // Clear image and depth buffer everytime we update the scene
@@ -137,7 +137,6 @@ XMLscene.prototype.display = function () {
 
         // Displays the scene.
         this.graph.displayScene();
-
     }
     else {
         // TODO: Fazer um loading aqui
@@ -145,9 +144,7 @@ XMLscene.prototype.display = function () {
         this.axis.display();
     }
 
-
     this.popMatrix();
 
     // ---- END Background, camera and axis setup
-
 };
