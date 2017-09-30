@@ -10,9 +10,9 @@ function Square(scene, xMin, yMin, xMax, yMax) {
 }
 
 Square.prototype = Object.create(CGFobject.prototype);
-MyObject.prototype.constructor = Square;
+Square.prototype.constructor = Square;
 
-Square.prototype.initBuffers = function () {
+Square.prototype.initBuffers = function() {
     this.vertices = [
         this.minX, this.maxY, 0,
         this.maxX, this.maxY, 0,
