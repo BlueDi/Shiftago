@@ -1,14 +1,14 @@
 /**
  * Cylinder
  * @param scene CGFscene where the Cylinder will be displayed
+ * @param height Cylinder height
  * @param base radius of the bottom base of the cylinder, placed on the (0, 0, 0) point
  * @param top radius of the top base of the cylinder
- * @param height Cylinder height
  * @param slices ammount of slices the Cylinder will be divided into along its perimeter
  * @param stacks ammount of stacks the Cylinder will be divided along its height
  * @constructor
  */
-function Cylinder(scene, base, top, height, slices, stacks) {
+function Cylinder(scene, height, base, top, slices, stacks) {
     CGFobject.call(this, scene);
 
     this.base = base;
