@@ -85,6 +85,8 @@
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
+            <TRANSLATION x="-0.5" y="-0.5" z="-0.5"/>
+
             <DESCENDANTS>
                 <NODEREF id="faceCubo1"/>
                 <NODEREF id="faceCubo2"/>

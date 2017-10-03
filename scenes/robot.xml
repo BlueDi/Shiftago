@@ -1,0 +1,535 @@
+<SCENE>
+    <!-- Initial values -->
+    <INITIALS>
+        <frustum near="0.1" far="500"/>
+        <translation x="-1" y="1" z="0"/>
+        <rotation axis="x" angle="0"/>
+        <rotation axis="y" angle="0"/>
+        <rotation axis="z" angle="0"/>
+        <scale sx="0.25" sy="0.25" sz="0.25"/>
+        <reference length="5"/>
+    </INITIALS>
+
+    <!-- Illumination and clear colour -->
+    <ILLUMINATION>
+        <ambient r="0.2" g="0.2" b="0.2" a="1"/>
+        <background r="0" g="0" b="0" a="1"/>
+    </ILLUMINATION>
+
+    <!-- Lights -->
+    <LIGHTS>
+        <LIGHT id="light0">
+            <enable value="1"/>
+            <position x="0" y="10" z="0" w="1"/>
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+        </LIGHT>
+
+        <LIGHT id="light1">
+            <enable value="1"/>
+            <position x="30" y="10" z="0" w="1"/>
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+        </LIGHT>
+
+        <LIGHT id="light2">
+            <enable value="1"/>
+            <position x="0" y="10" z="20" w="1"/>
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+        </LIGHT>
+    </LIGHTS>
+
+    <!-- Textures -->
+    <TEXTURES>
+        <!-- Default texture -->
+        <TEXTURE id="defaultTexture">
+            <file path=""/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
+    </TEXTURES>
+
+    <!-- Materials -->
+    <MATERIALS>
+        <!-- Default material -->
+        <MATERIAL id="defaultMaterial">
+            <shininess value="1"/>
+            <specular r="0.0" g="0.0" b="0.0" a="1"/>
+            <diffuse r="0.4" g="0.4" b="0.4" a="1"/>
+            <ambient r="0.4" g="0.4" b="0.4" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
+    </MATERIALS>
+
+    <!-- The nodes -->
+    <NODES>
+        <ROOT id="root"/>
+
+        <!-- The root node -->
+        <NODE id="root">
+            <MATERIAL id="defaultMaterial"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <!-- BEGIN robot -->
+        <NODE id="robot">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="1.2" z="0"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_body"/>
+                <NODEREF id="robot_head"/>
+                <NODEREF id="robot_arms"/>
+                <NODEREF id="robot_legs"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <!-- BEGIN robot_body -->
+        <NODE id="robot_body">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="-90"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_body1"/>
+                <NODEREF id="robot_body2"/>
+                <NODEREF id="robot_body3"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_body1">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="0" z="3"/>
+
+            <DESCENDANTS>
+                <LEAF type="sphere" args="1.6 20 20"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_body2">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="0" z="1"/>
+
+            <DESCENDANTS>
+                <LEAF type="cylinder" args="2 1.6 1.6 20 2"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_body3">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <LEAF type="cylinder" args="1 1.6 1.6 20 2"/>
+            </DESCENDANTS>
+        </NODE>
+        <!-- END robot_body -->
+
+        <!-- BEGIN robot_head -->
+        <NODE id="robot_head">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0.7" y="3.5" z="0.1"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_head1"/>
+                <NODEREF id="robot_eyes"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_head1">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <LEAF type="sphere" args="1.4 20 20"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_eyes">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="y" angle="90"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_left_eye"/>
+                <NODEREF id="robot_right_eye"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_eye">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0.5" y="0" z="0.9"/>
+
+            <DESCENDANTS>
+                <LEAF type="cylinder" args="0.475 0.17 0.17 20 2"/>
+                <LEAF type="cylinder" args="0.5 0.16 0.16 10 2"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_eye">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="-0.5" y="0" z="0.9"/>
+
+            <DESCENDANTS>
+                <LEAF type="cylinder" args="0.475 0.17 0.17 20 2"/>
+                <LEAF type="cylinder" args="0.5 0.16 0.16 10 2"/>
+            </DESCENDANTS>
+        </NODE>
+        <!-- END robot_head -->
+
+        <!-- BEGIN robot_arms -->
+        <NODE id="robot_arms">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_left_arm"/>
+                <NODEREF id="robot_right_arm"/>
+            </DESCENDANTS>
+
+        </NODE>
+
+        <NODE id="robot_left_arm">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_left_prearm"/>
+                <NODEREF id="robot_left_forearm"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_prearm">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="-60"/>
+            <ROTATION axis="y" angle="+30"/>
+            <TRANSLATION x="-1" y="3" z="0.6"/>
+            <SCALE sx="0.75" sy="0.5" sz="2.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_forearm">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="y" angle="100"/>
+            <TRANSLATION x="-2.25" y="1.4" z="0"/>
+            <SCALE sx="0.5" sy="0.5" sz="2.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_arm">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_right_prearm"/>
+                <NODEREF id="robot_right_forearm"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_prearm">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="+60"/>
+            <ROTATION axis="y" angle="-30"/>
+            <TRANSLATION x="-1" y="3" z="-0.6"/>
+            <SCALE sx="0.75" sy="0.5" sz="2.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_forearm">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="y" angle="80"/>
+            <TRANSLATION x="2.25" y="1.4" z="0"/>
+            <SCALE sx="0.5" sy="0.5" sz="2.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+        <!-- END robot_arms -->
+
+        <!-- BEGIN robot_legs -->
+        <NODE id="robot_legs">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_left_leg"/>
+                <NODEREF id="robot_right_leg"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_leg">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_left_legtop"/>
+                <NODEREF id="robot_left_legbase"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_legtop">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="5"/>
+            <TRANSLATION x="0" y="0" z="-1"/>
+            <SCALE sx="0.5" sy="-2.5" sz="0.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_legbase">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="-2.5" z="0"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_left_legbase1"/>
+                <NODEREF id="robot_left_legbase2"/>
+                <NODEREF id="robot_left_legbase3"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_legbase1">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <SCALE sx="3.5" sy="0.2" sz="1.3"/>
+            <TRANSLATION x="0" y="7" z="-1"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_legbase2">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <SCALE sx="1" sy="0.2" sz="1"/>
+            <TRANSLATION x="1.25" y="7" z="-0.55"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_legbase3">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <SCALE sx="1" sy="0.2" sz="1"/>
+            <TRANSLATION x="-1.25" y="7" z="-0.55"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_leg">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_right_legtop"/>
+                <NODEREF id="robot_right_legbase"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_legtop">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="-5"/>
+            <TRANSLATION x="0" y="0" z="1"/>
+            <SCALE sx="0.5" sy="-2.5" sz="0.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_legbase">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="-2.5" z="0"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_right_legbase1"/>
+                <NODEREF id="robot_right_legbase2"/>
+                <NODEREF id="robot_right_legbase3"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_legbase1">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <SCALE sx="3.5" sy="0.2" sz="1.3"/>
+            <TRANSLATION x="0" y="7" z="1"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_legbase2">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <SCALE sx="1" sy="0.2" sz="1"/>
+            <TRANSLATION x="1.25" y="7" z="0.55"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_legbase3">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <SCALE sx="1" sy="0.2" sz="1"/>
+            <TRANSLATION x="-1.25" y="7" z="0.55"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+        <!-- END robot_legs -->
+        <!-- END robot -->
+
+        <!-- BEGIN paralelo -->
+        <NODE id="paralelo">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="-0.5" y="-0.5" z="-0.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="faceCubo1"/>
+                <NODEREF id="faceCubo2"/>
+                <NODEREF id="faceCubo3"/>
+                <NODEREF id="faceCubo4"/>
+                <NODEREF id="faceCubo5"/>
+                <NODEREF id="faceCubo6"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="faceCubo1">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="0" z="1"/>
+
+            <DESCENDANTS>
+                <LEAF type="rectangle" args="0 1 1 0"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="faceCubo2">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="y" angle="-90"/>
+
+            <DESCENDANTS>
+                <LEAF type="rectangle" args="0 1 1 0"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="faceCubo3">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="1" y="0" z="1"/>
+            <ROTATION axis="y" angle="90"/>
+
+            <DESCENDANTS>
+                <LEAF type="rectangle" args="0 1 1 0"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="faceCubo4">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="1" y="0" z="0"/>
+            <ROTATION axis="y" angle="180"/>
+
+            <DESCENDANTS>
+                <LEAF type="rectangle" args="0 1 1 0"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="faceCubo5">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="-90"/>
+            <TRANSLATION x="0" y="-1" z="1"/>
+
+            <DESCENDANTS>
+                <LEAF type="rectangle" args="0 1 1 0"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="faceCubo6">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="90"/>
+
+            <DESCENDANTS>
+                <LEAF type="rectangle" args="0 1 1 0"/>
+            </DESCENDANTS>
+        </NODE>
+        <!-- END paralelo -->
+
+    </NODES>
+</SCENE>
