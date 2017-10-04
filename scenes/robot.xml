@@ -35,7 +35,7 @@
         </LIGHT>
 
         <LIGHT id="light2">
-            <enable value="1"/>
+            <enable value="0"/>
             <position x="0" y="10" z="20" w="1"/>
             <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
@@ -146,7 +146,7 @@
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
-            <TRANSLATION x="0.7" y="3.5" z="0.1"/>
+            <TRANSLATION x="0.7" y="3.75" z="0.1"/>
 
             <DESCENDANTS>
                 <NODEREF id="robot_head1"/>
@@ -179,7 +179,7 @@
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
-            <TRANSLATION x="0.5" y="0" z="0.9"/>
+            <TRANSLATION x="0.6" y="0" z="0.9"/>
 
             <DESCENDANTS>
                 <LEAF type="cylinder" args="0.475 0.17 0.17 20 2"/>
@@ -191,7 +191,7 @@
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
-            <TRANSLATION x="-0.5" y="0" z="0.9"/>
+            <TRANSLATION x="-0.6" y="0" z="0.9"/>
 
             <DESCENDANTS>
                 <LEAF type="cylinder" args="0.475 0.17 0.17 20 2"/>
@@ -217,8 +217,24 @@
             <TEXTURE id="null"/>
 
             <DESCENDANTS>
+                <NODEREF id="robot_left_shoulder"/>
                 <NODEREF id="robot_left_prearm"/>
                 <NODEREF id="robot_left_forearm"/>
+                <NODEREF id="robot_left_hand"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_shoulder">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="-60"/>
+            <ROTATION axis="y" angle="+30"/>
+            <TRANSLATION x="-1" y="2.75" z="1.8"/>
+            <ROTATION axis="x" angle="-90"/>
+
+            <DESCENDANTS>
+                <LEAF type="cylinder" args="0.5 0.375 0.375 20 2"/>
             </DESCENDANTS>
         </NODE>
 
@@ -241,11 +257,26 @@
             <TEXTURE id="null"/>
 
             <ROTATION axis="y" angle="100"/>
-            <TRANSLATION x="-2.25" y="1.4" z="0"/>
-            <SCALE sx="0.5" sy="0.5" sz="2.5"/>
+            <TRANSLATION x="-2.25" y="1.4" z="-1.25"/>
 
             <DESCENDANTS>
-                <NODEREF id="paralelo"/>
+                <LEAF type="cylinder" args="2.25 0.25 0.25 20 2"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_left_hand">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="y" angle="110"/>
+            <TRANSLATION x="-2.35" y="1.4" z="1"/>
+            <SCALE sx="0.4" sy="0.4" sz="1"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_handbase"/>
+                <NODEREF id="robot_finger1"/>
+                <NODEREF id="robot_finger2"/>
+                <NODEREF id="robot_finger3"/>
             </DESCENDANTS>
         </NODE>
 
@@ -254,8 +285,24 @@
             <TEXTURE id="null"/>
 
             <DESCENDANTS>
+                <NODEREF id="robot_right_shoulder"/>
                 <NODEREF id="robot_right_prearm"/>
                 <NODEREF id="robot_right_forearm"/>
+                <NODEREF id="robot_right_hand"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_shoulder">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="60"/>
+            <ROTATION axis="y" angle="-30"/>
+            <TRANSLATION x="-1" y="2.75" z="-1.8"/>
+            <ROTATION axis="x" angle="-90"/>
+
+            <DESCENDANTS>
+                <LEAF type="cylinder" args="0.5 0.375 0.375 20 2"/>
             </DESCENDANTS>
         </NODE>
 
@@ -278,11 +325,26 @@
             <TEXTURE id="null"/>
 
             <ROTATION axis="y" angle="80"/>
-            <TRANSLATION x="2.25" y="1.4" z="0"/>
-            <SCALE sx="0.5" sy="0.5" sz="2.5"/>
+            <TRANSLATION x="2.25" y="1.4" z="-1.25"/>
 
             <DESCENDANTS>
-                <NODEREF id="paralelo"/>
+                <LEAF type="cylinder" args="2.25 0.25 0.25 20 2"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_right_hand">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="y" angle="70"/>
+            <TRANSLATION x="2.35" y="1.4" z="1"/>
+            <SCALE sx="0.4" sy="0.4" sz="1"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_handbase"/>
+                <NODEREF id="robot_finger1"/>
+                <NODEREF id="robot_finger2"/>
+                <NODEREF id="robot_finger3"/>
             </DESCENDANTS>
         </NODE>
         <!-- END robot_arms -->
@@ -442,6 +504,54 @@
             </DESCENDANTS>
         </NODE>
         <!-- END robot_legs -->
+
+        <!-- BEGIN robot_hand -->
+        <NODE id="robot_handbase">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_finger1">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <ROTATION axis="x" angle="-45"/>
+            <TRANSLATION x="0" y="0.25" z="0.75"/>
+            <SCALE sx="0.5" sy="0.25" sz="0.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_finger2">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="0.25" z="0.75"/>
+            <SCALE sx="0.5" sy="0.25" sz="0.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_finger3">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="-0.25" z="0.75"/>
+            <SCALE sx="0.5" sy="0.25" sz="0.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
+            </DESCENDANTS>
+        </NODE>
+        <!-- END robot_hand -->
         <!-- END robot -->
 
         <!-- BEGIN paralelo -->
