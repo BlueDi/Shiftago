@@ -1412,7 +1412,7 @@ MySceneGraph.prototype.displayLeaf = function(leaf) {
     var transformation = this.transformationStack[this.transformationStack.length - 1];
     this.scene.multMatrix(transformation);
 
-    var tempMaterialStack = []
+    var tempMaterialStack = [];
     var material = 'null';
     while (material == 'null') {
         material = this.materialStack.pop();
@@ -1421,13 +1421,24 @@ MySceneGraph.prototype.displayLeaf = function(leaf) {
     while (tempMaterialStack.length > 0) {
         this.materialStack.push(tempMaterialStack.pop());
     }
+    var materialToApply = this.materials[material];
 
-    var texture = this.textureStack.pop();
-    while (this.textureStack == 'null') {
+    var tempTextureStack = [];
+    var texture = 'null';
+    while (texture == 'null' && this.textureStack.length > 0) {
         texture = this.textureStack.pop();
+        tempTextureStack.push(texture);
+    }
+    while (tempTextureStack.length > 0) {
+        this.textureStack.push(tempTextureStack.pop());
     }
 
-    this.materials[material].apply();
+    if (texture != 'clear' && texture != 'null') {
+        var textureToApply = this.textures[texture];
+        materialToApply.setTexture(textureToApply[0]);
+    }
+
+    materialToApply.apply();
 
     leaf.object.display();
 
