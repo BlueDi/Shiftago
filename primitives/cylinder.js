@@ -24,12 +24,27 @@ Cylinder.prototype = Object.create(CGFobject.prototype);
 Cylinder.prototype.constructor = Cylinder;
 
 /**
+ * Updates the Cylinder length factors
+ * @param lengthS s domain length factor
+ * @param lengthT t domain length factor
+ */
+Cylinder.prototype.updateTextureCoords = function(lengthS, lengthT) {
+    for (var i = 0; i < this.texCoords.length; i += 2) {
+        this.texCoords[i] = this.originalTexCoords[i] / lengthS;
+        this.texCoords[i + 1] = this.originalTexCoords[i + 1] / lengthT;
+    }
+
+    this.updateTexCoordsGLBuffers();
+}
+
+/**
  * Initializes the Cylinder buffers (vertices, indices, normals and texCoords)
  */
 Cylinder.prototype.initBuffers = function() {
     this.vertices = [];
     this.normals = [];
     this.indices = [];
+    this.originalTexCoords = [];
 
     //vertices and normals
     var step = this.height / this.stacks;
@@ -44,6 +59,7 @@ Cylinder.prototype.initBuffers = function() {
             var angle = j * delta;
             this.vertices.push(radius * Math.cos(angle), radius * Math.sin(angle), i * step);
             this.normals.push(Math.cos(angle), Math.sin(angle), 0);
+            this.originalTexCoords.push(j / this.slices, i / this.stacks);
         }
     }
 
@@ -62,7 +78,7 @@ Cylinder.prototype.initBuffers = function() {
         }
     }
 
-    //Top
+    //Bases
     this.vertices.push(0, 0, 0); //base center
     this.vertices.push(0, 0, this.height); //top center
     var baseCenter = (this.vertices.length / 3) - 2;
@@ -73,16 +89,18 @@ Cylinder.prototype.initBuffers = function() {
     }
 
     currentSlice = 1;
-    for (var j = 0; j < this.slices; j++) {
+    for (var j = 0; j < this.slices * this.stacks; j++) {
         if (currentSlice == this.slices) {
-            this.indices.push(baseCenter, j + 1 - this.slices, j);
-            this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices - this.slices + 1, topCenter);
+            //this.indices.push(baseCenter, j + 1 - this.slices, j);
+            //this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices - this.slices + 1, topCenter);
             currentSlice = 1;
         }
-        this.indices.push(baseCenter, j + 1, j);
-        this.indices.push(j + this.stacks * this.slices, j + 1 + this.stacks * this.slices, topCenter);
+        //this.indices.push(baseCenter, j + 1, j);
+        //this.indices.push(j + this.stacks * this.slices, j + 1 + this.stacks * this.slices, topCenter);
         currentSlice++;
     }
+
+    this.texCoords = this.originalTexCoords.slice();
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();

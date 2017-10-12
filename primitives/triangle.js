@@ -27,6 +27,10 @@ function Triangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
     this.z2 = z2;
     this.z3 = z3;
 
+    this.v1 = vec3.fromValues(x1, y1, z1); // A
+    this.v2 = vec3.fromValues(x2, y2, z2); // B
+    this.v3 = vec3.fromValues(x3, y3, z3); // C
+
     this.initBuffers();
 };
 
@@ -39,61 +43,51 @@ Triangle.prototype.constructor = Triangle;
  * @param lengthT t domain length factor
  */
 Triangle.prototype.updateTextureCoords = function(lengthS, lengthT) {
-    /**
-     * Calculo de coordenadas de mapeamento de texturas em triângulos - Alexandre Valle de Carvalho
-     */
-
-    var c = Math.sqrt(Math.pow(this.x2 - this.x1, 2) + Math.pow(this.y2 - this.y1, 2) + Math.pow(this.z2 - this.z1, 2));
-    var a = Math.sqrt(Math.pow(this.x3 - this.x2, 2) + Math.pow(this.y3 - this.y2, 2) + Math.pow(this.z3 - this.z2, 2));
-    var b = Math.sqrt(Math.pow(this.x1 - this.x3, 2) + Math.pow(this.y1 - this.y3, 2) + Math.pow(this.z1 - this.z3, 2));
-    var cosBeta = (Math.pow(a, 2) - Math.pow(b, 2) + Math.pow(c, 2)) / (2 * a * c);
-    var sinBeta = Math.sqrt(1 - Math.pow(cosBeta, 2));
-
-    this.texCoords = [
-        0, 0,
-        1, 0,
-        (c - a * cosBeta) / lengthS, a * sinBeta / lengthT
-    ];
+    for (var i = 0; i < this.texCoords.length; i += 2) {
+        this.texCoords[i] = this.originalTexCoords[i] / lengthS;
+        this.texCoords[i + 1] = this.originalTexCoords[i + 1] / lengthT;
+    }
 
     this.updateTexCoordsGLBuffers();
 };
 
 /**
- * Initializes the Triangle buffers (vertices, indices, normals and textureCoords)
+ * Initializes the Triangle buffers (vertices, indices, normals and texCoords)
  */
 Triangle.prototype.initBuffers = function() {
     this.vertices = [
-        this.x1, this.y1, this.z1,
-        this.x2, this.y2, this.z2,
-        this.x3, this.y3, this.z3
+        this.v1[0], this.v1[1], this.v1[2],
+        this.v2[0], this.v2[1], this.v2[2],
+        this.v3[0], this.v3[1], this.v3[2]
     ];
 
     this.indices = [0, 1, 2];
 
-    var vector1 = [
-        this.x1 - this.x2,
-        this.y1 - this.y2,
-        this.z1 - this.z2
-    ];
+    var AB = vec3.create();
+    vec3.sub(AB, this.v2, this.v1);
+    var AC = vec3.create();
+    vec3.sub(AC, this.v3, this.v1);
+    var BC = vec3.create();
+    vec3.sub(BC, this.v3, this.v2);
 
-    var vector2 = [
-        this.x1 - this.x3,
-        this.y1 - this.y3,
-        this.z1 - this.z3
-    ];
-    //Creates a new instance of a vec3
-    var normal = vec3.create();
-    //Generates the cross product of two vec3s
-    vec3.cross(normal, vector1, vector2);
-
+    var N = vec3.create();
+    vec3.cross(N, AB, BC);
+    vec3.normalize(N, N);
     this.normals = [
-        normal[0], normal[1], normal[2],
-        normal[0], normal[1], normal[2],
-        normal[0], normal[1], normal[2]
+        N[0], N[1], N[2],
+        N[0], N[1], N[2],
+        N[0], N[1], N[2],
     ];
 
-    //factors lengthS = 1, lengthT = 1
-    this.updateTextureCoords(1, 1);
+    var tC = (vec3.sqrLen(AB) + vec3.sqrLen(AC) - vec3.sqrLen(BC)) / (2 * vec3.length(AB));
+    var sC = Math.sqrt(vec3.sqrLen(AC) - Math.pow(tC, 2));
+    this.originalTexCoords = [
+        0, 0,
+        vec3.length(AB), 0,
+        sC, tC
+    ];
+
+    this.texCoords = this.originalTexCoords.slice();
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();

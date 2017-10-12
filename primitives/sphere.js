@@ -19,26 +19,37 @@ function Sphere(scene, radius, slices, stacks) {
 Sphere.prototype = Object.create(CGFobject.prototype);
 Sphere.prototype.constructor = Sphere;
 
+Sphere.prototype.updateTextureCoords = function(lengthS, lengthT) {
+    for (var i = 0; i < this.texCoords.length; i += 2) {
+        this.texCoords[i] = this.originalTexCoords[i] / lengthS;
+        this.texCoords[i + 1] = this.originalTexCoords[i + 1] / lengthT;
+    }
+
+    this.updateTexCoordsGLBuffers();
+};
+
 /**
- * Initializes the Sphere buffers (vertices, indices and normals)
+ * Initializes the Sphere buffers (vertices, indices, normals, and texCoords)
  */
 Sphere.prototype.initBuffers = function() {
+    this.indices = [];
     this.vertices = [];
     this.normals = [];
-    this.indices = [];
+    this.originalTexCoords = [];
 
     for (var i = 0; i <= this.stacks; i++) {
         var verticalAngle = Math.PI / this.stacks * i;
-        var cosvertical = Math.cos(verticalAngle);
-        var sinvertical = Math.sin(verticalAngle);
+        var cosVertical = Math.cos(verticalAngle);
+        var sinVertical = Math.sin(verticalAngle);
 
         for (var j = 0; j <= this.slices; j++) {
             var horizontalAngle = Math.PI * 2 / this.slices * j;
             var cosH = Math.cos(horizontalAngle);
             var sinH = Math.sin(horizontalAngle);
 
-            this.vertices.push(this.radius * sinvertical * cosH, this.radius * sinvertical * sinH, this.radius * cosvertical);
-            this.normals.push(sinvertical * cosH, sinvertical * sinH, cosvertical);
+            this.vertices.push(this.radius * sinVertical * cosH, this.radius * sinVertical * sinH, this.radius * cosVertical);
+            this.normals.push(sinVertical * cosH, sinVertical * sinH, cosVertical);
+            this.originalTexCoords.push(j / this.slices, i / this.stacks);
         }
     }
 
@@ -48,6 +59,8 @@ Sphere.prototype.initBuffers = function() {
             this.indices.push((i * (this.slices + 1)) + j + this.slices + 1, (i * (this.slices + 1)) + j + this.slices + 2, (i * (this.slices + 1)) + j + 1);
         }
     }
+
+    this.texCoords = this.originalTexCoords.slice();
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();

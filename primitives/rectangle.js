@@ -1,19 +1,24 @@
 /**
  * Rectangle
  * @param scene CGFscene where the Rectangle will be displayed
- * @param x1 x coordinate of the left top vertex
- * @param y1 y coordinate of the left top vertex
- * @param x2 x coordinate of the right bottom vertex
- * @param y2 y coordinate of the right bottom vertex
+ * @param minX x coordinate of the left top vertex
+ * @param maxY y coordinate of the left top vertex
+ * @param maxX x coordinate of the right bottom vertex
+ * @param minY y coordinate of the right bottom vertex
  * @constructor
  */
-function Rectangle(scene, x1, y1, x2, y2) {
+function Rectangle(scene, minX, maxY, maxX, minY) {
     CGFobject.call(this, scene);
 
-    this.x1 = x1;
-    this.y1 = y1;
-    this.x2 = x2;
-    this.y2 = y2;
+    this.minX = minX;
+    this.maxX = maxX;
+    this.minY = minY;
+    this.maxY = maxY;
+
+    this.minS = 0;
+    this.maxS = 1;
+    this.minT = 0;
+    this.maxT = 1;
 
     this.initBuffers();
 };
@@ -27,12 +32,10 @@ Rectangle.prototype.constructor = Rectangle;
  * @param lengthT t domain length factor
  */
 Rectangle.prototype.updateTextureCoords = function(lengthS, lengthT) {
-    this.texCoords = [
-        lengthS, 0,
-        0, 0,
-        0, lengthT,
-        lengthS, lengthT
-    ];
+    for (var i = 0; i < this.texCoords.length; i += 2) {
+        this.texCoords[i] = this.originalTexCoords[i] / lengthS;
+        this.texCoords[i + 1] = this.originalTexCoords[i + 1] / lengthT;
+    }
 
     this.updateTexCoordsGLBuffers();
 };
@@ -42,10 +45,10 @@ Rectangle.prototype.updateTextureCoords = function(lengthS, lengthT) {
  */
 Rectangle.prototype.initBuffers = function() {
     this.vertices = [
-        this.x1, this.y1, 0, //0
-        this.x1, this.y2, 0, //1
-        this.x2, this.y2, 0, //2
-        this.x2, this.y1, 0 //3
+        this.minX, this.maxY, 0, //0
+        this.minX, this.minY, 0, //1
+        this.maxX, this.minY, 0, //2
+        this.maxX, this.maxY, 0 //3
     ];
 
     this.indices = [
@@ -60,12 +63,17 @@ Rectangle.prototype.initBuffers = function() {
         0, 0, 1
     ];
 
-    this.texCoords = [
-        0, 0,
-        0, 1,
-        1, 1,
-        1, 0
+    this.largura = this.maxX - this.minX;
+    this.altura = this.maxY - this.minY;
+
+    this.originalTexCoords = [
+        this.minS, this.altura * this.maxT,
+        this.minS, this.minT,
+        this.largura * this.maxS, this.minT,
+        this.largura * this.maxS, this.altura * this.maxT
     ];
+
+    this.texCoords = this.originalTexCoords.slice();
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();
