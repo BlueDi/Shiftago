@@ -1,12 +1,12 @@
 <SCENE>
     <!-- Initial values -->
     <INITIALS>
-        <frustum near="0.1" far="500"/>
-        <translation x="-1" y="1" z="0"/>
-        <rotation axis="x" angle="0"/>
-        <rotation axis="y" angle="0"/>
-        <rotation axis="z" angle="0"/>
-        <scale sx="0.5" sy="0.5" sz="0.5"/>
+        <frustum near="0" far="400"/>
+        <translation x="0" y="-2" z="1"/>
+        <rotation axis="x" angle="-9"/>
+        <rotation axis="y" angle="-25"/>
+        <rotation axis="z" angle="20"/>
+        <scale sx="1" sy="1" sz="1"/>
         <reference length="5"/>
     </INITIALS>
 
@@ -52,7 +52,17 @@
         </TEXTURE>
 
         <TEXTURE id="rust">
-            <file path="images/rust.jpg"/>
+            <file path="images_nier_robot/normalrust.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
+		<TEXTURE id="hard_rust">
+            <file path="images_nier_robot/hardrust.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
+		<TEXTURE id="light_rust">
+            <file path="images_nier_robot/lightrust.jpg"/>
             <amplif_factor s="1" t="1"/>
         </TEXTURE>
 
@@ -128,9 +138,10 @@
         <!-- BEGIN robot_body -->
         <NODE id="robot_body">
             <MATERIAL id="null"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="light_rust"/>
 
             <ROTATION axis="x" angle="-90"/>
+            <ROTATION axis="z" angle="-90"/>
 
             <DESCENDANTS>
                 <NODEREF id="robot_body1"/>
@@ -140,8 +151,8 @@
         </NODE>
 
         <NODE id="robot_body1">
-            <MATERIAL id="bronze"/>
-            <TEXTURE id="rust"/>
+            <MATERIAL id="latao"/>
+            <TEXTURE id="hard_rust"/>
 
             <TRANSLATION x="0" y="0" z="3"/>
 
@@ -152,7 +163,7 @@
 
         <NODE id="robot_body2">
             <MATERIAL id="null"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="rust"/>
 
             <TRANSLATION x="0" y="0" z="1"/>
 
@@ -188,13 +199,15 @@
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
+            <ROTATION axis="z" angle="100"/>
+
             <DESCENDANTS>
                 <LEAF type="sphere" args="1.4 20 20"/>
             </DESCENDANTS>
         </NODE>
 
         <NODE id="robot_eyes">
-            <MATERIAL id="bronze"/>
+            <MATERIAL id="latao"/>
             <TEXTURE id="null"/>
 
             <ROTATION axis="y" angle="90"/>
@@ -233,7 +246,7 @@
         <!-- BEGIN robot_arms -->
         <NODE id="robot_arms">
             <MATERIAL id="null"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="rust"/>
 
             <DESCENDANTS>
                 <NODEREF id="robot_left_arm"/>
@@ -284,7 +297,7 @@
 
         <NODE id="robot_left_forearm">
             <MATERIAL id="bronze"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="hard_rust"/>
 
             <ROTATION axis="y" angle="80"/>
             <TRANSLATION x="2.25" y="1.4" z="-1.25"/>
@@ -296,7 +309,7 @@
 
         <NODE id="robot_left_hand">
             <MATERIAL id="bronze"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="hard_rust"/>
 
             <ROTATION axis="y" angle="70"/>
             <TRANSLATION x="2.35" y="1.4" z="1"/>
@@ -352,7 +365,7 @@
 
         <NODE id="robot_right_forearm">
             <MATERIAL id="null"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="hard_rust"/>
 
             <ROTATION axis="y" angle="100"/>
             <TRANSLATION x="-2.25" y="1.4" z="-1.25"/>
@@ -364,7 +377,7 @@
 
         <NODE id="robot_right_hand">
             <MATERIAL id="null"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="hard_rust"/>
 
             <ROTATION axis="y" angle="110"/>
             <TRANSLATION x="-2.35" y="1.4" z="1"/>
@@ -382,7 +395,7 @@
         <!-- BEGIN robot_legs -->
         <NODE id="robot_legs">
             <MATERIAL id="null"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="hard_rust"/>
 
             <DESCENDANTS>
                 <NODEREF id="robot_left_leg"/>
@@ -402,7 +415,7 @@
 
         <NODE id="robot_left_legtop">
             <MATERIAL id="null"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="rust"/>
 
             <ROTATION axis="x" angle="5"/>
             <TRANSLATION x="0" y="0" z="-1"/>
@@ -474,7 +487,7 @@
 
         <NODE id="robot_right_legtop">
             <MATERIAL id="null"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="rust"/>
 
             <ROTATION axis="x" angle="-5"/>
             <TRANSLATION x="0" y="0" z="1"/>
@@ -538,7 +551,7 @@
         <!-- BEGIN robot_hand -->
         <NODE id="robot_handbase">
             <MATERIAL id="null"/>
-            <TEXTURE id="null"/>
+            <TEXTURE id="rust"/>
 
             <DESCENDANTS>
                 <NODEREF id="paralelo"/>
