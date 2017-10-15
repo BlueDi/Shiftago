@@ -78,7 +78,7 @@ Cylinder.prototype.initBuffers = function() {
         }
     }
 
-    //Bases
+    //Base & Top
     this.vertices.push(0, 0, 0); //base center
     this.vertices.push(0, 0, this.height); //top center
     var baseCenter = (this.vertices.length / 3) - 2;
@@ -89,15 +89,16 @@ Cylinder.prototype.initBuffers = function() {
     }
 
     currentSlice = 1;
-    for (var j = 0; j < this.slices * this.stacks; j++) {
+    for (var j = 0; j < this.slices; j++) {
         if (currentSlice == this.slices) {
-            //this.indices.push(baseCenter, j + 1 - this.slices, j);
-            //this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices - this.slices + 1, topCenter);
-            currentSlice = 1;
+            this.indices.push(baseCenter, 0, this.slices - 1);
+            this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices - this.slices + 1, topCenter);
+        } else {
+            this.indices.push(baseCenter, j + 1, j);
+            this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices + 1, topCenter);
         }
-        //this.indices.push(baseCenter, j + 1, j);
-        //this.indices.push(j + this.stacks * this.slices, j + 1 + this.stacks * this.slices, topCenter);
         currentSlice++;
+        this.originalTexCoords.push(0.5, 0);
     }
 
     this.texCoords = this.originalTexCoords.slice();
