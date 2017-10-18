@@ -67,10 +67,10 @@ Rectangle.prototype.initBuffers = function() {
     this.altura = this.maxY - this.minY;
 
     this.originalTexCoords = [
-        this.minS, this.altura * this.maxT,
         this.minS, this.minT,
-        this.largura * this.maxS, this.minT,
-        this.largura * this.maxS, this.altura * this.maxT
+        this.minS, this.altura * this.maxT,
+        this.largura * this.maxS, this.altura * this.maxT,
+        this.largura * this.maxS, this.minT
     ];
 
     this.texCoords = this.originalTexCoords.slice();

@@ -98,7 +98,7 @@ Cylinder.prototype.initBuffers = function() {
             this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices + 1, topCenter);
         }
         currentSlice++;
-        this.originalTexCoords.push(0.5, 0);
+        this.originalTexCoords.push(10, 0);
     }
 
     this.texCoords = this.originalTexCoords.slice();
