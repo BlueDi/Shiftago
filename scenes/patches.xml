@@ -1,0 +1,205 @@
+<SCENE>
+    <!-- Initial values -->
+    <INITIALS>
+        <frustum near="0.1" far="400"/>
+        <translation x="0" y="-2" z="1"/>
+        <rotation axis="x" angle="-9"/>
+        <rotation axis="y" angle="-25"/>
+        <rotation axis="z" angle="20"/>
+        <scale sx="1" sy="1" sz="1"/>
+        <reference length="5"/>
+    </INITIALS>
+
+    <!-- Illumination and clear colour -->
+    <ILLUMINATION>
+        <ambient r="0.2" g="0.2" b="0.2" a="1"/>
+        <background r="0" g="0" b="0" a="1"/>
+    </ILLUMINATION>
+
+    <!-- Lights -->
+    <LIGHTS>
+        <LIGHT id="light0">
+            <enable value="1"/>
+            <position x="0" y="10" z="0" w="1"/>
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+        </LIGHT>
+
+        <LIGHT id="light1">
+            <enable value="1"/>
+            <position x="30" y="10" z="0" w="1"/>
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+        </LIGHT>
+
+        <LIGHT id="light2">
+            <enable value="0"/>
+            <position x="0" y="10" z="20" w="1"/>
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
+            <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+        </LIGHT>
+    </LIGHTS>
+
+    <!-- Textures -->
+    <TEXTURES>
+        <!-- Default texture -->
+        <TEXTURE id="defaultTexture">
+            <file path=""/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
+        <TEXTURE id="texture">
+            <file path="images/texture.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
+    </TEXTURES>
+
+    <!-- Materials -->
+    <MATERIALS>
+        <!-- Default material -->
+        <MATERIAL id="defaultMaterial">
+            <shininess value="1"/>
+            <specular r="0.0" g="0.0" b="0.0" a="1"/>
+            <diffuse r="0.4" g="0.4" b="0.4" a="1"/>
+            <ambient r="0.4" g="0.4" b="0.4" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
+        <!-- Patch material -->
+        <MATERIAL id="patch">
+            <shininess value="120"/>
+            <specular r="0.0" g="0.0" b="0.0" a="1"/>
+            <diffuse r="0.7" g="0.7" b="0.7" a="1"/>
+            <ambient r="0.3" g="0.3" b="0.3" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
+    </MATERIALS>
+
+    <!-- The nodes -->
+    <NODES>
+        <ROOT id="root"/>
+
+        <!-- The root node -->
+        <NODE id="root">
+            <MATERIAL id="patch"/>
+            <TEXTURE id="texture"/>
+
+            <DESCENDANTS>
+                <NODEREF id="patch1"/>
+                <NODEREF id="patch2"/>
+                <NODEREF id="patch3"/>
+                <NODEREF id="patch4"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="patch1">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="-7.5" y="0" z="0"/>
+
+            <DESCENDANTS>
+                <LEAF type="patch" args="20 20">
+                    <CPLINE>
+                        <CPOINT xx="-2.0" yy="-2.0" zz="0.0" ww="1"/>
+                        <CPOINT xx="-2.0" yy="2.0" zz="0.0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="2.0" yy="-2.0" zz="0.0" ww="1"/>
+                        <CPOINT xx="2.0" yy="2.0" zz="0.0" ww="1"/>
+                    </CPLINE>
+                </LEAF>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="patch2">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="-2.5" y="0" z="0"/>
+
+            <DESCENDANTS>
+                <LEAF type="patch" args="20 20">
+                    <CPLINE>
+                        <CPOINT xx="-1.5" yy="-1.5" zz="0.0" ww="1"/>
+                        <CPOINT xx="-1.5" yy="1.5" zz="0.0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="0" yy="-1.5" zz="3.0" ww="1"/>
+                        <CPOINT xx="0" yy="1.5" zz="3.0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="1.5" yy="-1.5" zz="0.0" ww="1"/>
+                        <CPOINT xx="1.5" yy="1.5" zz="0.0" ww="1"/>
+                    </CPLINE>
+                </LEAF>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="patch3">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="2.5" y="0" z="0"/>
+
+            <DESCENDANTS>
+                <LEAF type="patch" args="20 20">
+                    <CPLINE>
+                        <CPOINT xx="-1.5" yy="-1.5" zz="0.0" ww="1"/>
+                        <CPOINT xx="-2.0" yy="-2.0" zz="2.0" ww="1"/>
+                        <CPOINT xx="-2.0" yy="2.0" zz="2.0" ww="1"/>
+                        <CPOINT xx="-1.5" yy="1.5" zz="0.0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="0" yy="0" zz="3.0" ww="1"/>
+                        <CPOINT xx="0" yy="-2.0" zz="3.0" ww="1"/>
+                        <CPOINT xx="0" yy="2.0" zz="3.0" ww="1"/>
+                        <CPOINT xx="0" yy="0" zz="3.0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="1.5" yy="-1.5" zz="0.0" ww="1"/>
+                        <CPOINT xx="2.0" yy="-2.0" zz="2.0" ww="1"/>
+                        <CPOINT xx="2.0" yy="2.0" zz="2.0" ww="1"/>
+                        <CPOINT xx="1.5" yy="1.5" zz="0.0" ww="1"/>
+                    </CPLINE>
+                </LEAF>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="patch4">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="7.5" y="0" z="0"/>
+
+            <DESCENDANTS>
+                <LEAF type="patch" args="20 20">
+                    <CPLINE>
+                        <CPOINT xx="-2.0" yy="-2.0" zz="1.0" ww="1"/>
+                        <CPOINT xx="-2.0" yy="-1.0" zz="-2.0" ww="1"/>
+                        <CPOINT xx="-2.0" yy="1.0" zz="5.0" ww="1"/>
+                        <CPOINT xx="-2.0" yy="2.0" zz="-1.0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="0" yy="-2.0" zz="0" ww="1"/>
+                        <CPOINT xx="0" yy="-1.0" zz="-1.0" ww="1"/>
+                        <CPOINT xx="0" yy="1.0" zz="1.5" ww="1"/>
+                        <CPOINT xx="0" yy="2.0" zz="0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="2.0" yy="-2.0" zz="-1.0" ww="1"/>
+                        <CPOINT xx="2.0" yy="-1.0" zz="2.0" ww="1"/>
+                        <CPOINT xx="2.0" yy="1.0" zz="-5.0" ww="1"/>
+                        <CPOINT xx="2.0" yy="2.0" zz="1.0" ww="1"/>
+                    </CPLINE>
+                </LEAF>
+            </DESCENDANTS>
+        </NODE>
+
+    </NODES>
+</SCENE>
