@@ -1439,6 +1439,10 @@ MySceneGraph.prototype.displayLeaf = function(leaf) {
         leaf.object.updateTextureCoords(textureToApply[1], textureToApply[2]);
     }
 
+    if(texture == 'clear') {
+      materialToApply.setTexture(null);
+    }
+
     materialToApply.apply();
 
     leaf.object.display();
