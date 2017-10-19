@@ -1,11 +1,11 @@
 <SCENE>
     <!-- Initial values -->
     <INITIALS>
-        <frustum near="0" far="500"/>
-        <translation x="-1" y="1" z="0"/>
-        <rotation axis="x" angle="0"/>
-        <rotation axis="y" angle="0"/>
-        <rotation axis="z" angle="0"/>
+        <frustum near="0.1" far="500"/>
+        <translation x="-10" y="-7" z="0"/>
+        <rotation axis="x" angle="25"/>
+        <rotation axis="y" angle="90"/>
+        <rotation axis="z" angle="-30"/>
         <scale sx="0.25" sy="0.25" sz="0.25"/>
         <reference length="5"/>
     </INITIALS>
@@ -70,6 +70,7 @@
             <amplif_factor s="1" t="1"/>
         </TEXTURE>
 
+        <!-- Textures for the robot -->
         <TEXTURE id="rust">
             <file path="images_nier_robot/normalrust.jpg"/>
             <amplif_factor s="1" t="1"/>
@@ -85,10 +86,25 @@
             <amplif_factor s="1" t="1"/>
         </TEXTURE>
 
+        <!-- Textures for robot hat -->
+        <TEXTURE id="polkadot">
+            <file path="images_nier_robot/polkadot.png"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+        <TEXTURE id="polkadot2">
+            <file path="images_nier_robot/polkadot2.jpg"/>
+            <amplif_factor s="1.25" t="1"/>
+        </TEXTURE>
+        <TEXTURE id="fluffy">
+            <file path="images_nier_robot/fluffy.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
+        <!-- Disco ball Texture -->
         <TEXTURE id="disco">
-                <file path="images_nier_robot/disco.jpg"/>
-                <amplif_factor s="1" t="1"/>
-            </TEXTURE>
+            <file path="images_nier_robot/disco.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
 
     </TEXTURES>
 
@@ -414,8 +430,152 @@
             <TRANSLATION x="0.7" y="3.75" z="0.1"/>
 
             <DESCENDANTS>
+                <NODEREF id="robot_hat"/>
                 <NODEREF id="robot_head1"/>
                 <NODEREF id="robot_eyes"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_hat">
+            <MATERIAL id="prata"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="0.88" z="0"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_hat_left"/>
+                <NODEREF id="robot_hat_right"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_hat_left">
+            <MATERIAL id="null"/>
+            <TEXTURE id="polkadot"/>
+
+            <SCALE sx="1.25" sy="1.25" sz="1.25"/>
+            <TRANSLATION x="0" y="0" z="-0.3"/>
+            <ROTATION axis="y" angle="20"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_hat_base"/>
+                <NODEREF id="robot_hat_body"/>
+                <NODEREF id="robot_hat_pompom"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_hat_right">
+            <MATERIAL id="null"/>
+            <TEXTURE id="polkadot2"/>
+
+            <SCALE sx="1.25" sy="1.25" sz="1.25"/>
+            <TRANSLATION x="0" y="0" z="0.3"/>
+            <ROTATION axis="y" angle="180"/>
+            <ROTATION axis="y" angle="-20"/>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_hat_base"/>
+                <NODEREF id="robot_hat_body"/>
+                <NODEREF id="robot_hat_pompom"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_hat_base">
+            <MATERIAL id="null"/>
+            <TEXTURE id="fluffy"/>
+
+            <TRANSLATION x="0" y="-0.25" z="0"/>
+            <ROTATION axis="x" angle="-100"/>
+
+            <DESCENDANTS>
+                <LEAF type="cylinder" args="0.5 1 0.9 20 2"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_hat_body">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="0" z="0"/>
+            <SCALE sx="1.1" sy="1.1" sz="1.1"/>
+            <ROTATION axis="x" angle="-30"/>
+
+            <DESCENDANTS>
+                <LEAF type="patch" args="20 20">
+                    <CPLINE>
+                        <CPOINT xx="0.75" yy="0" zz="0" ww="1"/>
+                        <CPOINT xx="0.75" yy="0" zz="1.0" ww="1"/>
+                        <CPOINT xx="-0.75" yy="0" zz="1.0" ww="1"/>
+                        <CPOINT xx="-0.75" yy="0" zz="0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="0.5" yy="1" zz="0" ww="1"/>
+                        <CPOINT xx="0.5" yy="1" zz="1" ww="1"/>
+                        <CPOINT xx="-0.5" yy="1" zz="1" ww="1"/>
+                        <CPOINT xx="-0.5" yy="1" zz="0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="0.25" yy="2" zz="-0.5" ww="1"/>
+                        <CPOINT xx="0.25" yy="2" zz="-0.5" ww="1"/>
+                        <CPOINT xx="-0.25" yy="2" zz="-0.5" ww="1"/>
+                        <CPOINT xx="-0.25" yy="2" zz="-0.5" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="0.25" yy="1.5" zz="-1" ww="1"/>
+                        <CPOINT xx="0.25" yy="1.75" zz="-1" ww="1"/>
+                        <CPOINT xx="-0.25" yy="1.75" zz="-1" ww="1"/>
+                        <CPOINT xx="-0.25" yy="1.5" zz="-1" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="0.1" yy="1" zz="-1.25" ww="1"/>
+                        <CPOINT xx="0.1" yy="1.25" zz="-1.25" ww="1"/>
+                        <CPOINT xx="-0.1" yy="1.25" zz="-1.25" ww="1"/>
+                        <CPOINT xx="-0.1" yy="1" zz="-1.25" ww="1"/>
+                    </CPLINE>
+                </LEAF>
+                <LEAF type="patch" args="20 20">
+                    <CPLINE>
+                        <CPOINT xx="-0.75" yy="0" zz="0" ww="1"/>
+                        <CPOINT xx="-0.75" yy="0" zz="-1.0" ww="1"/>
+                        <CPOINT xx="0.75" yy="0" zz="-1.0" ww="1"/>
+                        <CPOINT xx="0.75" yy="0" zz="0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="-0.5" yy="1" zz="0" ww="1"/>
+                        <CPOINT xx="-0.5" yy="1" zz="-1" ww="1"/>
+                        <CPOINT xx="0.5" yy="1" zz="-1" ww="1"/>
+                        <CPOINT xx="0.5" yy="1" zz="0" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="-0.25" yy="2" zz="-0.5" ww="1"/>
+                        <CPOINT xx="-0.25" yy="2" zz="-0.5" ww="1"/>
+                        <CPOINT xx="0.25" yy="2" zz="-0.5" ww="1"/>
+                        <CPOINT xx="0.25" yy="2" zz="-0.5" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="-0.25" yy="1.5" zz="-1" ww="1"/>
+                        <CPOINT xx="-0.25" yy="1.25" zz="-1" ww="1"/>
+                        <CPOINT xx="0.25" yy="1.25" zz="-1" ww="1"/>
+                        <CPOINT xx="0.25" yy="1.5" zz="-1" ww="1"/>
+                    </CPLINE>
+                    <CPLINE>
+                        <CPOINT xx="-0.1" yy="1" zz="-1.25" ww="1"/>
+                        <CPOINT xx="-0.1" yy="0.75" zz="-1.25" ww="1"/>
+                        <CPOINT xx="0.1" yy="0.75" zz="-1.25" ww="1"/>
+                        <CPOINT xx="0.1" yy="1" zz="-1.25" ww="1"/>
+                    </CPLINE>
+                </LEAF>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_hat_pompom">
+            <MATERIAL id="null"/>
+            <TEXTURE id="fluffy"/>
+
+            <TRANSLATION x="0" y="0.2" z="-1.75"/>
+            <ROTATION axis="x" angle="-60"/>
+
+            <DESCENDANTS>
+                <LEAF type="sphere" args="0.25 20 20"/>
             </DESCENDANTS>
         </NODE>
 
@@ -524,13 +684,13 @@
             <MATERIAL id="bronze"/>
             <TEXTURE id="null"/>
 
-            <ROTATION axis="x" angle="60"/>
-            <ROTATION axis="y" angle="-30"/>
-            <TRANSLATION x="-0.9" y="2.7" z="0.7"/>
+            <ROTATION axis="x" angle="-60"/>
+            <ROTATION axis="y" angle="30"/>
+            <TRANSLATION x="-1" y="2.7" z="-0.6"/>
             <ROTATION axis="x" angle="-90"/>
 
             <DESCENDANTS>
-                <LEAF type="cylinder" args="0.6 0.46 0.46 20 2"/>
+                <LEAF type="cylinder" args="0.6 0.375 0.375 20 2"/>
             </DESCENDANTS>
         </NODE>
 
@@ -593,7 +753,7 @@
             <MATERIAL id="bronze"/>
             <TEXTURE id="null"/>
 
-            <ROTATION axis="x" angle="+60"/>
+            <ROTATION axis="x" angle="60"/>
             <ROTATION axis="y" angle="-30"/>
             <TRANSLATION x="-1" y="3" z="-0.6"/>
             <SCALE sx="0.75" sy="0.5" sz="2.5"/>
@@ -607,14 +767,13 @@
             <MATERIAL id="bronze"/>
             <TEXTURE id="null"/>
 
-            <ROTATION axis="x" angle="-60"/>
-            <ROTATION axis="y" angle="+30"/>
-            <TRANSLATION x="-0.9" y="2.7" z="-0.5"/>
+            <ROTATION axis="x" angle="60"/>
+            <ROTATION axis="y" angle="-30"/>
+            <TRANSLATION x="-1" y="2.7" z="0.6"/>
             <ROTATION axis="x" angle="-90"/>
 
-
             <DESCENDANTS>
-                <LEAF type="cylinder" args="0.6 0.46 0.46 20 2"/>
+                <LEAF type="cylinder" args="0.6 0.375 0.375 20 2"/>
             </DESCENDANTS>
         </NODE>
 
