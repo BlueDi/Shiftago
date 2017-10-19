@@ -1277,7 +1277,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                         sizeChildren++;
                     }
                 } else if (descendants[j].nodeName == "LEAF") {
-                    var type = this.reader.getItem(descendants[j], 'type', ['rectangle', 'cylinder', 'sphere', 'triangle']);
+                    var type = this.reader.getItem(descendants[j], 'type', ['rectangle', 'cylinder', 'sphere', 'triangle', 'patch']);
 
                     if (type != null) {
                         this.log("   Leaf: " + type);
@@ -1436,11 +1436,12 @@ MySceneGraph.prototype.displayLeaf = function(leaf) {
     if (texture != 'clear' && texture != 'null') {
         var textureToApply = this.textures[texture];
         materialToApply.setTexture(textureToApply[0]);
-        leaf.object.updateTextureCoords(textureToApply[1], textureToApply[2]);
-    }
 
-    if(texture == 'clear') {
-      materialToApply.setTexture(null);
+        if (leaf.type != 'patch') {
+            leaf.object.updateTextureCoords(textureToApply[1], textureToApply[2]);
+        }
+    } else if (texture == 'clear') {
+        materialToApply.setTexture(null);
     }
 
     materialToApply.apply();
