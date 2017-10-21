@@ -6,16 +6,20 @@
  * @param top radius of the top base of the cylinder
  * @param slices ammount of slices the Cylinder will be divided into along its perimeter
  * @param stacks ammount of stacks the Cylinder will be divided along its height
+ * @param hasTop if the Cylinder has a base on top or not
+ * @param hasBase if the Cylinder has a base on top or not
  * @constructor
  */
-function Cylinder(scene, height, base, top, slices, stacks) {
+function Cylinder(scene, height, base, top, stacks, slices, hasTop, hasBase) {
     CGFobject.call(this, scene);
 
     this.base = base;
     this.top = top;
     this.height = height;
-    this.slices = slices;
     this.stacks = stacks;
+    this.slices = slices;
+    this.hasTop = hasTop;
+    this.hasBase = hasBase;
 
     this.initBuffers();
 };
@@ -91,11 +95,17 @@ Cylinder.prototype.initBuffers = function() {
     currentSlice = 1;
     for (var j = 0; j < this.slices; j++) {
         if (currentSlice == this.slices) {
-            this.indices.push(baseCenter, 0, this.slices - 1);
-            this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices - this.slices + 1, topCenter);
+            if (this.hasBase)
+                this.indices.push(baseCenter, 0, this.slices - 1);
+
+            if (this.hasTop)
+                this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices - this.slices + 1, topCenter);
         } else {
-            this.indices.push(baseCenter, j + 1, j);
-            this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices + 1, topCenter);
+            if (this.hasBase)
+                this.indices.push(baseCenter, j + 1, j);
+
+            if (this.hasTop)
+                this.indices.push(j + this.stacks * this.slices, j + this.stacks * this.slices + 1, topCenter);
         }
         currentSlice++;
         this.originalTexCoords.push(10, 0);
