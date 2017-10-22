@@ -7,7 +7,7 @@
         <rotation axis="y" angle="90"/>
         <rotation axis="z" angle="-30"/>
         <scale sx="0.25" sy="0.25" sz="0.25"/>
-        <reference length="5"/>
+        <reference length="0"/>
     </INITIALS>
 
     <!-- Illumination and clear colour -->
@@ -106,6 +106,32 @@
             <amplif_factor s="1" t="1"/>
         </TEXTURE>
 
+        <!-- Floors and Walls -->
+        <TEXTURE id="floor">
+            <file path="images_nier_robot/floor.jpg"/>
+            <amplif_factor s="4" t="4"/>
+        </TEXTURE>
+
+        <TEXTURE id="wall">
+            <file path="images_nier_robot/wall.jpg"/>
+            <amplif_factor s="4" t="4"/>
+        </TEXTURE>
+
+        <TEXTURE id="bar_metal">
+            <file path="images_nier_robot/bar_metal.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
+        <TEXTURE id="daftpunk">
+            <file path="images_nier_robot/daftpunk.jpg"/>
+            <amplif_factor s="20" t="10"/>
+        </TEXTURE>
+
+        <TEXTURE id="poster">
+            <file path="images_nier_robot/poster.jpg"/>
+            <amplif_factor s="8" t="8"/>
+        </TEXTURE>
+
     </TEXTURES>
 
     <!-- Materials -->
@@ -144,6 +170,14 @@
             <emission r="0.0" g="0.0" b="0.0" a="1"/>
         </MATERIAL>
 
+        <MATERIAL id="blue_fur">
+            <shininess value="0.2"/>
+            <specular r="0.020" g="0.044" b="0.118" a="1"/>
+            <diffuse r="0.020" g="0.044" b="0.118" a="1"/>
+            <ambient r="0.020" g="0.044" b="0.118" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
     </MATERIALS>
 
     <!-- The nodes -->
@@ -159,6 +193,8 @@
                 <NODEREF id="walls"/>
                 <NODEREF id="discoBall"/>
                 <NODEREF id="bar"/>
+                <NODEREF id="posters"/>
+                <NODEREF id="stools"/>
                 <NODEREF id="robot"/>
             </DESCENDANTS>
         </NODE>
@@ -166,7 +202,7 @@
         <!-- BEGIN walls-->
         <NODE id="walls">
             <MATERIAL id="null" />
-            <TEXTURE id="clear" />
+            <TEXTURE id="wall" />
 
       <SCALE sx="6" sy="6" sz="6" />
 
@@ -225,7 +261,7 @@
 
     <NODE id ="floorTop">
       <MATERIAL id ="null" />
-          <TEXTURE id="null" />
+          <TEXTURE id="floor" />
 
           <SCALE sx="2" sy="1" sz="1.7" />
           <TRANSLATION x="0" y="4" z="0" />
@@ -240,7 +276,7 @@
 
       <NODE id ="floorBot">
         <MATERIAL id ="null" />
-            <TEXTURE id="null" />
+            <TEXTURE id="floor" />
 
             <SCALE sx="2" sy="1" sz="1.7" />
             <TRANSLATION x="0" y="0" z="4" />
@@ -300,7 +336,7 @@
         <!-- BEGIN bar-->
         <NODE id="bar">
             <MATERIAL id="null" />
-            <TEXTURE id="clear" />
+            <TEXTURE id="bar_metal" />
 
 
             <TRANSLATION x="36" y="1.8" z="5" />
@@ -358,6 +394,170 @@
 
       <!-- END bar-->
 
+      <!-- BEGIN posters -->
+
+      <NODE id="posters">
+          <MATERIAL id="null" />
+          <TEXTURE id="null" />
+
+
+      <DESCENDANTS>
+        <NODEREF id= "poster1" />
+        <NODEREF id= "poster2" />
+      </DESCENDANTS>
+
+      </NODE>
+
+      <NODE id="poster1">
+          <MATERIAL id="null" />
+          <TEXTURE id="poster" />
+
+
+          <TRANSLATION x="31" y="6.5" z="0.1" />
+
+      <DESCENDANTS>
+        <LEAF type="rectangle" args="0 8 8 0" />
+      </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="poster2">
+        <MATERIAL id="null" />
+        <TEXTURE id="daftpunk" />
+
+        <ROTATION axis="y" angle="-90" />
+        <TRANSLATION x="13" y="6.8" z="-47" />
+
+    <DESCENDANTS>
+      <LEAF type="rectangle" args="0 10 20 0" />
+    </DESCENDANTS>
+
+  </NODE>
+
+      <!-- END posters-->
+
+      <!-- BEGIN stools-->
+      <NODE id="stools">
+          <MATERIAL id="null" />
+          <TEXTURE id="clear" />
+
+          <TRANSLATION x="35" y="2.55" z="9" />
+
+      <DESCENDANTS>
+          <NODEREF id="stool1"/>
+          <NODEREF id="stool2"/>
+      </DESCENDANTS>
+
+  </NODE>
+
+  <NODE id="stool1">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <TRANSLATION x="-2.6" y="0" z="0" />
+
+  <DESCENDANTS>
+      <NODEREF id="stool"/>
+  </DESCENDANTS>
+
+</NODE>
+
+
+  <NODE id="stool2">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <TRANSLATION x="5" y="0" z="0" />
+
+
+  <DESCENDANTS>
+      <NODEREF id="stool"/>
+  </DESCENDANTS>
+
+</NODE>
+
+  <NODE id="stool">
+      <MATERIAL id="blue_fur" />
+      <TEXTURE id="null" />
+
+      <ROTATION axis="x" angle="-90" />
+
+
+  <DESCENDANTS>
+      <LEAF type="cylinder" args="0.7 1.5 1.5 2 20 1 1"/>
+      <NODEREF id="leg1"/>
+      <NODEREF id="leg2"/>
+      <NODEREF id="leg3"/>
+      <NODEREF id="leg4"/>
+  </DESCENDANTS>
+
+</NODE>
+
+
+  <NODE id="leg1">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <TRANSLATION x="-0.7" y="-0.7" z="-2.6" />
+
+  <DESCENDANTS>
+      <NODEREF id="leg"/>
+  </DESCENDANTS>
+
+</NODE>
+
+
+  <NODE id="leg2">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <TRANSLATION x="0.7" y="-0.7" z="-2.6" />
+
+  <DESCENDANTS>
+      <NODEREF id="leg"/>
+  </DESCENDANTS>
+
+  </NODE>
+
+
+  <NODE id="leg3">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <TRANSLATION x="-0.7" y="0.7" z="-2.6" />
+
+  <DESCENDANTS>
+      <NODEREF id="leg"/>
+  </DESCENDANTS>
+
+  </NODE>
+
+
+  <NODE id="leg4">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <TRANSLATION x="0.7" y="0.7" z="-2.6" />
+
+  <DESCENDANTS>
+      <NODEREF id="leg"/>
+  </DESCENDANTS>
+
+  </NODE>
+
+
+  <NODE id="leg">
+      <MATERIAL id="defaultMaterial" />
+      <TEXTURE id="null" />
+
+  <DESCENDANTS>
+      <LEAF type="cylinder" args="2.7 0.3 0.3 2 20 1 1"/>
+  </DESCENDANTS>
+
+</NODE>
+
+    <!-- END stools-->
+
         <!-- BEGIN robot -->
         <NODE id="robot">
             <MATERIAL id="prata"/>
@@ -403,7 +603,7 @@
 
         <NODE id="robot_body2">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
 
             <TRANSLATION x="0" y="0" z="1"/>
 
@@ -424,7 +624,7 @@
 
         <!-- BEGIN robot_head -->
         <NODE id="robot_head">
-            <MATERIAL id="null"/>
+            <MATERIAL id="prata"/>
             <TEXTURE id="null"/>
 
             <TRANSLATION x="0.7" y="3.75" z="0.1"/>
@@ -632,6 +832,7 @@
             <MATERIAL id="null"/>
             <TEXTURE id="rust"/>
 
+
             <DESCENDANTS>
                 <NODEREF id="robot_left_arm"/>
                 <NODEREF id="robot_right_arm"/>
@@ -695,11 +896,11 @@
         </NODE>
 
         <NODE id="robot_left_forearm">
-            <MATERIAL id="bronze"/>
+            <MATERIAL id="null"/>
             <TEXTURE id="hard_rust"/>
 
             <ROTATION axis="y" angle="80"/>
-            <TRANSLATION x="2.25" y="1.4" z="-1.25"/>
+            <TRANSLATION x="2.45" y="1.4" z="-1.25"/>
 
             <DESCENDANTS>
                 <LEAF type="cylinder" args="2.25 0.25 0.25 2 20 1 1"/>
@@ -711,7 +912,7 @@
             <TEXTURE id="hard_rust"/>
 
             <ROTATION axis="y" angle="70"/>
-            <TRANSLATION x="2.35" y="1.4" z="1"/>
+            <TRANSLATION x="2.55" y="1.4" z="1"/>
             <SCALE sx="0.4" sy="0.4" sz="1"/>
 
             <DESCENDANTS>
@@ -750,7 +951,7 @@
         </NODE>
 
         <NODE id="robot_right_prearm">
-            <MATERIAL id="bronze"/>
+            <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
             <ROTATION axis="x" angle="60"/>
@@ -782,7 +983,7 @@
             <TEXTURE id="hard_rust"/>
 
             <ROTATION axis="y" angle="100"/>
-            <TRANSLATION x="-2.25" y="1.4" z="-1.25"/>
+            <TRANSLATION x="-2.48" y="1.4" z="-1.25"/>
 
             <DESCENDANTS>
                 <LEAF type="cylinder" args="2.25 0.25 0.25 2 20 1 1"/>
@@ -790,11 +991,11 @@
         </NODE>
 
         <NODE id="robot_right_hand">
-            <MATERIAL id="null"/>
+            <MATERIAL id="bronze"/>
             <TEXTURE id="hard_rust"/>
 
             <ROTATION axis="y" angle="110"/>
-            <TRANSLATION x="-2.35" y="1.4" z="1"/>
+            <TRANSLATION x="-2.6" y="1.4" z="1"/>
             <SCALE sx="0.4" sy="0.4" sz="1"/>
 
             <DESCENDANTS>
@@ -926,7 +1127,7 @@
         </NODE>
 
         <NODE id="robot_right_legbase1">
-            <MATERIAL id="prata"/>
+            <MATERIAL id="bronze"/>
             <TEXTURE id="null"/>
 
             <SCALE sx="3.51" sy="0.21" sz="1.3"/>
