@@ -1383,8 +1383,10 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
     mat4.multiply(matrixtrans, transformation, nodeTransformation);
     this.transformationStack.push(matrixtrans);
 
-    this.materialStack.push(material);
-    this.textureStack.push(texture);
+    if (material != 'null')
+        this.materialStack.push(material);
+    if (texture != 'null')
+        this.textureStack.push(texture);
 
     if (typeof children != 'undefined' && children.length > 0) {
         for (child of children) {
@@ -1399,8 +1401,10 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
     }
 
     this.transformationStack.pop();
-    this.materialStack.pop();
-    this.textureStack.pop();
+    if (material != 'null')
+        this.materialStack.pop();
+    if (texture != 'null')
+        this.textureStack.pop();
 };
 
 /**
@@ -1412,25 +1416,12 @@ MySceneGraph.prototype.displayLeaf = function(leaf) {
     var transformation = this.transformationStack[this.transformationStack.length - 1];
     this.scene.multMatrix(transformation);
 
-    var tempMaterialStack = [];
-    var material = 'null';
-    while (material == 'null') {
-        material = this.materialStack.pop();
-        tempMaterialStack.push(material);
-    }
-    while (tempMaterialStack.length > 0) {
-        this.materialStack.push(tempMaterialStack.pop());
-    }
+    var material = this.materialStack[this.materialStack.length - 1];
     var materialToApply = this.materials[material];
 
-    var tempTextureStack = [];
-    var texture = 'null';
-    while (texture == 'null' && this.textureStack.length > 0) {
-        texture = this.textureStack.pop();
-        tempTextureStack.push(texture);
-    }
-    while (tempTextureStack.length > 0) {
-        this.textureStack.push(tempTextureStack.pop());
+    var texture = 'clear';
+    if (this.textureStack.length > 0) {
+        texture = this.textureStack[this.textureStack.length - 1];
     }
 
     if (texture != 'clear' && texture != 'null') {
@@ -1440,7 +1431,7 @@ MySceneGraph.prototype.displayLeaf = function(leaf) {
         if (leaf.type != 'patch') {
             leaf.object.updateTextureCoords(textureToApply[1], textureToApply[2]);
         }
-    } else if (texture == 'clear') {
+    } else {
         materialToApply.setTexture(null);
     }
 
