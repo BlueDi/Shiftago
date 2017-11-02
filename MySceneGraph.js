@@ -1428,7 +1428,7 @@ MySceneGraph.prototype.displayLeaf = function(leaf) {
         var textureToApply = this.textures[texture];
         materialToApply.setTexture(textureToApply[0]);
 
-        if (leaf.type != 'patch') {
+        if (leaf.type == 'rectangle' || leaf.type == 'triangle') {
             leaf.object.updateTextureCoords(textureToApply[1], textureToApply[2]);
         }
     } else {

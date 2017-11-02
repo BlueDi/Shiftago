@@ -19,15 +19,6 @@ function Sphere(scene, radius, slices, stacks) {
 Sphere.prototype = Object.create(CGFobject.prototype);
 Sphere.prototype.constructor = Sphere;
 
-Sphere.prototype.updateTextureCoords = function(lengthS, lengthT) {
-    for (var i = 0; i < this.texCoords.length; i += 2) {
-        this.texCoords[i] = this.originalTexCoords[i] / lengthS;
-        this.texCoords[i + 1] = this.originalTexCoords[i + 1] / lengthT;
-    }
-
-    this.updateTexCoordsGLBuffers();
-};
-
 /**
  * Initializes the Sphere buffers (vertices, indices, normals, and texCoords)
  */

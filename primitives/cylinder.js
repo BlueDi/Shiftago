@@ -28,20 +28,6 @@ Cylinder.prototype = Object.create(CGFobject.prototype);
 Cylinder.prototype.constructor = Cylinder;
 
 /**
- * Updates the Cylinder length factors
- * @param lengthS s domain length factor
- * @param lengthT t domain length factor
- */
-Cylinder.prototype.updateTextureCoords = function(lengthS, lengthT) {
-    for (var i = 0; i < this.texCoords.length; i += 2) {
-        this.texCoords[i] = this.originalTexCoords[i] / lengthS;
-        this.texCoords[i + 1] = this.originalTexCoords[i + 1] / lengthT;
-    }
-
-    this.updateTexCoordsGLBuffers();
-}
-
-/**
  * Initializes the Cylinder buffers (vertices, indices, normals and texCoords)
  */
 Cylinder.prototype.initBuffers = function() {
