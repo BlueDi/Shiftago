@@ -20,7 +20,7 @@ XMLscene.prototype.constructor = XMLscene;
  */
 XMLscene.prototype.init = function(application) {
     CGFscene.prototype.init.call(this, application);
-    this.setUpdatePeriod(16.67);
+    this.setUpdatePeriod(0.001);
 
     this.initCameras();
 

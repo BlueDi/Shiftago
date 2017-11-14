@@ -1430,15 +1430,20 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             }
 
             // Retrieves possible animations.
-            var animationIndex = specsNames.indexOf("ANIMATIONREF");
+            var animationIndex = specsNames.indexOf("ANIMATIONREFS");
             if (animationIndex != -1) {
-                var animationID = this.reader.getString(this.animations[j], 'id');
-                if (animationID == null)
-                    return "unable to parse animation ID (node ID = " + nodeID + ")";
-                if (animationID != null && this.animations[animationID] == null)
-                    return "ID does not correspond to a valid animation (node ID = " + nodeID + ")";
-
-                this.nodes[nodeID].animationID = animationID;
+                var aimationsDescendants = nodeSpecs[animationIndex].children;
+                for (var j = 0; j < aimationsDescendants.length; j++) {
+                    if (aimationsDescendants[j].nodeName == "ANIMATIONREF") {
+                        var animationID = this.reader.getString(aimationsDescendants[j], 'id');
+                        this.log("   AnimationRef: " + animationID);
+                        if (animationID == null)
+                            return "unable to parse animation id";
+                        if (this.animations[animationID] == null)
+                            return "ID does not correspond to a valid animation";
+                        this.nodes[nodeID].animationID = animationID;
+                    }
+                }
             }
 
             // Retrieves information about children.
@@ -1573,11 +1578,11 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
 
     var matrixtrans = mat4.create();
     mat4.multiply(matrixtrans, transformation, nodeTransformation);
-
-    if (animation != null) {
+    if (animation !== null) {
         mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animationMatrix);
     }
     this.transformationStack.push(matrixtrans);
+
     if (material != 'null')
         this.materialStack.push(material);
     if (texture != 'null')
