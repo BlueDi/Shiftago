@@ -7,32 +7,9 @@ class LinearAnimation extends Animation {
         this.currentPosition = vec3.clone(this.controlPoints[this.actualControlPoint]);
         this.currentCP = vec3.clone(this.controlPoints[this.actualControlPoint]);
 
-        var x1 = this.controlPoints[this.actualControlPoint][0];
-        var y1 = this.controlPoints[this.actualControlPoint][1];
-        var z1 = this.controlPoints[this.actualControlPoint][2];
-
-        var x2 = this.controlPoints[this.actualControlPoint + 1][0];
-        var y2 = this.controlPoints[this.actualControlPoint + 1][1];
-        var z2 = this.controlPoints[this.actualControlPoint + 1][2];
-
-        var xv = x2 - x1;
-        var yv = y2 - y1;
-        var zv = z2 - z1;
-
-        //rotation
-        var veclengthXY = Math.sqrt(xv * xv + zv * zv);
-
-        if (veclengthXY > 0) {
-            this.rotAng = Math.acos((xv * 0 + zv * 1) / veclengthXY);
-
-            if (xv < 0) {
-                this.rotAng = -this.rotAng;
-            }
-
-            var axisvec = vec3.fromValues(0, 1, 0);
-
-            this.fromYRotation(this.animationMatrix, this.rotAng);
-        }
+        var initialDirection = vec3.fromValues(1, 0, 0);
+        var angleBetweenPoints = this.angle(initialDirection, this.currentCP);
+        this.fromYRotation(this.animationMatrix, angleBetweenPoints);
     }
 
     rotate(currTime) {
