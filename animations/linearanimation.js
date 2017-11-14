@@ -6,6 +6,7 @@ class LinearAnimation extends Animation {
         this.actualControlPoint = 0;
         this.currentPosition = vec3.clone(this.controlPoints[this.actualControlPoint]);
         this.currentCP = vec3.clone(this.controlPoints[this.actualControlPoint]);
+        this.rotAng = 0;
 
         var initialDirection = vec3.fromValues(1, 0, 0);
         var angleBetweenPoints = this.angle(initialDirection, this.currentCP);
@@ -13,22 +14,51 @@ class LinearAnimation extends Animation {
     }
 
     rotate(currTime) {
-        this.initialTime = currTime;
-        var nextCPi = this.actualControlPoint + 1;
-        if (nextCPi < this.controlPoints.length) {
-            var nextCP = vec3.clone(this.controlPoints[nextCPi]);
-            var angleBetweenPoints = this.angle(this.currentPosition, nextCP);
+        var deltat = (currTime - this.initialTime) / 60;
+        var actualVelocity = deltat * this.velocity;
 
-            this.needsToRotate = this.rotAng > 0.1 || this.rotAng < -0.1;
+        var tempCP = this.actualControlPoint + 1;
+        if (tempCP < this.controlPoints.length) {
+            if (this.rotAng > -0.05 && this.rotAng < 0.05) {
+                this.currentCP = vec3.clone(this.controlPoints[tempCP]);
+                var vec = vec3.fromValues(0, 1, 0);
+                this.rotAng = this.angle(this.currentPosition, this.currentCP);
 
-            if (this.needsToRotate)
-                this.fromYRotation(this.animationMatrix, angleBetweenPoints);
-            else {
-                this.actualControlPoint = nextCP;
-                if (this.actualControlPoint < this.controlPoints.length) {
-                    this.currentCP = vec3.clone(this.controlPoints[this.actualControlPoint]);
+                if (this.rotAng > 0.05 || this.rotAng < -0.05) {
+                    this.needsToRotate = true;
+                } else {
+                    this.actualControlPoint++;
+                    this.needsToRotate = false;
+                }
+
+                console.log(this.rotAng);
+                console.log(this.needsToRotate);
+
+                if (this.needsToRotate) {
+                    var vec = vec3.fromValues(0, 1, 0);
+                    mat4.rotate(this.animationMatrix, this.animationMatrix, this.rotAng * actualVelocity, vec);
+                } else {
+                    this.actualControlPoint = tempCP;
+                }
+            } else {
+                console.log('-----------------');
+                console.log(this.rotAng);
+                if (this.rotAng > 0) {
+                    this.rotAng -= actualVelocity;
+                } else {
+                    this.rotAng += actualVelocity;
+                }
+                console.log(this.rotAng);
+
+                var vec = vec3.fromValues(0, 1, 0);
+                mat4.rotate(this.animationMatrix, this.animationMatrix, this.rotAng * actualVelocity, vec);
+
+                if (this.rotAng > -0.05 && this.rotAng < 0.05) {
+                    this.needsToRotate = false;
                 }
             }
+        } else {
+            this.actualControlPoint++;
         }
     }
 
@@ -67,14 +97,15 @@ class LinearAnimation extends Animation {
         out[13] = 0;
         out[14] = 0;
         out[15] = 1;
-        return out;
     }
 
-    translate() {
-        var nextCP = vec3.clone(this.controlPoints[this.actualControlPoint]);
+    translate(currTime) {
         var increment = vec3.create();
-        var speed = vec3.fromValues(this.velocity, this.velocity, this.velocity);
-        vec3.subtract(increment, nextCP, this.currentPosition);
+        var deltat = (currTime - this.initialTime) / 1000;
+        var actualVelocity = deltat * this.velocity;
+
+        var speed = vec3.fromValues(actualVelocity, actualVelocity, actualVelocity);
+        vec3.subtract(increment, this.currentCP, this.currentPosition);
         vec3.multiply(increment, increment, speed);
         vec3.add(this.currentPosition, this.currentPosition, increment);
         mat4.translate(this.animationMatrix, this.animationMatrix, increment);
@@ -96,6 +127,9 @@ class LinearAnimation extends Animation {
         Atualizar o estado da animacao
     */
     update(currTime) {
+        if (this.initialTime == 0)
+            this.initialTime = currTime;
+
         if (this.actualControlPoint < this.controlPoints.length) {
             if (this.needsToRotate) {
                 console.log('.......... ROTATE ............');
@@ -104,13 +138,12 @@ class LinearAnimation extends Animation {
             } else {
                 console.log('......... TRANSLATE ..........');
                 console.log('translate');
-                this.translate();
+                this.translate(currTime);
                 this.needsToRotate = this.equals(this.currentPosition, this.currentCP);
             }
-        } else {
-            this.animationMatrix = mat4.create();
-            mat4.identity(this.animationMatrix);
         }
+
+        this.initialTime = currTime;
     }
 
     //var angleBetweenPoints = vec3.angle(this.controlPoints[this.actualControlPoint--], this.controlPoints[this.actualControlPoint]);

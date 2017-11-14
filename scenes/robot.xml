@@ -181,8 +181,9 @@
     <ANIMATIONS>
         <ANIMATION id="walk" speed="1" type="linear">
             <controlpoint xx="20" yy="1.2" zz="18"/>
-            <controlpoint xx="20" yy="1.2" zz="25"/>
-            <controlpoint xx="20" yy="3" zz="25"/>
+            <controlpoint xx="40" yy="1.2" zz="25"/>
+            <controlpoint xx="20" yy="1.2" zz="15"/>
+            <controlpoint xx="40" yy="1.2" zz="25"/>
         </ANIMATION>
 
     </ANIMATIONS>
