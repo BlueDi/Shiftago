@@ -4,39 +4,93 @@ class LinearAnimation extends Animation {
 
         this.controlPoints = controlPoints;
         this.actualControlPoint = 0;
-        this.currentAngle = vec3.fromValues(1, 0, 0);
         this.currentPosition = vec3.clone(this.controlPoints[this.actualControlPoint]);
         this.currentCP = vec3.clone(this.controlPoints[this.actualControlPoint]);
-        this.previousCP = vec3.fromValues(0, 0, 0);
-        this.state = 1;
 
-        /*
-            mat4.translate(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, [x, y, z]);
-            mat4.rotate(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, angle * DEGREE_TO_RAD, this.axisCoords[axis]);
-            mat4.scale(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, [sx, sy, sz]);
-        */
+        var x1 = this.controlPoints[this.actualControlPoint][0];
+        var y1 = this.controlPoints[this.actualControlPoint][1];
+        var z1 = this.controlPoints[this.actualControlPoint][2];
+
+        var x2 = this.controlPoints[this.actualControlPoint + 1][0];
+        var y2 = this.controlPoints[this.actualControlPoint + 1][1];
+        var z2 = this.controlPoints[this.actualControlPoint + 1][2];
+
+        var xv = x2 - x1;
+        var yv = y2 - y1;
+        var zv = z2 - z1;
+
+        //rotation
+        var veclengthXY = Math.sqrt(xv * xv + zv * zv);
+
+        if (veclengthXY > 0) {
+            this.rotAng = Math.acos((xv * 0 + zv * 1) / veclengthXY);
+
+            if (xv < 0) {
+                this.rotAng = -this.rotAng;
+            }
+
+            var axisvec = vec3.fromValues(0, 1, 0);
+
+            this.fromYRotation(this.animationMatrix, this.rotAng);
+        }
     }
 
     rotate(currTime) {
-        this.currentPosition = vec3.clone(this.controlPoints[this.actualControlPoint]);
         this.initialTime = currTime;
-        if (this.actualControlPoint != 0) {
-            this.previousCP = vec3.clone(this.controlPoints[this.actualControlPoint--]);
+        var nextCPi = this.actualControlPoint + 1;
+        if (nextCPi < this.controlPoints.length) {
+            var nextCP = vec3.clone(this.controlPoints[nextCPi]);
+            var angleBetweenPoints = this.angle(this.currentPosition, nextCP);
+
+            this.needsToRotate = this.rotAng > 0.1 || this.rotAng < -0.1;
+
+            if (this.needsToRotate)
+                this.fromYRotation(this.animationMatrix, angleBetweenPoints);
+            else {
+                this.actualControlPoint = nextCP;
+                if (this.actualControlPoint < this.controlPoints.length) {
+                    this.currentCP = vec3.clone(this.controlPoints[this.actualControlPoint]);
+                }
+            }
         }
+    }
 
-        var dx = this.currentAngle[0] - this.previousCP[0];
-        var dy = this.currentAngle[1] - this.previousCP[1];
-        var dz = this.currentAngle[2] - this.previousCP[2];
-        var dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2));
-
-        this.rotAng = Math.acos(dz / dist);
-        if (dx < 0) {
-            this.rotAng = -this.rotAng;
+    angle(a, b) {
+        let tempA = vec3.fromValues(a[0], a[1], a[2]);
+        let tempB = vec3.fromValues(b[0], b[1], b[2]);
+        vec3.normalize(tempA, tempA);
+        vec3.normalize(tempB, tempB);
+        let cosine = vec3.dot(tempA, tempB);
+        if (cosine > 1.0) {
+            return 0;
+        } else if (cosine < -1.0) {
+            return Math.PI;
+        } else {
+            return Math.acos(cosine);
         }
+    }
 
-        var axisvec = vec3.fromValues(0, 1, 0);
-
-        mat4.rotate(this.animationMatrix, this.animationMatrix, this.rotAng, axisvec);
+    fromYRotation(out, rad) {
+        let s = Math.sin(rad);
+        let c = Math.cos(rad);
+        // Perform axis-specific matrix multiplication
+        out[0] = c;
+        out[1] = 0;
+        out[2] = -s;
+        out[3] = 0;
+        out[4] = 0;
+        out[5] = 1;
+        out[6] = 0;
+        out[7] = 0;
+        out[8] = s;
+        out[9] = 0;
+        out[10] = c;
+        out[11] = 0;
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 1;
+        return out;
     }
 
     translate() {
@@ -45,10 +99,7 @@ class LinearAnimation extends Animation {
         var speed = vec3.fromValues(this.velocity, this.velocity, this.velocity);
         vec3.subtract(increment, nextCP, this.currentPosition);
         vec3.multiply(increment, increment, speed);
-        console.log(this.currentPosition);
         vec3.add(this.currentPosition, this.currentPosition, increment);
-        console.log(increment);
-        console.log(this.currentPosition);
         mat4.translate(this.animationMatrix, this.animationMatrix, increment);
     }
 
@@ -68,16 +119,20 @@ class LinearAnimation extends Animation {
         Atualizar o estado da animacao
     */
     update(currTime) {
-        if (this.actualControlPoint < this.controlPoints.length && this.equals(this.currentPosition, this.currentCP)) {
-            console.log('...........................................');
-            console.log('rotate');
-            this.rotate(currTime);
-            this.actualControlPoint += 1;
-            this.currentCP = vec3.clone(this.controlPoints[this.actualControlPoint]);
-        } else if (this.actualControlPoint < this.controlPoints.length && !this.equals(this.currentPosition, this.currentCP)) {
-            console.log('...........................................');
-            console.log('translate');
-            this.translate();
+        if (this.actualControlPoint < this.controlPoints.length) {
+            if (this.needsToRotate) {
+                console.log('.......... ROTATE ............');
+                console.log('rotate');
+                this.rotate(currTime);
+            } else {
+                console.log('......... TRANSLATE ..........');
+                console.log('translate');
+                this.translate();
+                this.needsToRotate = this.equals(this.currentPosition, this.currentCP);
+            }
+        } else {
+            this.animationMatrix = mat4.create();
+            mat4.identity(this.animationMatrix);
         }
     }
 
