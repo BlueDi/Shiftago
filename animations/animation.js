@@ -3,7 +3,6 @@ class Animation {
         this.velocity = speed;
         this.initialTime = 0;
         this.animationMatrix = mat4.create();
-        mat4.identity(this.animationMatrix);
     }
 
     /**
