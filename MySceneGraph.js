@@ -1580,6 +1580,7 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
     mat4.multiply(matrixtrans, transformation, nodeTransformation);
     if (animation !== null) {
         mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animationMatrix);
+        mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animRotMatrix);
     }
     this.transformationStack.push(matrixtrans);
 

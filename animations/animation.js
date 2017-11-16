@@ -1,8 +1,11 @@
 class Animation {
     constructor(speed) {
+        this.RPS = 60;
+
         this.velocity = speed;
         this.initialTime = 0;
         this.animationMatrix = mat4.create();
+        this.animRotMatrix = mat4.create();
     }
 
     /**
