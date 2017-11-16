@@ -7,10 +7,9 @@ class LinearAnimation extends Animation {
         this.currentPosition = vec3.clone(this.controlPoints[0]);
         this.needsToRotate = true;
         this.needs = true;
+        this.needs2 = true;
 
-        this.rotAng = 0;
         this.oldPosition = this.currentPosition;
-        console.log(this.controlPoints);
     }
 
     rotate(currTime) {
@@ -20,7 +19,6 @@ class LinearAnimation extends Animation {
 
         var tempCP = this.actualControlPoint + 1;
         if (tempCP < this.controlPoints.length) {
-            console.log(this.actualControlPoint);
             if (this.needs) {
                 this.tempCP = vec3.clone(this.controlPoints[tempCP]);
                 this.tempCP[1] = 0;
@@ -29,11 +27,12 @@ class LinearAnimation extends Animation {
                 this.rotateTo(this.rotationFinal, this.currentPosition, this.tempCP, up);
                 vec3.subtract(this.rotation, this.tempCP, this.currentPosition);
                 var speed = vec3.fromValues(actualVelocity, actualVelocity, actualVelocity);
-                vec3.divide(this.rotation, this.rotation, speed);
+                vec3.multiply(this.rotation, this.rotation, speed);
                 this.needs = false;
             } else {
                 vec3.add(this.rotation, this.currentPosition, this.rotation);
                 this.rotateTo(this.animationMatrix, this.currentPosition, this.rotation, up);
+
                 if (this.equalsMat4(this.animationMatrix, this.rotationFinal)) {
                     this.needs = true;
                     this.needsToRotate = false;
@@ -183,60 +182,26 @@ class LinearAnimation extends Animation {
         return out;
     };
 
-    angle(a, b) {
-        let tempA = vec3.fromValues(a[0], a[1], a[2]);
-        let tempB = vec3.fromValues(b[0], b[1], b[2]);
-        vec3.normalize(tempA, tempA);
-        vec3.normalize(tempB, tempB);
-        let cosine = vec3.dot(tempA, tempB);
-        if (cosine > 1.0) {
-            return 0;
-        } else if (cosine < -1.0) {
-            return Math.PI;
-        }
-        var angle = Math.acos(cosine);
-        if (b[0] - a[0] < 0)
-            angle = -angle;
-        return angle;
-    }
-
-    fromYRotation(out, rad) {
-        let s = Math.sin(rad);
-        let c = Math.cos(rad);
-        // Perform axis-specific matrix multiplication
-        out[0] = c;
-        out[1] = 0;
-        out[2] = -s;
-        out[3] = 0;
-        out[4] = 0;
-        out[5] = 1;
-        out[6] = 0;
-        out[7] = 0;
-        out[8] = s;
-        out[9] = 0;
-        out[10] = c;
-        out[11] = 0;
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = 0;
-        out[15] = 1;
-    }
-
     translate(currTime) {
-        var increment = vec3.create();
         var deltat = currTime - this.initialTime;
         var actualVelocity = this.velocity / deltat;
         var speed = vec3.fromValues(actualVelocity, actualVelocity, actualVelocity);
 
-        vec3.subtract(increment, this.currentCP, this.oldPosition);
-        vec3.multiply(increment, increment, speed);
-        vec3.add(this.currentPosition, this.currentPosition, increment);
-        console.log(this.oldPosition);
-        mat4.translate(this.animationMatrix, this.animationMatrix, increment);
+        if (this.needs2) {
+            this.baseIncrement = vec3.create();
+            vec3.subtract(this.baseIncrement, this.currentCP, this.oldPosition);
+            this.needs2 = false;
+        } else {
+            this.increment = vec3.create();
+            vec3.multiply(this.increment, this.baseIncrement, speed);
+            vec3.add(this.currentPosition, this.currentPosition, this.increment);
+            mat4.translate(this.animationMatrix, this.animationMatrix, this.increment);
 
-        this.needsToRotate = this.equals(this.currentPosition, this.currentCP);
-        if (this.needsToRotate) {
-            this.oldPosition = this.currentPosition;
+            this.needsToRotate = this.equals(this.currentPosition, this.currentCP);
+            if (this.needsToRotate) {
+                this.oldPosition = this.currentPosition;
+                this.needs2 = true;
+            }
         }
     }
 
