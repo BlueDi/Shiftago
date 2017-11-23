@@ -1579,8 +1579,8 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
     var matrixtrans = mat4.create();
     mat4.multiply(matrixtrans, transformation, nodeTransformation);
     if (animation !== null) {
-        mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animationMatrix);
-        mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animRotMatrix);
+        mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animTranslateMatrix);
+        mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animRotationMatrix);
     }
     this.transformationStack.push(matrixtrans);
 

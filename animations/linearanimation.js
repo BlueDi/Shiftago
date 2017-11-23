@@ -21,8 +21,8 @@ class LinearAnimation extends Animation {
 
         this.dv = vec3.create();
         this.olddv = vec3.create();
-        this.animationMatrix = mat4.create();
-        this.animRotMatrix = mat4.create();
+        this.animTranslateMatrix = mat4.create();
+        this.animRotationMatrix = mat4.create();
 
         this.state = "initial";
     }
@@ -67,8 +67,8 @@ class LinearAnimation extends Animation {
             }
 
             var axisvec = vec3.fromValues(0, 1, 0);
-            this.animRotMatrix = mat4.create();
-            mat4.rotate(this.animRotMatrix, this.animRotMatrix, this.rotAng, axisvec);
+            this.animRotationMatrix = mat4.create();
+            mat4.rotate(this.animRotationMatrix, this.animRotationMatrix, this.rotAng, axisvec);
         }
     }
 
@@ -95,8 +95,8 @@ class LinearAnimation extends Animation {
         this.zinc = znovo - this.currentPosition[2];
 
         var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
-        this.animationMatrix = mat4.create();
-        mat4.translate(this.animationMatrix, this.animationMatrix, transvec);
+        this.animTranslateMatrix = mat4.create();
+        mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, transvec);
     }
 
     /**
@@ -137,8 +137,8 @@ class LinearAnimation extends Animation {
             }
 
             var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
-            this.animationMatrix = mat4.create();
-            mat4.translate(this.animationMatrix, this.animationMatrix, transvec);
+            this.animTranslateMatrix = mat4.create();
+            mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, transvec);
 
             this.currPartition += assertPoint;
             this.currPartitionPoint += assertPoint;
