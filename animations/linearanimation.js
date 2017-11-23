@@ -3,151 +3,154 @@ class LinearAnimation extends Animation {
         super(speed);
 
         this.controlPoints = controlPoints;
-        this.actualControlPoint = 0;
-        this.currentPosition = vec3.clone(this.controlPoints[this.actualControlPoint]);
-        this.currentCP = vec3.clone(this.controlPoints[this.actualControlPoint]);
+        this.numberofreparts = this.controlPoints.length - 1;
+        this.setLength();
+
+        this.currContrtrolPoint = 0;
+
+        this.kinc;
+
+        this.reparts = this.FPS * this.velocity;
+        this.currPartition = 0;
+        this.Time;
+
+        this.repartPoint;
+        this.currPartitionPoint = 0;
+
         this.rotAng = 0;
 
-        var initialDirection = vec3.fromValues(1, 0, 0);
-        var angleBetweenPoints = this.angle(initialDirection, this.currentCP);
-        this.fromYRotation(this.animationMatrix, angleBetweenPoints);
-    }
+        this.dv = vec3.create();
+        this.olddv = vec3.create();
+        this.animTranslateMatrix = mat4.create();
+        this.animRotationMatrix = mat4.create();
 
-    rotate(currTime) {
-        var deltat = (currTime - this.initialTime) / 60;
-        var actualVelocity = deltat * this.velocity;
-
-        var tempCP = this.actualControlPoint + 1;
-        if (tempCP < this.controlPoints.length) {
-            if (this.rotAng > -0.05 && this.rotAng < 0.05) {
-                this.currentCP = vec3.clone(this.controlPoints[tempCP]);
-                var vec = vec3.fromValues(0, 1, 0);
-                this.rotAng = this.angle(this.currentPosition, this.currentCP);
-
-                if (this.rotAng > 0.05 || this.rotAng < -0.05) {
-                    this.needsToRotate = true;
-                } else {
-                    this.actualControlPoint++;
-                    this.needsToRotate = false;
-                }
-
-                console.log(this.rotAng);
-                console.log(this.needsToRotate);
-
-                if (this.needsToRotate) {
-                    var vec = vec3.fromValues(0, 1, 0);
-                    mat4.rotate(this.animationMatrix, this.animationMatrix, this.rotAng * actualVelocity, vec);
-                } else {
-                    this.actualControlPoint = tempCP;
-                }
-            } else {
-                console.log('-----------------');
-                console.log(this.rotAng);
-                if (this.rotAng > 0) {
-                    this.rotAng -= actualVelocity;
-                } else {
-                    this.rotAng += actualVelocity;
-                }
-                console.log(this.rotAng);
-
-                var vec = vec3.fromValues(0, 1, 0);
-                mat4.rotate(this.animationMatrix, this.animationMatrix, this.rotAng * actualVelocity, vec);
-
-                if (this.rotAng > -0.05 && this.rotAng < 0.05) {
-                    this.needsToRotate = false;
-                }
-            }
-        } else {
-            this.actualControlPoint++;
-        }
-    }
-
-    angle(a, b) {
-        let tempA = vec3.fromValues(a[0], a[1], a[2]);
-        let tempB = vec3.fromValues(b[0], b[1], b[2]);
-        vec3.normalize(tempA, tempA);
-        vec3.normalize(tempB, tempB);
-        let cosine = vec3.dot(tempA, tempB);
-        if (cosine > 1.0) {
-            return 0;
-        } else if (cosine < -1.0) {
-            return Math.PI;
-        } else {
-            return Math.acos(cosine);
-        }
-    }
-
-    fromYRotation(out, rad) {
-        let s = Math.sin(rad);
-        let c = Math.cos(rad);
-        // Perform axis-specific matrix multiplication
-        out[0] = c;
-        out[1] = 0;
-        out[2] = -s;
-        out[3] = 0;
-        out[4] = 0;
-        out[5] = 1;
-        out[6] = 0;
-        out[7] = 0;
-        out[8] = s;
-        out[9] = 0;
-        out[10] = c;
-        out[11] = 0;
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = 0;
-        out[15] = 1;
-    }
-
-    translate(currTime) {
-        var increment = vec3.create();
-        var deltat = (currTime - this.initialTime) / 1000;
-        var actualVelocity = deltat * this.velocity;
-
-        var speed = vec3.fromValues(actualVelocity, actualVelocity, actualVelocity);
-        vec3.subtract(increment, this.currentCP, this.currentPosition);
-        vec3.multiply(increment, increment, speed);
-        vec3.add(this.currentPosition, this.currentPosition, increment);
-        mat4.translate(this.animationMatrix, this.animationMatrix, increment);
-    }
-
-    equals(a, b) {
-        let a0 = a[0],
-            a1 = a[1],
-            a2 = a[2];
-        let b0 = b[0],
-            b1 = b[1],
-            b2 = b[2];
-        return (Math.abs(a0 - b0) <= 0.01 * Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
-            Math.abs(a1 - b1) <= 0.01 * Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
-            Math.abs(a2 - b2) <= 0.01 * Math.max(1.0, Math.abs(a2), Math.abs(b2)));
+        this.state = "initial";
     }
 
     /**
-        Atualizar o estado da animacao
-    */
-    update(currTime) {
-        if (this.initialTime == 0)
-            this.initialTime = currTime;
+     * Calculates the total lentgh of the animation by calculating
+     * all trajectories lentgh first
+     */
+    setLength() {
+        this.totallength = 0;
 
-        if (this.actualControlPoint < this.controlPoints.length) {
-            if (this.needsToRotate) {
-                console.log('.......... ROTATE ............');
-                console.log('rotate');
-                this.rotate(currTime);
-            } else {
-                console.log('......... TRANSLATE ..........');
-                console.log('translate');
-                this.translate(currTime);
-                this.needsToRotate = this.equals(this.currentPosition, this.currentCP);
-            }
+        for (var i = 0; i < this.controlPoints.length - 1; i++) {
+            var dv = vec3.create();
+            vec3.subtract(dv, this.controlPoints[i], this.controlPoints[i + 1]);
+            this.totallength += Math.sqrt(Math.pow(dv[0], 2) + Math.pow(dv[1], 2) + Math.pow(dv[2], 2));
         }
+    };
 
-        this.initialTime = currTime;
+    initialize() {
+        this.currentPosition = this.controlPoints[this.currContrtrolPoint];
+        this.nextPosition = this.controlPoints[this.currContrtrolPoint + 1];
+
+        this.currX = this.currentPosition[0];
+        this.currY = this.currentPosition[1];
+        this.currZ = this.currentPosition[2];
+
+        vec3.subtract(this.olddv, this.dv, this.olddv);
+        vec3.subtract(this.dv, this.nextPosition, this.currentPosition);
     }
 
-    //var angleBetweenPoints = vec3.angle(this.controlPoints[this.actualControlPoint--], this.controlPoints[this.actualControlPoint]);
+    rotate() {
+        var veclengthXZ = Math.sqrt(this.dv[0] * this.dv[0] + this.dv[2] * this.dv[2]);
 
-    //mat4.rotateY(this.animationMatrix, this.animationMatrix, DEGREE_TO_RAD * 3);
-    //mat4.translate(this.animationMatrix, this.animationMatrix, this.controlPoints[this.actualControlPoint] / this.velocity);
+        if (veclengthXZ != 0) {
+            this.rotAng = Math.acos(this.dv[0] / veclengthXZ);
+
+            if (this.dv[0] < 0) {
+                this.rotAng = -this.rotAng;
+            }
+            if (this.dv[2] > 0 && this.olddv[2] >= 0) {
+                this.rotAng = -this.rotAng;
+            }
+
+            var axisvec = vec3.fromValues(0, 1, 0);
+            this.animRotationMatrix = mat4.create();
+            mat4.rotate(this.animRotationMatrix, this.animRotationMatrix, this.rotAng, axisvec);
+        }
+    }
+
+    translateInitial() {
+        var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[2], 2));
+        this.translate(veclength);
+    }
+
+    translateUpdate() {
+        var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[1], 2) + Math.pow(this.dv[2], 2));
+        this.translate(veclength);
+    }
+
+    translate(veclength) {
+        this.repartPoint = 60 * (this.reparts * veclength) / (this.totallength * this.velocity);
+        this.kinc = (veclength / this.repartPoint) / veclength;
+
+        var xnovo = this.currentPosition[0] + this.kinc * this.dv[0];
+        var ynovo = this.currentPosition[1] + this.kinc * this.dv[1];
+        var znovo = this.currentPosition[2] + this.kinc * this.dv[2];
+
+        this.xinc = xnovo - this.currentPosition[0];
+        this.yinc = ynovo - this.currentPosition[1];
+        this.zinc = znovo - this.currentPosition[2];
+
+        var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
+        this.animTranslateMatrix = mat4.create();
+        mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, transvec);
+    }
+
+    /**
+        Atualizar o estado da animacao.
+        Se for a primeira vez inicia thisTime.
+        Se for a primeira vez do control point roda para a posicao e calcula a matriz de translacao.
+        Se ainda nao tiver chegado ao fim, desloca se em direcao ao control point.
+        Se fez todas as particoes, chegou ao fim
+    */
+    update(currTime) {
+        if (this.state == 'initial') {
+            this.Time = currTime;
+            this.initialize();
+            this.translateInitial();
+            this.state = 'updating';
+        }
+
+        if (this.state == 'updating' && this.currPartitionPoint == 0) {
+            this.initialize();
+            this.rotate();
+            this.translateUpdate();
+
+            this.currPartition++;
+            this.currPartitionPoint++;
+        }
+
+        if (this.state != 'end') {
+            var deltat = currTime - this.Time;
+
+            this.Time = currTime;
+
+            var assertPoint = Math.round((deltat * this.FPS) / 100);
+
+            for (var i = 0; i < assertPoint; i++) {
+                this.currX += this.xinc;
+                this.currY += this.yinc;
+                this.currZ += this.zinc;
+            }
+
+            var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
+            this.animTranslateMatrix = mat4.create();
+            mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, transvec);
+
+            this.currPartition += assertPoint;
+            this.currPartitionPoint += assertPoint;
+        }
+
+        if (this.currPartitionPoint >= this.repartPoint) {
+            this.currPartitionPoint = 0;
+            this.currContrtrolPoint++;
+        }
+
+        if (this.currPartition >= this.repart || this.currContrtrolPoint >= this.numberofreparts) {
+            this.state = 'end';
+        }
+    }
 };
