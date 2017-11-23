@@ -1,140 +1,95 @@
 class CircularAnimation extends Animation {
-    constructor(speed, controlPoints) {
+    constructor(speed, center, radius, startang, rotang) {
         super(speed);
 
-        this.controlPoints = controlPoints;
-        this.actualControlPoint = 0;
-        this.currentPosition = vec3.clone(this.controlPoints[0]);
-        if (this.controlPoints.length > 1) {
-            this.currentCP = vec3.clone(this.controlPoints[1]);
+        var DEGREE_TO_RAD = Math.PI / 180;
+
+        this.center = center;
+        this.radius = radius;
+        this.startang = startang * DEGREE_TO_RAD;
+        this.rotang = rotang * DEGREE_TO_RAD;
+
+        this.repart;
+        this.currPartition = 0;
+        this.Time;
+
+        this.currRotAng = 0;
+        this.assertAng = Math.PI / 2;
+
+        this.curr = vec3.fromValues(0, 0, 0);
+
+        this.incang;
+
+        this.FPS = 60;
+        this.animTranslateMatrix;
+        this.animRotationMatrix;
+
+        this.state = "waiting";
+
+        this.initialize();
+    }
+
+    initialize() {
+        //intial rotation
+        if (this.rotang < 0) {
+            this.assertAng = -this.assertAng;
         }
-        this.rotAng = 0;
-        this.oldPosition = this.currentPosition;
-        console.log(this.controlPoints);
+
+        this.currRotAng += this.startang + Math.PI / 2;
+
+        this.rotate();
+        this.translate();
+
+        //calculating total partitions and incremet anglev
+        //var totalrot = Math.abs(this.rotang);
+        this.repart = this.FPS * 60;
+        this.incang = this.rotang / this.repart;
     }
 
-    rotate(currTime) {
-        var deltat = currTime - this.initialTime;
-        var actualVelocity = this.velocity / deltat;
-
-        var tempCP = this.actualControlPoint + 1;
-        if (tempCP < this.controlPoints.length) {
-            if (this.rotAng == 0) {
-                this.currentCP = vec3.clone(this.controlPoints[tempCP]);
-                this.rotAng = this.angle(this.currentPosition, this.currentCP);
-                this.currentAng = this.rotAng;
-
-                if (this.rotAng > 0.01 || this.rotAng < -0.01) {
-                    this.needsToRotate = true;
-                } else {
-                    this.actualControlPoint++;
-                    this.needsToRotate = false;
-                    this.rotAng = 0;
-                    this.currentAng = 0;
-                }
-            } else {
-                if (this.currentAng > 0.01 || this.currentAng < -0.01) {
-                    this.currentAng -= this.rotAng * actualVelocity;
-                } else {
-                    this.rotAng = 0;
-                    this.currentAng = 0;
-                    this.needsToRotate = false;
-                }
-
-                var coiso = mat4.create();
-                mat4.translate(coiso, coiso, this.currentAng);
-                this.fromYRotation(this.animationMatrix, coiso);
-            }
-        } else {
-            this.actualControlPoint++;
-        }
+    rotate() {
+        var axisvec = vec3.fromValues(0, 1, 0);
+        this.animRotationMatrix = mat4.create();
+        this.animRotationMatrix = mat4.rotate(this.animRotationMatrix, this.animRotationMatrix, this.currRotAng + this.assertAng, axisvec);
     }
 
-    angle(a, b) {
-        let tempA = vec3.fromValues(a[0], a[1], a[2]);
-        let tempB = vec3.fromValues(b[0], b[1], b[2]);
-        vec3.normalize(tempA, tempA);
-        vec3.normalize(tempB, tempB);
-        let cosine = vec3.dot(tempA, tempB);
-        if (cosine > 1.0) {
-            return 0;
-        } else if (cosine < -1.0) {
-            return Math.PI;
-        }
-        var angle = Math.acos(cosine);
-        if (b[0] - a[0] < 0)
-            angle = -angle;
-        return angle;
+    translate() {
+        this.curr[0] = this.radius * Math.sin(this.currRotAng);
+        this.curr[2] = this.radius * Math.cos(this.currRotAng);
+
+        var transform = vec3.create();
+        vec3.add(transform, this.curr, this.center);
+        this.animTranslateMatrix = mat4.create();
+        mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, transform);
     }
 
-    fromYRotation(out, rad) {
-        let s = Math.sin(rad);
-        let c = Math.cos(rad);
-        // Perform axis-specific matrix multiplication
-        out[0] = c;
-        out[1] = 0;
-        out[2] = -s;
-        out[3] = 0;
-        out[4] = 0;
-        out[5] = 1;
-        out[6] = 0;
-        out[7] = 0;
-        out[8] = s;
-        out[9] = 0;
-        out[10] = c;
-        out[11] = 0;
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = 0;
-        out[15] = 1;
-    }
-
-    translate(currTime) {
-        var increment = vec3.create();
-        var deltat = currTime - this.initialTime;
-        var actualVelocity = this.velocity / deltat;
-        var speed = vec3.fromValues(actualVelocity, actualVelocity, actualVelocity);
-
-        vec3.subtract(increment, this.currentCP, this.oldPosition);
-        vec3.multiply(increment, increment, speed);
-        vec3.add(this.currentPosition, this.currentPosition, increment);
-        console.log(this.currentPosition);
-        console.log(this.oldPosition);
-        mat4.translate(this.animationMatrix, this.animationMatrix, increment);
-
-        this.needsToRotate = this.equals(this.currentPosition, this.currentCP);
-        if (this.needsToRotate) {
-            this.oldPosition = this.currentPosition;
-        }
-    }
-
-    equals(a, b) {
-        let a0 = a[0],
-            a1 = a[1],
-            a2 = a[2];
-        let b0 = b[0],
-            b1 = b[1],
-            b2 = b[2];
-        return (Math.abs(a0 - b0) <= 0.01 * Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
-            Math.abs(a1 - b1) <= 0.01 * Math.max(1.0, Math.abs(a1), Math.abs(b1)) &&
-            Math.abs(a2 - b2) <= 0.01 * Math.max(1.0, Math.abs(a2), Math.abs(b2)));
-    }
-
-    /**
-        Atualizar o estado da animacao
-    */
     update(currTime) {
-        if (this.initialTime == 0)
-            this.initialTime = currTime - 1;
+        if (this.currPartition == 0) {
+            this.Time = currTime;
+            this.currPartition++;
 
-        if (this.actualControlPoint < this.controlPoints.length - 1) {
-            if (this.needsToRotate) {
-                this.rotate(currTime);
-            } else {
-                this.translate(currTime);
-            }
+            return;
         }
 
-        this.initialTime = currTime;
+        if (this.state != "end") {
+            var Diff = currTime - this.Time;
+            this.Time = currTime;
+
+            var n_part_asserts = (Diff * this.FPS) / 100;
+            var assertPoint = Math.round(n_part_asserts);
+
+            for (var i = 0; i < assertPoint; i++) {
+                console.log(this.currRotAng);
+                this.currRotAng += this.incang;
+            }
+
+            this.rotate();
+            this.translate();
+
+            this.currPartition += assertPoint;
+        }
+
+        if (this.currPartition >= this.repart) {
+            this.state = "end";
+        }
     }
-};
+}

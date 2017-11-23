@@ -1228,7 +1228,7 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
                 } else if (isNaN(rotang))
                     return "non-numeric value for the parse rotang for the circular animation";
 
-                var center = [centerx, centery, centerz];
+                var center = vec3.fromValues(centerx, centery, centerz);
                 this.animations[animationID] = new CircularAnimation(animationSpeed, center, radius, startang, rotang);
                 break;
 
