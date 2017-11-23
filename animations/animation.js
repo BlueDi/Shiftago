@@ -4,8 +4,11 @@ class Animation {
 
         this.velocity = speed;
         this.initialTime = 0;
-        this.animationMatrix = mat4.create();
-        this.animRotMatrix = mat4.create();
+        this.animTranslateMatrix = mat4.create();
+        this.animRotationMatrix = mat4.create();
+
+        this.state = 'end';
+        this.stop = false;
     }
 
     /**

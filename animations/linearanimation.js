@@ -21,10 +21,8 @@ class LinearAnimation extends Animation {
 
         this.dv = vec3.create();
         this.olddv = vec3.create();
-        this.animTranslateMatrix = mat4.create();
-        this.animRotationMatrix = mat4.create();
 
-        this.state = "initial";
+        this.state = 'initial';
     }
 
     /**
@@ -107,50 +105,52 @@ class LinearAnimation extends Animation {
         Se fez todas as particoes, chegou ao fim
     */
     update(currTime) {
-        if (this.state == 'initial') {
-            this.Time = currTime;
-            this.initialize();
-            this.translateInitial();
-            this.state = 'updating';
-        }
-
-        if (this.state == 'updating' && this.currPartitionPoint == 0) {
-            this.initialize();
-            this.rotate();
-            this.translateUpdate();
-
-            this.currPartition++;
-            this.currPartitionPoint++;
-        }
-
-        if (this.state != 'end') {
-            var deltat = currTime - this.Time;
-
-            this.Time = currTime;
-
-            var assertPoint = Math.round((deltat * this.FPS) / 100);
-
-            for (var i = 0; i < assertPoint; i++) {
-                this.currX += this.xinc;
-                this.currY += this.yinc;
-                this.currZ += this.zinc;
+        if (this.stop == false) {
+            if (this.state == 'initial') {
+                this.Time = currTime;
+                this.initialize();
+                this.translateInitial();
+                this.state = 'updating';
             }
 
-            var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
-            this.animTranslateMatrix = mat4.create();
-            mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, transvec);
+            if (this.state == 'updating' && this.currPartitionPoint == 0) {
+                this.initialize();
+                this.rotate();
+                this.translateUpdate();
 
-            this.currPartition += assertPoint;
-            this.currPartitionPoint += assertPoint;
-        }
+                this.currPartition++;
+                this.currPartitionPoint++;
+            }
 
-        if (this.currPartitionPoint >= this.repartPoint) {
-            this.currPartitionPoint = 0;
-            this.currContrtrolPoint++;
-        }
+            if (this.state != 'end') {
+                var deltat = currTime - this.Time;
 
-        if (this.currPartition >= this.repart || this.currContrtrolPoint >= this.numberofreparts) {
-            this.state = 'end';
+                this.Time = currTime;
+
+                var assertPoint = Math.round((deltat * this.FPS) / 100);
+
+                for (var i = 0; i < assertPoint; i++) {
+                    this.currX += this.xinc;
+                    this.currY += this.yinc;
+                    this.currZ += this.zinc;
+                }
+
+                var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
+                this.animTranslateMatrix = mat4.create();
+                mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, transvec);
+
+                this.currPartition += assertPoint;
+                this.currPartitionPoint += assertPoint;
+            }
+
+            if (this.currPartitionPoint >= this.repartPoint) {
+                this.currPartitionPoint = 0;
+                this.currContrtrolPoint++;
+            }
+
+            if (this.currPartition >= this.repart || this.currContrtrolPoint >= this.numberofreparts) {
+                this.state = 'end';
+            }
         }
     }
 };
