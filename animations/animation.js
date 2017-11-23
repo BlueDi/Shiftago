@@ -6,6 +6,9 @@ class Animation {
         this.initialTime = 0;
         this.animTranslateMatrix = mat4.create();
         this.animRotationMatrix = mat4.create();
+
+        this.state = 'end';
+        this.stop = false;
     }
 
     /**

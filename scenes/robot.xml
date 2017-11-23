@@ -179,7 +179,7 @@
     </MATERIALS>
 
     <ANIMATIONS>
-        <ANIMATION id="walk" speed="1" type="linear">
+        <ANIMATION id="walk" speed="10" type="linear">
             <controlpoint xx="0" yy="0" zz="0"/>
             <controlpoint xx="10" yy="0" zz="0"/>
             <controlpoint xx="10" yy="0" zz="10"/>
@@ -192,6 +192,13 @@
             <controlpoint xx="-10" yy="0" zz="0"/>
             <controlpoint xx="0" yy="0" zz="0"/>
             <controlpoint xx="-10" yy="0" zz="0"/>
+        </ANIMATION>
+
+        <ANIMATION id="rotate" speed="10" type="circular" centerx="0" centery="0" centerz="0" radius="20" startang="0" rotang="180"/>
+
+        <ANIMATION id="robotwalk" type="combo">
+            <SPANREF id="rotate"/>
+            <SPANREF id="walk"/>
         </ANIMATION>
 
     </ANIMATIONS>
@@ -563,7 +570,7 @@
             <ROTATION axis="y" angle="180"/>
 
             <ANIMATIONREFS>
-                <ANIMATIONREF id="walk"/>
+                <ANIMATIONREF id="robotwalk"/>
             </ANIMATIONREFS>
 
             <DESCENDANTS>

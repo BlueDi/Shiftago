@@ -21,10 +21,8 @@ class CircularAnimation extends Animation {
         this.incang;
 
         this.FPS = 60;
-        this.animTranslateMatrix;
-        this.animRotationMatrix;
 
-        this.state = "waiting";
+        this.state = 'initial';
 
         this.initialize();
     }
@@ -63,33 +61,34 @@ class CircularAnimation extends Animation {
     }
 
     update(currTime) {
-        if (this.currPartition == 0) {
-            this.Time = currTime;
-            this.currPartition++;
+        if (this.stop == false) {
+            if (this.currPartition == 0) {
+                this.Time = currTime;
+                this.currPartition++;
 
-            return;
-        }
-
-        if (this.state != "end") {
-            var Diff = currTime - this.Time;
-            this.Time = currTime;
-
-            var n_part_asserts = (Diff * this.FPS) / 100;
-            var assertPoint = Math.round(n_part_asserts);
-
-            for (var i = 0; i < assertPoint; i++) {
-                console.log(this.currRotAng);
-                this.currRotAng += this.incang;
+                return;
             }
 
-            this.rotate();
-            this.translate();
+            if (this.state != 'end') {
+                var Diff = currTime - this.Time;
+                this.Time = currTime;
 
-            this.currPartition += assertPoint;
-        }
+                var n_part_asserts = (Diff * this.FPS) / 100;
+                var assertPoint = Math.round(n_part_asserts);
 
-        if (this.currPartition >= this.repart) {
-            this.state = "end";
+                for (var i = 0; i < assertPoint; i++) {
+                    this.currRotAng += this.incang;
+                }
+
+                this.rotate();
+                this.translate();
+
+                this.currPartition += assertPoint;
+            }
+
+            if (this.currPartition >= this.repart) {
+                this.state = 'end';
+            }
         }
     }
-}
+};
