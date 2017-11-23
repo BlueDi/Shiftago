@@ -1,6 +1,6 @@
 class Animation {
     constructor(speed) {
-        this.RPS = 60;
+        this.FPS = 60;
 
         this.velocity = speed;
         this.initialTime = 0;

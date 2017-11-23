@@ -10,7 +10,7 @@ class LinearAnimation extends Animation {
 
         this.kinc;
 
-        this.reparts = this.RPS;
+        this.reparts = this.FPS * this.velocity;
         this.currPartition = 0;
         this.Time;
 
@@ -19,10 +19,12 @@ class LinearAnimation extends Animation {
 
         this.rotAng = 0;
 
+        this.dv = vec3.create();
+        this.olddv = vec3.create();
         this.animationMatrix = mat4.create();
         this.animRotMatrix = mat4.create();
 
-        this.state = "waiting";
+        this.state = "initial";
     }
 
     /**
@@ -39,7 +41,7 @@ class LinearAnimation extends Animation {
         }
     };
 
-    initial() {
+    initialize() {
         this.currentPosition = this.controlPoints[this.currContrtrolPoint];
         this.nextPosition = this.controlPoints[this.currContrtrolPoint + 1];
 
@@ -47,31 +49,41 @@ class LinearAnimation extends Animation {
         this.currY = this.currentPosition[1];
         this.currZ = this.currentPosition[2];
 
-        this.dv = vec3.create();
+        vec3.subtract(this.olddv, this.dv, this.olddv);
         vec3.subtract(this.dv, this.nextPosition, this.currentPosition);
     }
 
-    rotate(currTime) {
-        var veclengthXY = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[2], 2));
+    rotate() {
+        var veclengthXZ = Math.sqrt(this.dv[0] * this.dv[0] + this.dv[2] * this.dv[2]);
 
-        if (veclengthXY > 0) {
-            this.rotAng = Math.acos((this.dv[0] * 0 + this.dv[2] * 1) / veclengthXY);
+        if (veclengthXZ != 0) {
+            this.rotAng = Math.acos(this.dv[0] / veclengthXZ);
 
-            if (this.dv[0] > 0) {
+            if (this.dv[0] < 0) {
+                this.rotAng = -this.rotAng;
+            }
+            if (this.dv[2] > 0 && this.olddv[2] >= 0) {
                 this.rotAng = -this.rotAng;
             }
 
             var axisvec = vec3.fromValues(0, 1, 0);
-
-            this.rotMatrix = mat4.create();
-            this.rotMatrix = mat4.rotate(this.animRotMatrix, this.animRotMatrix, this.rotAng, axisvec);
+            this.animRotMatrix = mat4.create();
+            mat4.rotate(this.animRotMatrix, this.animRotMatrix, this.rotAng, axisvec);
         }
     }
 
-    translate(currTime) {
+    translateInitial() {
         var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[2], 2));
+        this.translate(veclength);
+    }
 
-        this.repartPoint = (this.reparts * veclength) / this.totallength;
+    translateUpdate() {
+        var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[2], 2));
+        this.translate(veclength);
+    }
+
+    translate(veclength) {
+        this.repartPoint = 60 * (this.reparts * veclength) / (this.totallength * this.velocity);
         this.kinc = (veclength / this.repartPoint) / veclength;
 
         var xnovo = this.currentPosition[0] + this.kinc * this.dv[0];
@@ -84,34 +96,39 @@ class LinearAnimation extends Animation {
 
         var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
         this.animationMatrix = mat4.create();
-
         mat4.translate(this.animationMatrix, this.animationMatrix, transvec);
     }
 
     /**
-        Atualizar o estado da animacao
+        Atualizar o estado da animacao.
+        Se for a primeira vez inicia thisTime.
+        Se for a primeira vez do control point roda para a posicao e calcula a matriz de translacao.
+        Se ainda nao tiver chegado ao fim, desloca se em direcao ao control point.
+        Se fez todas as particoes, chegou ao fim
     */
     update(currTime) {
-        if (this.currPartition == 0) {
+        if (this.state == 'initial') {
             this.Time = currTime;
+            this.initialize();
+            this.translateInitial();
+            this.state = 'updating';
         }
 
-        if (this.state != "end" && this.currPartitionPoint == 0) {
-            this.initial();
-            this.rotate(currTime);
-            this.translate(currTime);
+        if (this.state == 'updating' && this.currPartitionPoint == 0) {
+            this.initialize();
+            this.rotate();
+            this.translateUpdate();
 
             this.currPartition++;
             this.currPartitionPoint++;
         }
 
-        if (this.state != "end") {
+        if (this.state != 'end') {
             var deltat = currTime - this.Time;
 
             this.Time = currTime;
 
-            var n_part_asserts = (deltat * this.RPS) / 1000;
-            var assertPoint = Math.round(n_part_asserts);
+            var assertPoint = Math.round((deltat * this.FPS) / 100);
 
             for (var i = 0; i < assertPoint; i++) {
                 this.currX += this.xinc;
@@ -121,7 +138,6 @@ class LinearAnimation extends Animation {
 
             var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
             this.animationMatrix = mat4.create();
-
             mat4.translate(this.animationMatrix, this.animationMatrix, transvec);
 
             this.currPartition += assertPoint;
@@ -134,7 +150,7 @@ class LinearAnimation extends Animation {
         }
 
         if (this.currPartition >= this.repart || this.currContrtrolPoint >= this.numberofreparts) {
-            this.state = "end";
+            this.state = 'end';
         }
     }
 };

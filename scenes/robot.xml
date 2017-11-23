@@ -183,10 +183,13 @@
             <controlpoint xx="0" yy="0" zz="0"/>
             <controlpoint xx="10" yy="0" zz="0"/>
             <controlpoint xx="10" yy="0" zz="10"/>
-            <controlpoint xx="10" yy="1" zz="10"/>
-            <controlpoint xx="10" yy="0" zz="10"/>
+            <controlpoint xx="10" yy="0" zz="0"/>
+            <controlpoint xx="0" yy="0" zz="10"/>
             <controlpoint xx="10" yy="0" zz="0"/>
             <controlpoint xx="0" yy="0" zz="0"/>
+            <controlpoint xx="-10" yy="0" zz="0"/>
+            <controlpoint xx="0" yy="0" zz="0"/>
+            <controlpoint xx="-10" yy="0" zz="0"/>
         </ANIMATION>
 
     </ANIMATIONS>
