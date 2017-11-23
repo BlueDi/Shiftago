@@ -187,6 +187,8 @@
             <controlpoint xx="0" yy="0" zz="10"/>
             <controlpoint xx="10" yy="0" zz="0"/>
             <controlpoint xx="0" yy="0" zz="0"/>
+            <controlpoint xx="0" yy="10" zz="0"/>
+            <controlpoint xx="0" yy="0" zz="0"/>
             <controlpoint xx="-10" yy="0" zz="0"/>
             <controlpoint xx="0" yy="0" zz="0"/>
             <controlpoint xx="-10" yy="0" zz="0"/>

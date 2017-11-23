@@ -78,7 +78,7 @@ class LinearAnimation extends Animation {
     }
 
     translateUpdate() {
-        var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[2], 2));
+        var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[1], 2) + Math.pow(this.dv[2], 2));
         this.translate(veclength);
     }
 
