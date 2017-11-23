@@ -1183,64 +1183,56 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
                 break;
 
             case "circular":
+                var centerx = this.reader.getFloat(children[i], 'centerx');
+                if (centerx == null) {
+                    this.onXMLMinorError("unable to parse centerx for the circular animation");
+                    break;
+                } else if (isNaN(centerx))
+                    return "non-numeric value for the parse centerx for the circular animation";
 
-                if (animationSpecs.length != 2) {
-                    return "incorrect amount of specs for circular animation";
+                var centery = this.reader.getFloat(children[i], 'centery');
+                if (centerx == null) {
+                    this.onXMLMinorError("unable to parse centery for the circular animation");
+                    break;
+                } else if (isNaN(centery))
+                    return "non-numeric value for the parse centery for the circular animation";
+
+                var centerz = this.reader.getFloat(children[i], 'centerz');
+                if (centerz == null) {
+                    this.onXMLMinorError("unable to parse centerz for the circular animation");
+                    break;
+                } else if (isNaN(centerz))
+                    return "non-numeric value for the parse centerz for the circular animation";
+
+                var radius = this.reader.getFloat(children[i], 'radius');
+                if (radius < 0) {
+                    return "invalid radius value: negative value";
                 }
+                if (radius == null) {
+                    this.onXMLMinorError("unable to parse radius for the circular animation");
+                    break;
+                } else if (isNaN(radius))
+                    return "non-numeric value for the parse radius for the circular animation";
 
-                for (var j = 0; j < animationSpecs.length; j++) {
+                var startang = this.reader.getFloat(children[i], 'startang');
+                if (startang == null) {
+                    this.onXMLMinorError("unable to parse startang for the circular animation");
+                    break;
+                } else if (isNaN(startang))
+                    return "non-numeric value for the parse startang for the circular animation";
 
-                    var centerx = this.reader.getFloat(animationSpecs[j], 'centerx');
-                    if (centerx == null) {
-                        this.onXMLMinorError("unable to parse centerx for the circular animation");
-                        break;
-                    } else if (isNaN(centerx))
-                        return "non-numeric value for the parse centerx for the circular animation";
+                var rotang = this.reader.getFloat(children[i], 'rotang');
+                if (rotang == null) {
+                    this.onXMLMinorError("unable to parse rotang for the circular animation");
+                    break;
+                } else if (isNaN(rotang))
+                    return "non-numeric value for the parse rotang for the circular animation";
 
-                    var centery = this.reader.getFloat(animationSpecs[j], 'centery');
-                    if (centerx == null) {
-                        this.onXMLMinorError("unable to parse centery for the circular animation");
-                        break;
-                    } else if (isNaN(centery))
-                        return "non-numeric value for the parse centery for the circular animation";
-
-                    var centerz = this.reader.getFloat(animationSpecs[j], 'centerz');
-                    if (centerz == null) {
-                        this.onXMLMinorError("unable to parse centerz for the circular animation");
-                        break;
-                    } else if (isNaN(centerz))
-                        return "non-numeric value for the parse centerz for the circular animation";
-
-
-                    var radius = this.reader.getFloat(animationSpecs[j], 'radius');
-                    if (radius < 0) {
-                        return "invalid radius value: negative value";
-                    }
-                    if (radius == null) {
-                        this.onXMLMinorError("unable to parse radius for the circular animation");
-                        break;
-                    } else if (isNaN(radius))
-                        return "non-numeric value for the parse radius for the circular animation";
-
-                    var startang = this.reader.getFloat(animationSpecs[j], 'startang');
-                    if (startang == null) {
-                        this.onXMLMinorError("unable to parse startang for the circular animation");
-                        break;
-                    } else if (isNaN(startang))
-                        return "non-numeric value for the parse startang for the circular animation";
-
-                    var rotang = this.reader.getFloat(animationSpecs[j], 'rotang');
-                    if (rotang == null) {
-                        this.onXMLMinorError("unable to parse rotang for the circular animation");
-                        break;
-                    } else if (isNaN(rotang))
-                        return "non-numeric value for the parse rotang for the circular animation";
-                }
-
+                var center = [centerx, centery, centerz];
+                this.animations[animationID] = new CircularAnimation(animationSpeed, center, radius, startang, rotang);
                 break;
 
             case "bezier":
-
                 if (animationSpecs.length != 4) {
                     return "incorrect amount of control points for bezier animation";
                 }
