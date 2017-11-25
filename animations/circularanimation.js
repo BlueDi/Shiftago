@@ -8,46 +8,21 @@ class CircularAnimation extends Animation {
         this.radius = radius;
         this.startang = startang * DEGREE_TO_RAD;
         this.rotang = rotang * DEGREE_TO_RAD;
+        this.reparts = 60 * 10000 / Math.pow(this.velocity, 2);
+        this.incang = this.rotang / this.reparts;
 
-        this.repart;
         this.currPartition = 0;
-        this.Time;
-
-        this.currRotAng = 0;
-        this.assertAng = Math.PI / 2;
+        this.currRotAng = this.startang + Math.PI;
 
         this.curr = vec3.fromValues(0, 0, 0);
 
-        this.incang;
-
-        this.FPS = 60;
-
         this.state = 'initial';
-
-        this.initialize();
-    }
-
-    initialize() {
-        //intial rotation
-        if (this.rotang < 0) {
-            this.assertAng = -this.assertAng;
-        }
-
-        this.currRotAng += this.startang + Math.PI / 2;
-
-        this.rotate();
-        this.translate();
-
-        //calculating total partitions and incremet anglev
-        //var totalrot = Math.abs(this.rotang);
-        this.repart = this.FPS * 60;
-        this.incang = this.rotang / this.repart;
     }
 
     rotate() {
         var axisvec = vec3.fromValues(0, 1, 0);
         this.animRotationMatrix = mat4.create();
-        this.animRotationMatrix = mat4.rotate(this.animRotationMatrix, this.animRotationMatrix, this.currRotAng + this.assertAng, axisvec);
+        this.animRotationMatrix = mat4.rotate(this.animRotationMatrix, this.animRotationMatrix, this.currRotAng, axisvec);
     }
 
     translate() {
@@ -62,23 +37,17 @@ class CircularAnimation extends Animation {
 
     update(currTime) {
         if (this.stop == false) {
-            if (this.currPartition == 0) {
-                this.Time = currTime;
-                this.currPartition++;
-
-                return;
+            if (this.state == 'initial') {
+                this.initialTime = currTime;
+                this.state = 'updating';
             }
 
             if (this.state != 'end') {
-                var Diff = currTime - this.Time;
-                this.Time = currTime;
+                var deltat = currTime - this.initialTime;
+                this.initialTime = currTime;
 
-                var n_part_asserts = (Diff * this.FPS) / 100;
-                var assertPoint = Math.round(n_part_asserts);
-
-                for (var i = 0; i < assertPoint; i++) {
-                    this.currRotAng += this.incang;
-                }
+                var assertPoint = Math.round(deltat);
+                this.currRotAng += this.incang * assertPoint;
 
                 this.rotate();
                 this.translate();
@@ -86,7 +55,7 @@ class CircularAnimation extends Animation {
                 this.currPartition += assertPoint;
             }
 
-            if (this.currPartition >= this.repart) {
+            if (this.currPartition >= this.reparts) {
                 this.state = 'end';
             }
         }

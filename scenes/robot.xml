@@ -567,7 +567,6 @@
 
             <SCALE sx="1.4" sy="1.4" sz="1.4"/>
             <TRANSLATION x="17" y="1.2" z="18"/>
-            <ROTATION axis="y" angle="180"/>
 
             <ANIMATIONREFS>
                 <ANIMATIONREF id="robotwalk"/>
