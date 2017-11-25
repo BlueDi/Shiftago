@@ -12,7 +12,11 @@ class CircularAnimation extends Animation {
         this.incang = this.rotang / this.reparts;
 
         this.currPartition = 0;
-        this.currRotAng = this.startang + Math.PI;
+        if (this.rotang > 0) {
+            this.currRotAng = this.startang + Math.PI;
+        } else if (this.rotang < 0) {
+            this.currRotAng = this.startang - Math.PI;
+        }
 
         this.curr = vec3.fromValues(0, 0, 0);
 
@@ -26,8 +30,13 @@ class CircularAnimation extends Animation {
     }
 
     translate() {
-        this.curr[0] = this.radius * Math.sin(this.currRotAng);
-        this.curr[2] = this.radius * Math.cos(this.currRotAng);
+        if (this.currRotAng > 0) {
+            this.curr[0] = this.radius * Math.sin(this.currRotAng);
+            this.curr[2] = this.radius * Math.cos(this.currRotAng);
+        } else if (this.currRotAng < 0) {
+            this.curr[0] = -this.radius * Math.sin(this.currRotAng);
+            this.curr[2] = -this.radius * Math.cos(this.currRotAng);
+        }
 
         var transform = vec3.create();
         vec3.add(transform, this.curr, this.center);
@@ -56,6 +65,8 @@ class CircularAnimation extends Animation {
             }
 
             if (this.currPartition >= this.reparts) {
+                this.currRotAng = this.rotang + Math.PI;
+                this.rotate();
                 this.state = 'end';
             }
         }
