@@ -1417,16 +1417,16 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             // Retrieves possible animations.
             var animationIndex = specsNames.indexOf("ANIMATIONREFS");
             if (animationIndex != -1) {
-                var aimationsDescendants = nodeSpecs[animationIndex].children;
-                for (var j = 0; j < aimationsDescendants.length; j++) {
-                    if (aimationsDescendants[j].nodeName == "ANIMATIONREF") {
-                        var animationID = this.reader.getString(aimationsDescendants[j], 'id');
+                var animationsDescendants = nodeSpecs[animationIndex].children;
+                for (var j = 0; j < animationsDescendants.length; j++) {
+                    if (animationsDescendants[j].nodeName == "ANIMATIONREF") {
+                        var animationID = this.reader.getString(animationsDescendants[j], 'id');
                         this.log("   AnimationRef: " + animationID);
                         if (animationID == null)
                             return "unable to parse animation id";
                         if (this.animations[animationID] == null)
                             return "ID does not correspond to a valid animation";
-                        this.nodes[nodeID].animationID = animationID;
+                        this.nodes[nodeID].animationID.push(animationID);
                     }
                 }
             }
@@ -1563,9 +1563,10 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
 
     var matrixtrans = mat4.create();
     mat4.multiply(matrixtrans, transformation, nodeTransformation);
-    if (animation !== null) {
-        mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animTranslateMatrix);
-        mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animRotationMatrix);
+    for (var i = 0; i < animation.length; i++) {
+        var animationID = animation[i];
+        mat4.multiply(matrixtrans, matrixtrans, this.animations[animationID].animTranslateMatrix);
+        mat4.multiply(matrixtrans, matrixtrans, this.animations[animationID].animRotationMatrix);
     }
     this.transformationStack.push(matrixtrans);
 
