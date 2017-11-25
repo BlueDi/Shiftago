@@ -10,10 +10,9 @@ class LinearAnimation extends Animation {
 
         this.kinc;
 
-        this.reparts = this.FPS * this.velocity;
-        this.currPartition = 0;
-        this.Time;
+        this.reparts = 60 * 10000 / Math.pow(this.velocity, 2);
 
+        this.currPartition = 0;
         this.repartPoint;
         this.currPartitionPoint = 0;
 
@@ -43,10 +42,6 @@ class LinearAnimation extends Animation {
         this.currentPosition = this.controlPoints[this.currContrtrolPoint];
         this.nextPosition = this.controlPoints[this.currContrtrolPoint + 1];
 
-        this.currX = this.currentPosition[0];
-        this.currY = this.currentPosition[1];
-        this.currZ = this.currentPosition[2];
-
         vec3.subtract(this.olddv, this.dv, this.olddv);
         vec3.subtract(this.dv, this.nextPosition, this.currentPosition);
     }
@@ -70,31 +65,17 @@ class LinearAnimation extends Animation {
         }
     }
 
-    translateInitial() {
-        var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[2], 2));
-        this.translate(veclength);
-    }
-
-    translateUpdate() {
-        var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[1], 2) + Math.pow(this.dv[2], 2));
-        this.translate(veclength);
-    }
-
     translate(veclength) {
-        this.repartPoint = 60 * (this.reparts * veclength) / (this.totallength * this.velocity);
-        this.kinc = (veclength / this.repartPoint) / veclength;
+        var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[1], 2) + Math.pow(this.dv[2], 2));
+        this.repartPoint = this.reparts * veclength / this.totallength;
+        this.kinc = 1 / this.repartPoint;
+        console.log(this.repartPoint, this.kinc);
 
-        var xnovo = this.currentPosition[0] + this.kinc * this.dv[0];
-        var ynovo = this.currentPosition[1] + this.kinc * this.dv[1];
-        var znovo = this.currentPosition[2] + this.kinc * this.dv[2];
+        this.inc = vec3.create();
+        vec3.scale(this.inc, this.dv, this.kinc);
 
-        this.xinc = xnovo - this.currentPosition[0];
-        this.yinc = ynovo - this.currentPosition[1];
-        this.zinc = znovo - this.currentPosition[2];
-
-        var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
         this.animTranslateMatrix = mat4.create();
-        mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, transvec);
+        mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, this.currentPosition);
     }
 
     /**
@@ -107,37 +88,29 @@ class LinearAnimation extends Animation {
     update(currTime) {
         if (this.stop == false) {
             if (this.state == 'initial') {
-                this.Time = currTime;
-                this.initialize();
-                this.translateInitial();
+                this.initialTime = currTime;
                 this.state = 'updating';
             }
 
             if (this.state == 'updating' && this.currPartitionPoint == 0) {
                 this.initialize();
                 this.rotate();
-                this.translateUpdate();
+                this.translate();
 
                 this.currPartition++;
                 this.currPartitionPoint++;
             }
 
             if (this.state != 'end') {
-                var deltat = currTime - this.Time;
+                var deltat = currTime - this.initialTime;
+                this.initialTime = currTime;
+                var assertPoint = Math.round(deltat);
+                var currInc = vec3.create();
+                vec3.scale(currInc, this.inc, assertPoint);
+                vec3.add(this.currentPosition, this.currentPosition, currInc);
 
-                this.Time = currTime;
-
-                var assertPoint = Math.round((deltat * this.FPS) / 100);
-
-                for (var i = 0; i < assertPoint; i++) {
-                    this.currX += this.xinc;
-                    this.currY += this.yinc;
-                    this.currZ += this.zinc;
-                }
-
-                var transvec = vec3.fromValues(this.currX, this.currY, this.currZ);
                 this.animTranslateMatrix = mat4.create();
-                mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, transvec);
+                mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, this.currentPosition);
 
                 this.currPartition += assertPoint;
                 this.currPartitionPoint += assertPoint;
@@ -148,7 +121,7 @@ class LinearAnimation extends Animation {
                 this.currContrtrolPoint++;
             }
 
-            if (this.currPartition >= this.repart || this.currContrtrolPoint >= this.numberofreparts) {
+            if (this.currContrtrolPoint >= this.numberofreparts) {
                 this.state = 'end';
             }
         }
