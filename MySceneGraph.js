@@ -1150,8 +1150,14 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
         var nodeNames = [];
         switch (animationType) {
             case "linear":
+            case "bezier":
                 var animationSpeed = this.reader.getFloat(children[i], 'speed');
                 var controlPoints = [];
+
+                if (animationType == "bezier" && animationSpecs.length < 4) {
+                    return "bezier animation needs at least 4 control points";
+                }
+
                 for (var j = 0; j < animationSpecs.length; j++) {
                     if (animationSpecs[j].nodeName != "controlpoint") {
                         return "invalid Specs for linear animation";
@@ -1179,7 +1185,12 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
                         return "non-numeric value for zz-coordinate of the" + j + "º control point of the linear animation";
                     controlPoints.push([xx, yy, zz]);
                 }
-                this.animations[animationID] = new LinearAnimation(animationSpeed, controlPoints);
+
+                if (animationType == "linear") {
+                    this.animations[animationID] = new LinearAnimation(animationSpeed, controlPoints);
+                } else if (animationType == "bezier") {
+                    this.animations[animationID] = new BezierAnimation(animationSpeed, controlPoints);
+                }
                 break;
 
             case "circular":
@@ -1231,38 +1242,6 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 
                 var center = vec3.fromValues(centerx, centery, centerz);
                 this.animations[animationID] = new CircularAnimation(animationSpeed, center, radius, startang, rotang);
-                break;
-
-            case "bezier":
-                var animationSpeed = this.reader.getFloat(children[i], 'speed');
-
-                for (var j = 0; j < animationSpecs.length; j++) {
-                    if (animationSpecs[i].nodeName != "controlpoint") {
-                        return "invalid Specs for bezier animation";
-                    }
-                    var xx = this.reader.getFloat(animationSpecs[j], 'xx');
-                    if (xx == null) {
-                        this.onXMLMinorError("unable to parse xx-coordinate for the " + j + "º control point of the bezier animation");
-                        break;
-                    } else if (isNaN(xx))
-                        return "non-numeric value for xx-coordinate of the" + j + "º control point of the bezier animation";
-
-                    var yy = this.reader.getFloat(animationSpecs[j], 'yy');
-                    if (yy == null) {
-                        this.onXMLMinorError("unable to parse yy-coordinate for the " + j + "º control point of the bezier animation");
-                        break;
-                    } else if (isNaN(yy))
-                        return "non-numeric value for yy-coordinate of the" + j + "º control point of the bezier animation";
-
-                    var zz = this.reader.getFloat(animationSpecs[j], 'zz');
-                    if (zz == null) {
-                        this.onXMLMinorError("unable to parse zz-coordinate for the " + j + "º control point of the bezier animation");
-                        break;
-                    } else if (isNaN(zz))
-                        return "non-numeric value for zz-coordinate of the" + j + "º control point of the bezier animation";
-
-                }
-
                 break;
 
             case "combo":
