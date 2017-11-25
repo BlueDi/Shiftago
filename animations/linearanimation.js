@@ -10,7 +10,7 @@ class LinearAnimation extends Animation {
 
         this.kinc;
 
-        this.reparts = 60 * 10000 / Math.pow(this.velocity, 2);
+        this.reparts = 60 * 1000 / Math.pow(this.velocity, 2);
 
         this.currPartition = 0;
         this.repartPoint;
@@ -51,11 +51,10 @@ class LinearAnimation extends Animation {
 
         if (veclengthXZ != 0) {
             this.rotAng = Math.acos(this.dv[0] / veclengthXZ);
-
-            if (this.dv[0] < 0) {
+            if (this.olddv[0] > 0) {
                 this.rotAng = -this.rotAng;
             }
-            if (this.dv[2] > 0 && this.olddv[2] >= 0) {
+            if (this.dv[0] <= 0 && this.olddv[0] == 0) {
                 this.rotAng = -this.rotAng;
             }
 
@@ -67,9 +66,8 @@ class LinearAnimation extends Animation {
 
     translate(veclength) {
         var veclength = Math.sqrt(Math.pow(this.dv[0], 2) + Math.pow(this.dv[1], 2) + Math.pow(this.dv[2], 2));
-        this.repartPoint = this.reparts * veclength / this.totallength;
+        this.repartPoint = this.reparts * veclength;
         this.kinc = 1 / this.repartPoint;
-        console.log(this.repartPoint, this.kinc);
 
         this.inc = vec3.create();
         vec3.scale(this.inc, this.dv, this.kinc);
