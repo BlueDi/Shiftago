@@ -1155,7 +1155,9 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
                 var controlPoints = [];
 
                 if (animationType == "bezier" && animationSpecs.length < 4) {
-                    return "bezier animation needs at least 4 control points";
+                    return "a bezier animation needs at least 4 control points";
+                } else if (animationSpecs.length < 2) {
+                    return "a linear animation needs at least 2 control points";
                 }
 
                 for (var j = 0; j < animationSpecs.length; j++) {
