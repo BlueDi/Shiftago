@@ -8,7 +8,7 @@ class CircularAnimation extends Animation {
         this.radius = radius;
         this.startang = startang * DEGREE_TO_RAD;
         this.rotang = rotang * DEGREE_TO_RAD;
-        this.reparts = 60 * 10000 / Math.pow(this.velocity, 2);
+        this.reparts = this.SCALE / this.velocity;
         this.incang = this.rotang / this.reparts;
 
         this.currPartition = 0;
@@ -21,12 +21,6 @@ class CircularAnimation extends Animation {
         this.curr = vec3.fromValues(0, 0, 0);
 
         this.state = 'initial';
-    }
-
-    rotate() {
-        var axisvec = vec3.fromValues(0, 1, 0);
-        this.animRotationMatrix = mat4.create();
-        this.animRotationMatrix = mat4.rotate(this.animRotationMatrix, this.animRotationMatrix, this.currRotAng, axisvec);
     }
 
     translate() {
@@ -58,7 +52,7 @@ class CircularAnimation extends Animation {
                 var assertPoint = Math.round(deltat);
                 this.currRotAng += this.incang * assertPoint;
 
-                this.rotate();
+                this.rotateY(this.currRotAng);
                 this.translate();
 
                 this.currPartition += assertPoint;
@@ -66,7 +60,7 @@ class CircularAnimation extends Animation {
 
             if (this.currPartition >= this.reparts) {
                 this.currRotAng = this.rotang + Math.PI;
-                this.rotate();
+                this.rotateY(this.currRotAng);
                 this.state = 'end';
             }
         }

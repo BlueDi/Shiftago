@@ -10,7 +10,7 @@ class LinearAnimation extends Animation {
 
         this.kinc;
 
-        this.reparts = 60 * 1000 / Math.pow(this.velocity, 2);
+        this.reparts = this.SCALE / Math.pow(this.velocity, 2);
 
         this.currPartition = 0;
         this.repartPoint;
@@ -58,9 +58,7 @@ class LinearAnimation extends Animation {
                 this.rotAng = -this.rotAng;
             }
 
-            var axisvec = vec3.fromValues(0, 1, 0);
-            this.animRotationMatrix = mat4.create();
-            mat4.rotate(this.animRotationMatrix, this.animRotationMatrix, this.rotAng, axisvec);
+            this.rotateY(this.rotAng);
         }
     }
 

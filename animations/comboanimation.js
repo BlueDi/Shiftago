@@ -3,6 +3,10 @@ class ComboAnimation extends Animation {
         super(0);
 
         this.animationsList = animationsList;
+        for (var i = 0; i < this.animationsList.length; i++) {
+            this.animationsList[i].stop = false;
+        }
+
         this.state = 'initial';
     }
 
@@ -10,6 +14,8 @@ class ComboAnimation extends Animation {
         Atualizar o estado da animacao
     */
     update(currTime) {
+        this.animTranslateMatrix = mat4.create();
+        this.animRotationMatrix = mat4.create();
         for (var i = 0; i < this.animationsList.length; i++) {
             this.actualAnimation = this.animationsList[i];
 
