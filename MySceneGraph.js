@@ -1429,6 +1429,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                         this.nodes[nodeID].animationID.push(animationID);
                     }
                 }
+                this.animations[this.nodes[nodeID].animationID[0]].stop = false;
             }
 
             // Retrieves information about children.
@@ -1563,8 +1564,25 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
 
     var matrixtrans = mat4.create();
     mat4.multiply(matrixtrans, transformation, nodeTransformation);
+
+    var actualAnimationID = -1;
+    var next = false;
     for (var i = 0; i < animation.length; i++) {
-        var animationID = animation[i];
+        var currentA = this.animations[animation[i]];
+        if (currentA.stop == false && currentA.state != 'end') {
+            actualAnimationID = i;
+            break;
+        } else if (currentA.stop == false && currentA.state == 'end') {
+            next = true;
+        } else if (next == true && currentA.stop == true && currentA.state != 'end') {
+            next = false;
+            currentA.stop = false;
+            actualAnimationID = i;
+            break;
+        }
+    }
+    if (actualAnimationID != -1) {
+        var animationID = animation[actualAnimationID];
         mat4.multiply(matrixtrans, matrixtrans, this.animations[animationID].animTranslateMatrix);
         mat4.multiply(matrixtrans, matrixtrans, this.animations[animationID].animRotationMatrix);
     }
