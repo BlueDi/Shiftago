@@ -179,26 +179,67 @@
     </MATERIALS>
 
     <ANIMATIONS>
-        <ANIMATION id="walk" speed="10" type="linear">
+        <ANIMATION id="walk2" speed="25" type="linear">
             <controlpoint xx="0" yy="0" zz="0"/>
-            <controlpoint xx="10" yy="0" zz="0"/>
-            <controlpoint xx="10" yy="0" zz="10"/>
-            <controlpoint xx="10" yy="0" zz="0"/>
-            <controlpoint xx="0" yy="0" zz="10"/>
-            <controlpoint xx="10" yy="0" zz="0"/>
+            <controlpoint xx="-10" yy="0" zz="0"/>
+            <controlpoint xx="-10" yy="0" zz="-30"/>
+            <controlpoint xx="0" yy="0" zz="-30"/>
+            <controlpoint xx="-10" yy="0" zz="0"/>
+            <controlpoint xx="0" yy="0" zz="0"/>
+        </ANIMATION>
+        <ANIMATION id="walk3" speed="25" type="linear">
+            <controlpoint xx="0" yy="0" zz="0"/>
+            <controlpoint xx="-10" yy="0" zz="0"/>
+            <controlpoint xx="-10" yy="0" zz="-30"/>
+            <controlpoint xx="0" yy="0" zz="-30"/>
+            <controlpoint xx="-10" yy="0" zz="0"/>
+            <controlpoint xx="0" yy="0" zz="0"/>
+        </ANIMATION>
+        <ANIMATION id="walkback" speed="30" type="linear">
+            <controlpoint xx="15" yy="0" zz="0"/>
+            <controlpoint xx="0" yy="0" zz="0"/>
+        </ANIMATION>
+        <ANIMATION id="walkback2" speed="25" type="linear">
+            <controlpoint xx="-15" yy="0" zz="0"/>
+            <controlpoint xx="0" yy="0" zz="0"/>
+        </ANIMATION>
+        <ANIMATION id="jump" speed="35" type="linear">
             <controlpoint xx="0" yy="0" zz="0"/>
             <controlpoint xx="0" yy="10" zz="0"/>
             <controlpoint xx="0" yy="0" zz="0"/>
-            <controlpoint xx="-10" yy="0" zz="0"/>
+        </ANIMATION>
+        <ANIMATION id="jump2" speed="35" type="linear">
             <controlpoint xx="0" yy="0" zz="0"/>
-            <controlpoint xx="-10" yy="0" zz="0"/>
+            <controlpoint xx="0" yy="10" zz="0"/>
+            <controlpoint xx="0" yy="0" zz="0"/>
         </ANIMATION>
 
-        <ANIMATION id="rotate" speed="10" type="circular" centerx="0" centery="0" centerz="0" radius="20" startang="0" rotang="180"/>
+        <ANIMATION id="rotate" speed="20" type="circular" centerx="0" centery="0" centerz="0" radius="0" startang="0" rotang="-180"/>
+        <ANIMATION id="walk_around" speed="30" type="circular" centerx="0" centery="0" centerz="0" radius="3" startang="0" rotang="720"/>
+        <ANIMATION id="walk_around2" speed="30" type="circular" centerx="0" centery="0" centerz="0" radius="3" startang="0" rotang="720"/>
+        <ANIMATION id="rotate_ball" speed="1" type="circular" centerx="0" centery="0" centerz="0" radius="3" startang="0" rotang="1080"/>
+        <ANIMATION id="rotate_discoball" speed="3" type="circular" centerx="0" centery="0" centerz="0" radius="0" startang="0" rotang="1080"/>
 
-        <ANIMATION id="robotwalk" type="combo">
-            <SPANREF id="rotate"/>
-            <SPANREF id="walk"/>
+        <ANIMATION id="drift" speed="25" type="bezier">
+            <controlpoint xx="0" yy="0" zz="0"/>
+            <controlpoint xx="7" yy="0" zz="10"/>
+            <controlpoint xx="7" yy="0" zz="-10"/>
+            <controlpoint xx="15" yy="0" zz="0"/>
+        </ANIMATION>
+        <ANIMATION id="drift2" speed="25" type="bezier">
+            <controlpoint xx="0" yy="0" zz="0"/>
+            <controlpoint xx="-7" yy="0" zz="-10"/>
+            <controlpoint xx="-7" yy="0" zz="10"/>
+            <controlpoint xx="-15" yy="0" zz="0"/>
+        </ANIMATION>
+
+        <ANIMATION id="jump_around" type="combo">
+            <SPANREF id="drift"/>
+            <SPANREF id="jump"/>
+        </ANIMATION>
+        <ANIMATION id="jump_around2" type="combo">
+            <SPANREF id="drift2"/>
+            <SPANREF id="jump2"/>
         </ANIMATION>
 
     </ANIMATIONS>
@@ -218,7 +259,8 @@
                 <NODEREF id="bar"/>
                 <NODEREF id="posters"/>
                 <NODEREF id="stools"/>
-                <NODEREF id="robot"/>
+                <NODEREF id="robotA"/>
+                <NODEREF id="robotB"/>
             </DESCENDANTS>
         </NODE>
 
@@ -316,6 +358,10 @@
             <TEXTURE id="null"/>
 
             <TRANSLATION x="25" y="21" z="20"/>
+
+            <ANIMATIONREFS>
+                <ANIMATIONREF id="rotate_discoball"/>
+            </ANIMATIONREFS>
 
             <DESCENDANTS>
                 <NODEREF id="string"/>
@@ -561,7 +607,7 @@
         <!-- END stools-->
 
         <!-- BEGIN robot -->
-        <NODE id="robot">
+        <NODE id="robotA">
             <MATERIAL id="prata"/>
             <TEXTURE id="rust"/>
 
@@ -569,14 +615,56 @@
             <TRANSLATION x="17" y="1.2" z="18"/>
 
             <ANIMATIONREFS>
-                <ANIMATIONREF id="robotwalk"/>
+                <ANIMATIONREF id="jump_around"/>
+                <ANIMATIONREF id="walkback"/>
+                <ANIMATIONREF id="walk_around2"/>
+                <ANIMATIONREF id="jump_around2"/>
+                <ANIMATIONREF id="walkback2"/>
             </ANIMATIONREFS>
 
             <DESCENDANTS>
+                <NODEREF id="robot_ball"/>
                 <NODEREF id="robot_body"/>
                 <NODEREF id="robot_head"/>
                 <NODEREF id="robot_arms"/>
                 <NODEREF id="robot_legs"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robotB">
+            <MATERIAL id="latao"/>
+            <TEXTURE id="light_rust"/>
+
+            <TRANSLATION x="17" y="1.2" z="35"/>
+
+            <ANIMATIONREFS>
+                <ANIMATIONREF id="walk2"/>
+                <ANIMATIONREF id="walk_around"/>
+                <ANIMATIONREF id="walk3"/>
+            </ANIMATIONREFS>
+
+            <DESCENDANTS>
+                <NODEREF id="robot_ball"/>
+                <NODEREF id="robot_body"/>
+                <NODEREF id="robot_head"/>
+                <NODEREF id="robot_arms"/>
+                <NODEREF id="robot_legs"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="robot_ball">
+            <MATERIAL id="prata"/>
+            <TEXTURE id="null"/>
+
+            <TRANSLATION x="0" y="6.5" z="0"/>
+
+            <ANIMATIONREFS>
+                <ANIMATIONREF id="rotate_ball"/>
+                <ANIMATIONREF id="jump"/>
+            </ANIMATIONREFS>
+
+            <DESCENDANTS>
+                <LEAF type="sphere" args="0.25 20 20"/>
             </DESCENDANTS>
         </NODE>
 
@@ -646,6 +734,10 @@
             <TEXTURE id="null"/>
 
             <TRANSLATION x="0" y="0.88" z="0"/>
+
+            <ANIMATIONREFS>
+                <ANIMATIONREF id="rotate"/>
+            </ANIMATIONREFS>
 
             <DESCENDANTS>
                 <NODEREF id="robot_hat_left"/>
@@ -848,6 +940,10 @@
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
+            <ANIMATIONREFS>
+                <ANIMATIONREF id="rotate"/>
+            </ANIMATIONREFS>
+
             <DESCENDANTS>
                 <NODEREF id="robot_left_shoulder"/>
                 <NODEREF id="robot_left_prearm"/>
@@ -930,6 +1026,10 @@
         <NODE id="robot_right_arm">
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
+
+            <ANIMATIONREFS>
+                <ANIMATIONREF id="rotate"/>
+            </ANIMATIONREFS>
 
             <DESCENDANTS>
                 <NODEREF id="robot_right_shoulder"/>
