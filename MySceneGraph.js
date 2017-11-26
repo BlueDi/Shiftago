@@ -1429,6 +1429,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                         this.nodes[nodeID].animationID.push(animationID);
                     }
                 }
+                this.nodes[nodeID].actualAnimation = 0;
                 this.animations[this.nodes[nodeID].animationID[0]].stop = false;
             }
 
@@ -1557,6 +1558,7 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
     var transformation = this.transformationStack[this.transformationStack.length - 1];
     var nodeTransformation = this.nodes[nodeID].transformMatrix;
     var animation = this.nodes[nodeID].animationID;
+    var actualAnimationID = this.nodes[nodeID].actualAnimation;
     var material = this.nodes[nodeID].materialID;
     var texture = this.nodes[nodeID].textureID;
     var children = this.nodes[nodeID].children;
@@ -1564,21 +1566,14 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
 
     var matrixtrans = mat4.create();
     mat4.multiply(matrixtrans, transformation, nodeTransformation);
-
-    var actualAnimationID = -1;
-    var next = false;
-    for (var i = 0; i < animation.length; i++) {
-        var currentA = this.animations[animation[i]];
-        if (currentA.stop == false && currentA.state != 'end') {
-            actualAnimationID = i;
-            break;
-        } else if (currentA.stop == false && currentA.state == 'end') {
-            next = true;
-        } else if (next == true && currentA.stop == true && currentA.state != 'end') {
-            next = false;
-            currentA.stop = false;
-            actualAnimationID = i;
-            break;
+    if (actualAnimationID != -1 && this.animations[animation[actualAnimationID]].state == 'end') {
+        if (actualAnimationID < animation.length - 1) {
+            actualAnimationID += 1;
+            this.nodes[nodeID].actualAnimation = actualAnimationID;
+            this.animations[animation[actualAnimationID]].stop = false;
+        } else {
+            actualAnimationID = -1;
+            this.nodes[nodeID].actualAnimation = -1;
         }
     }
     if (actualAnimationID != -1) {
