@@ -20,7 +20,6 @@ XMLscene.prototype.constructor = XMLscene;
  */
 XMLscene.prototype.init = function(application) {
     CGFscene.prototype.init.call(this, application);
-    this.setUpdatePeriod(1000 / 60);
 
     this.initCameras();
 
@@ -91,6 +90,8 @@ XMLscene.prototype.onGraphLoaded = function() {
 
     // Adds lights group.
     this.interface.addLightsGroup(this.graph.lights);
+
+    this.setUpdatePeriod(1000 / 60);
 }
 
 /**
