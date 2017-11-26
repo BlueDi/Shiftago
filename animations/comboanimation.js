@@ -4,7 +4,7 @@ class ComboAnimation extends Animation {
 
         this.animationsList = animationsList;
         for (var i = 0; i < this.animationsList.length; i++) {
-            this.animationsList[i].stop = false;
+            this.animationsList[i].stop = true;
         }
 
         this.state = 'initial';
@@ -14,16 +14,31 @@ class ComboAnimation extends Animation {
         Atualizar o estado da animacao
     */
     update(currTime) {
-        this.animTranslateMatrix = mat4.create();
-        this.animRotationMatrix = mat4.create();
-        for (var i = 0; i < this.animationsList.length; i++) {
-            this.actualAnimation = this.animationsList[i];
+        if (this.stop == false && this.state != 'end') {
+            if (this.state == 'initial') {
+                for (var i = 0; i < this.animationsList.length; i++) {
+                    this.animationsList[i].stop = false;
+                }
+                this.state = 'updating';
+            }
 
-            if (this.actualAnimation.state != 'end') {
-                this.actualAnimation.update(currTime);
+            this.animTranslateMatrix = mat4.create();
+            this.animRotationMatrix = mat4.create();
 
-                mat4.multiply(this.animTranslateMatrix, this.animTranslateMatrix, this.actualAnimation.animTranslateMatrix);
-                mat4.multiply(this.animRotationMatrix, this.animRotationMatrix, this.actualAnimation.animRotationMatrix);
+            var allEnded = true;
+            for (var i = 0; i < this.animationsList.length; i++) {
+                var animation = this.animationsList[i];
+
+                if (animation.state != 'end') {
+                    allEnded = false;
+                    animation.update(currTime);
+
+                    mat4.multiply(this.animTranslateMatrix, this.animTranslateMatrix, animation.animTranslateMatrix);
+                    mat4.multiply(this.animRotationMatrix, this.animRotationMatrix, animation.animRotationMatrix);
+                }
+            }
+            if (allEnded) {
+                this.state = 'end';
             }
         }
     }

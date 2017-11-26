@@ -82,7 +82,7 @@ class LinearAnimation extends Animation {
         Se fez todas as particoes, chegou ao fim
     */
     update(currTime) {
-        if (this.stop == false) {
+        if (this.stop == false && this.state != 'end') {
             if (this.state == 'initial') {
                 this.initialTime = currTime;
                 this.state = 'updating';

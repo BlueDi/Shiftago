@@ -39,7 +39,7 @@ class CircularAnimation extends Animation {
     }
 
     update(currTime) {
-        if (this.stop == false) {
+        if (this.stop == false && this.state != 'end') {
             if (this.state == 'initial') {
                 this.initialTime = currTime;
                 this.state = 'updating';
