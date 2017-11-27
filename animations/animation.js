@@ -1,6 +1,6 @@
 class Animation {
     constructor(speed) {
-        this.FPS = 60;
+        this.SCALE = 60 * 1000;
 
         this.velocity = speed;
         this.initialTime = 0;
@@ -8,7 +8,13 @@ class Animation {
         this.animRotationMatrix = mat4.create();
 
         this.state = 'end';
-        this.stop = false;
+        this.stop = true;
+    }
+
+    rotateY(rototationAngle) {
+        var axisvec = vec3.fromValues(0, 1, 0);
+        this.animRotationMatrix = mat4.create();
+        this.animRotationMatrix = mat4.rotate(this.animRotationMatrix, this.animRotationMatrix, rototationAngle, axisvec);
     }
 
     /**

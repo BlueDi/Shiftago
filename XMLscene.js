@@ -10,17 +10,24 @@ function XMLscene(interface) {
     this.interface = interface;
 
     this.lightValues = {};
+
+    this.initialTime = 0;
+    this.glow = false;
+    this.resetAnimation = false;
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
+
+XMLscene.prototype.resetAnimation = function() {
+    this.ResetAnimation = true;
+}
 
 /**
  * Initializes the scene, setting some WebGL defaults, initializing the camera and the axis.
  */
 XMLscene.prototype.init = function(application) {
     CGFscene.prototype.init.call(this, application);
-    this.setUpdatePeriod(10);
 
     this.initCameras();
 
@@ -91,6 +98,8 @@ XMLscene.prototype.onGraphLoaded = function() {
 
     // Adds lights group.
     this.interface.addLightsGroup(this.graph.lights);
+
+    this.setUpdatePeriod(1000 / 60);
 }
 
 /**
@@ -147,7 +156,18 @@ XMLscene.prototype.display = function() {
 };
 
 XMLscene.prototype.update = function(currTime) {
+
+    var currTime = currTime - this.initialTime;
+    this.graph.selectableShader.setUniformsValues({
+        normScale: this.glow ? 0 : (Math.cos(Math.PI * 2 * currTime / 1000) + 1.) / 2
+    });
+
     for (var animation in this.graph.animations) {
         this.graph.animations[animation].update(currTime);
+    }
+
+    if (this.resetAnimation) {
+        this.initialTime = currTime;
+        this.resetAnimation = false;
     }
 }

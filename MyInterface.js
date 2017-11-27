@@ -25,6 +25,7 @@ MyInterface.prototype.init = function(application) {
 
     // add a group of controls (and open/expand by defult)
 
+	this.scene.selFolder = this.gui.addFolder("Selectables");
     return true;
 };
 

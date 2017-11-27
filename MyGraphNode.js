@@ -2,8 +2,10 @@
  * MyGraphNode class, representing an intermediate node in the scene graph.
  * @constructor
  **/
-function MyGraphNode(graph, nodeID) {
+function MyGraphNode(graph, nodeID, selectable) {
     this.graph = graph;
+
+    this.selectable = selectable;
 
     this.nodeID = nodeID;
 
@@ -20,7 +22,8 @@ function MyGraphNode(graph, nodeID) {
     this.textureID = null;
 
     // The animation ID.
-    this.animationID = null;
+    this.animationID = [];
+    this.actualAnimation = -1;
 
     this.transformMatrix = mat4.create();
     mat4.identity(this.transformMatrix);

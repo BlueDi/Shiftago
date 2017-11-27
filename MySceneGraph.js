@@ -29,6 +29,8 @@ function MySceneGraph(filename, scene) {
     this.axisCoords['y'] = [0, 1, 0];
     this.axisCoords['z'] = [0, 0, 1];
 
+    this.selectableShader = new CGFshader(this.scene.gl, "shaders/selectable.vert", "shaders/selectable.frag");
+
     // File reading
     this.reader = new CGFXMLreader();
 
@@ -1150,8 +1152,16 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
         var nodeNames = [];
         switch (animationType) {
             case "linear":
+            case "bezier":
                 var animationSpeed = this.reader.getFloat(children[i], 'speed');
                 var controlPoints = [];
+
+                if (animationType == "bezier" && animationSpecs.length < 4) {
+                    return "a bezier animation needs at least 4 control points";
+                } else if (animationSpecs.length < 2) {
+                    return "a linear animation needs at least 2 control points";
+                }
+
                 for (var j = 0; j < animationSpecs.length; j++) {
                     if (animationSpecs[j].nodeName != "controlpoint") {
                         return "invalid Specs for linear animation";
@@ -1179,7 +1189,12 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
                         return "non-numeric value for zz-coordinate of the" + j + "º control point of the linear animation";
                     controlPoints.push([xx, yy, zz]);
                 }
-                this.animations[animationID] = new LinearAnimation(animationSpeed, controlPoints);
+
+                if (animationType == "linear") {
+                    this.animations[animationID] = new LinearAnimation(animationSpeed, controlPoints);
+                } else if (animationType == "bezier") {
+                    this.animations[animationID] = new BezierAnimation(animationSpeed, controlPoints);
+                }
                 break;
 
             case "circular":
@@ -1231,38 +1246,6 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 
                 var center = vec3.fromValues(centerx, centery, centerz);
                 this.animations[animationID] = new CircularAnimation(animationSpeed, center, radius, startang, rotang);
-                break;
-
-            case "bezier":
-                var animationSpeed = this.reader.getFloat(children[i], 'speed');
-
-                for (var j = 0; j < animationSpecs.length; j++) {
-                    if (animationSpecs[i].nodeName != "controlpoint") {
-                        return "invalid Specs for bezier animation";
-                    }
-                    var xx = this.reader.getFloat(animationSpecs[j], 'xx');
-                    if (xx == null) {
-                        this.onXMLMinorError("unable to parse xx-coordinate for the " + j + "º control point of the bezier animation");
-                        break;
-                    } else if (isNaN(xx))
-                        return "non-numeric value for xx-coordinate of the" + j + "º control point of the bezier animation";
-
-                    var yy = this.reader.getFloat(animationSpecs[j], 'yy');
-                    if (yy == null) {
-                        this.onXMLMinorError("unable to parse yy-coordinate for the " + j + "º control point of the bezier animation");
-                        break;
-                    } else if (isNaN(yy))
-                        return "non-numeric value for yy-coordinate of the" + j + "º control point of the bezier animation";
-
-                    var zz = this.reader.getFloat(animationSpecs[j], 'zz');
-                    if (zz == null) {
-                        this.onXMLMinorError("unable to parse zz-coordinate for the " + j + "º control point of the bezier animation");
-                        break;
-                    } else if (isNaN(zz))
-                        return "non-numeric value for zz-coordinate of the" + j + "º control point of the bezier animation";
-
-                }
-
                 break;
 
             case "combo":
@@ -1317,10 +1300,22 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             if (this.nodes[nodeID] != null)
                 return "node ID must be unique (conflict: ID = " + nodeID + ")";
 
+
+            var selectableNode = false;
+
+            //Checks if node is selectable
+
+            if (this.reader.hasAttribute(children[i], 'selectable')) {
+                selectableNode = this.reader.getBoolean(children[i], 'selectable');
+            }
+
             this.log("Processing node " + nodeID);
 
             // Creates node.
-            this.nodes[nodeID] = new MyGraphNode(this, nodeID);
+            this.nodes[nodeID] = new MyGraphNode(this, nodeID, selectableNode);
+
+            if (selectableNode)
+                this.scene.selFolder.add(this.nodes[nodeID], 'selectable').name(nodeID);
 
             // Gathers child nodes.
             var nodeSpecs = children[i].children;
@@ -1436,18 +1431,20 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             // Retrieves possible animations.
             var animationIndex = specsNames.indexOf("ANIMATIONREFS");
             if (animationIndex != -1) {
-                var aimationsDescendants = nodeSpecs[animationIndex].children;
-                for (var j = 0; j < aimationsDescendants.length; j++) {
-                    if (aimationsDescendants[j].nodeName == "ANIMATIONREF") {
-                        var animationID = this.reader.getString(aimationsDescendants[j], 'id');
+                var animationsDescendants = nodeSpecs[animationIndex].children;
+                for (var j = 0; j < animationsDescendants.length; j++) {
+                    if (animationsDescendants[j].nodeName == "ANIMATIONREF") {
+                        var animationID = this.reader.getString(animationsDescendants[j], 'id');
                         this.log("   AnimationRef: " + animationID);
                         if (animationID == null)
                             return "unable to parse animation id";
                         if (this.animations[animationID] == null)
                             return "ID does not correspond to a valid animation";
-                        this.nodes[nodeID].animationID = animationID;
+                        this.nodes[nodeID].animationID.push(animationID);
                     }
                 }
+                this.nodes[nodeID].actualAnimation = 0;
+                this.animations[this.nodes[nodeID].animationID[0]].stop = false;
             }
 
             // Retrieves information about children.
@@ -1565,6 +1562,15 @@ MySceneGraph.prototype.displayScene = function() {
     this.animationStack.push(tempanim);
 
     this.displayNode(this.idRoot);
+
+    if (!this.scene.glow) {
+        this.isMarking = false;
+        this.scene.setActiveShader(this.scene.defaultShader);
+    } else {
+        this.isMarking = true;
+        this.scene.setActiveShader(this.selectableShader);
+    }
+
 };
 
 /**
@@ -1575,6 +1581,7 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
     var transformation = this.transformationStack[this.transformationStack.length - 1];
     var nodeTransformation = this.nodes[nodeID].transformMatrix;
     var animation = this.nodes[nodeID].animationID;
+    var actualAnimationID = this.nodes[nodeID].actualAnimation;
     var material = this.nodes[nodeID].materialID;
     var texture = this.nodes[nodeID].textureID;
     var children = this.nodes[nodeID].children;
@@ -1582,11 +1589,29 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
 
     var matrixtrans = mat4.create();
     mat4.multiply(matrixtrans, transformation, nodeTransformation);
-    if (animation !== null) {
-        mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animTranslateMatrix);
-        mat4.multiply(matrixtrans, matrixtrans, this.animations[animation].animRotationMatrix);
+    if (actualAnimationID != -1 && this.animations[animation[actualAnimationID]].state == 'end') {
+        if (actualAnimationID < animation.length - 1) {
+            actualAnimationID += 1;
+            this.nodes[nodeID].actualAnimation = actualAnimationID;
+            this.animations[animation[actualAnimationID]].stop = false;
+        } else {
+            actualAnimationID = -1;
+            this.nodes[nodeID].actualAnimation = -1;
+        }
+    }
+    if (actualAnimationID != -1) {
+        var animationID = animation[actualAnimationID];
+        mat4.multiply(matrixtrans, matrixtrans, this.animations[animationID].animTranslateMatrix);
+        mat4.multiply(matrixtrans, matrixtrans, this.animations[animationID].animRotationMatrix);
     }
     this.transformationStack.push(matrixtrans);
+
+    var isMarker = false;
+    if (this.isMarking == false && this.nodes[nodeID].selectable == true) {
+        this.isMarking = true;
+        isMarker = true;
+        this.scene.setActiveShader(this.selectableShader);
+    }
 
     if (material != 'null')
         this.materialStack.push(material);

@@ -3,33 +3,43 @@ class ComboAnimation extends Animation {
         super(0);
 
         this.animationsList = animationsList;
-
-        for (var i = 1; i < this.animationsList.length; i++) {
+        for (var i = 0; i < this.animationsList.length; i++) {
             this.animationsList[i].stop = true;
         }
 
-        this.actualAnimationCounter = 0;
-        this.actualAnimation = this.animationsList[this.actualAnimationCounter];
         this.state = 'initial';
-    }
-
-    nextAnimation() {
-        this.actualAnimationCounter++;
-        this.actualAnimation = this.animationsList[this.actualAnimationCounter];
-        this.actualAnimation.stop = false;
     }
 
     /**
         Atualizar o estado da animacao
     */
     update(currTime) {
-        if (this.actualAnimation.state != 'end') {
-            this.actualAnimation.update(currTime);
+        if (this.stop == false && this.state != 'end') {
+            if (this.state == 'initial') {
+                for (var i = 0; i < this.animationsList.length; i++) {
+                    this.animationsList[i].stop = false;
+                }
+                this.state = 'updating';
+            }
 
-            this.animTranslateMatrix = this.actualAnimation.animTranslateMatrix;
-            this.animRotationMatrix = this.actualAnimation.animRotationMatrix;
-        } else if (this.actualAnimationCounter < this.animationsList.length - 1) {
-            this.nextAnimation();
+            this.animTranslateMatrix = mat4.create();
+            this.animRotationMatrix = mat4.create();
+
+            var allEnded = true;
+            for (var i = 0; i < this.animationsList.length; i++) {
+                var animation = this.animationsList[i];
+
+                if (animation.state != 'end') {
+                    allEnded = false;
+                    animation.update(currTime);
+
+                    mat4.multiply(this.animTranslateMatrix, this.animTranslateMatrix, animation.animTranslateMatrix);
+                    mat4.multiply(this.animRotationMatrix, this.animRotationMatrix, animation.animRotationMatrix);
+                }
+            }
+            if (allEnded) {
+                this.state = 'end';
+            }
         }
     }
 };

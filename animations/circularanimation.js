@@ -8,51 +8,29 @@ class CircularAnimation extends Animation {
         this.radius = radius;
         this.startang = startang * DEGREE_TO_RAD;
         this.rotang = rotang * DEGREE_TO_RAD;
+        this.reparts = this.SCALE / this.velocity;
+        this.incang = this.rotang / this.reparts;
 
-        this.repart;
         this.currPartition = 0;
-        this.Time;
-
-        this.currRotAng = 0;
-        this.assertAng = Math.PI / 2;
+        if (this.rotang > 0) {
+            this.currRotAng = this.startang + Math.PI;
+        } else if (this.rotang < 0) {
+            this.currRotAng = this.startang - Math.PI;
+        }
 
         this.curr = vec3.fromValues(0, 0, 0);
 
-        this.incang;
-
-        this.FPS = 60;
-
         this.state = 'initial';
-
-        this.initialize();
-    }
-
-    initialize() {
-        //intial rotation
-        if (this.rotang < 0) {
-            this.assertAng = -this.assertAng;
-        }
-
-        this.currRotAng += this.startang + Math.PI / 2;
-
-        this.rotate();
-        this.translate();
-
-        //calculating total partitions and incremet anglev
-        //var totalrot = Math.abs(this.rotang);
-        this.repart = this.FPS * 60;
-        this.incang = this.rotang / this.repart;
-    }
-
-    rotate() {
-        var axisvec = vec3.fromValues(0, 1, 0);
-        this.animRotationMatrix = mat4.create();
-        this.animRotationMatrix = mat4.rotate(this.animRotationMatrix, this.animRotationMatrix, this.currRotAng + this.assertAng, axisvec);
     }
 
     translate() {
-        this.curr[0] = this.radius * Math.sin(this.currRotAng);
-        this.curr[2] = this.radius * Math.cos(this.currRotAng);
+        if (this.currRotAng > 0) {
+            this.curr[0] = this.radius * Math.sin(this.currRotAng);
+            this.curr[2] = this.radius * Math.cos(this.currRotAng);
+        } else if (this.currRotAng < 0) {
+            this.curr[0] = -this.radius * Math.sin(this.currRotAng);
+            this.curr[2] = -this.radius * Math.cos(this.currRotAng);
+        }
 
         var transform = vec3.create();
         vec3.add(transform, this.curr, this.center);
@@ -61,32 +39,28 @@ class CircularAnimation extends Animation {
     }
 
     update(currTime) {
-        if (this.stop == false) {
-            if (this.currPartition == 0) {
-                this.Time = currTime;
-                this.currPartition++;
-
-                return;
+        if (this.stop == false && this.state != 'end') {
+            if (this.state == 'initial') {
+                this.initialTime = currTime;
+                this.state = 'updating';
             }
 
             if (this.state != 'end') {
-                var Diff = currTime - this.Time;
-                this.Time = currTime;
+                var deltat = currTime - this.initialTime;
+                this.initialTime = currTime;
 
-                var n_part_asserts = (Diff * this.FPS) / 100;
-                var assertPoint = Math.round(n_part_asserts);
+                var assertPoint = Math.round(deltat);
+                this.currRotAng += this.incang * assertPoint;
 
-                for (var i = 0; i < assertPoint; i++) {
-                    this.currRotAng += this.incang;
-                }
-
-                this.rotate();
+                this.rotateY(this.currRotAng);
                 this.translate();
 
                 this.currPartition += assertPoint;
             }
 
-            if (this.currPartition >= this.repart) {
+            if (this.currPartition >= this.reparts) {
+                this.currRotAng = this.rotang + Math.PI;
+                this.rotateY(this.currRotAng);
                 this.state = 'end';
             }
         }
