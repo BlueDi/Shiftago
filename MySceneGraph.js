@@ -29,6 +29,8 @@ function MySceneGraph(filename, scene) {
     this.axisCoords['y'] = [0, 1, 0];
     this.axisCoords['z'] = [0, 0, 1];
 
+    this.selectableShader = new CGFshader(this.scene.gl, "shaders/selectable.vert", "shaders/selectable.frag");
+
     // File reading
     this.reader = new CGFXMLreader();
 
@@ -1298,10 +1300,22 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             if (this.nodes[nodeID] != null)
                 return "node ID must be unique (conflict: ID = " + nodeID + ")";
 
+
+            var selectableNode = false;
+
+            //Checks if node is selectable
+
+            if (this.reader.hasAttribute(children[i], 'selectable')) {
+                selectableNode = this.reader.getBoolean(children[i], 'selectable');
+            }
+
             this.log("Processing node " + nodeID);
 
             // Creates node.
-            this.nodes[nodeID] = new MyGraphNode(this, nodeID);
+            this.nodes[nodeID] = new MyGraphNode(this, nodeID, selectableNode);
+
+            if (selectableNode)
+                this.scene.selFolder.add(this.nodes[nodeID], 'selectable').name(nodeID);
 
             // Gathers child nodes.
             var nodeSpecs = children[i].children;
@@ -1548,6 +1562,15 @@ MySceneGraph.prototype.displayScene = function() {
     this.animationStack.push(tempanim);
 
     this.displayNode(this.idRoot);
+
+    if (!this.scene.glow) {
+        this.isMarking = false;
+        this.scene.setActiveShader(this.scene.defaultShader);
+    } else {
+        this.isMarking = true;
+        this.scene.setActiveShader(this.selectableShader);
+    }
+
 };
 
 /**
@@ -1582,6 +1605,13 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
         mat4.multiply(matrixtrans, matrixtrans, this.animations[animationID].animRotationMatrix);
     }
     this.transformationStack.push(matrixtrans);
+
+    var isMarker = false;
+    if (this.isMarking == false && this.nodes[nodeID].selectable == true) {
+        this.isMarking = true;
+        isMarker = true;
+        this.scene.setActiveShader(this.selectableShader);
+    }
 
     if (material != 'null')
         this.materialStack.push(material);

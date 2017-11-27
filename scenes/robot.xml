@@ -19,7 +19,7 @@
     <!-- Lights -->
     <LIGHTS>
         <LIGHT id="light0">
-            <enable value="0"/>
+            <enable value="1"/>
             <position x="0" y="10" z="0" w="1"/>
             <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
@@ -382,7 +382,7 @@
 
         </NODE>
 
-        <NODE id="ball">
+        <NODE id="ball" selectable="true">
             <MATERIAL id="null"/>
             <TEXTURE id="disco"/>
 
@@ -506,7 +506,7 @@
 
         </NODE>
 
-        <NODE id="stool1">
+        <NODE id="stool1" selectable="true">
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
@@ -607,7 +607,7 @@
         <!-- END stools-->
 
         <!-- BEGIN robot -->
-        <NODE id="robotA">
+        <NODE id="robotA" selectable="true">
             <MATERIAL id="prata"/>
             <TEXTURE id="rust"/>
 

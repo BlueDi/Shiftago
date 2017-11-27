@@ -2,8 +2,10 @@
  * MyGraphNode class, representing an intermediate node in the scene graph.
  * @constructor
  **/
-function MyGraphNode(graph, nodeID) {
+function MyGraphNode(graph, nodeID, selectable) {
     this.graph = graph;
+
+    this.selectable = selectable;
 
     this.nodeID = nodeID;
 
