@@ -36,22 +36,7 @@ function Shiftago(graph, nodeID, selectable, dim) {
     var NBALLS = Math.pow(dim, 2);
     this.balls = [];
     var aux = dim / 2;
-    for (var i = -aux; i < aux; i++) {
-        for (var j = -aux; j < aux; j++) {
-            //Criar um no na posiçao certa e com uma bola
-            var node = new MyGraphNode(graph, "" + i + j);
-            node.materialID = "null";
-            node.textureID = "null";
-            mat4.translate(node.transformMatrix, node.transformMatrix, [i, 1, j]);
-            node.addLeaf(new MyLeaf(graph));
-            this.addChild(node.nodeID);
-            graph.nodes[node.nodeID] = node;
-            console.log(node);
-        }
-    }
-    console.log(graph.nodes);
-
-    this.getPrologRequest("display", this.handleReply);
+    this.getPrologRequest('display', this.handleReply);
 }
 
 Shiftago.prototype.constructor = Shiftago;
@@ -83,7 +68,7 @@ Shiftago.prototype.getPrologRequest = function(requestString, onSuccess, onError
         this.handleReply(data.target.response, request.requestString);
     };
     request.onerror = onError || function() {
-        console.log("Error waiting for response");
+        console.log('Error waiting for response');
     };
 
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -97,5 +82,59 @@ Shiftago.prototype.handleReply = function(data) {
 }
 
 Shiftago.prototype.initializeBoard = function() {
+    var materials = ['saphire', 'ruby', 'obsidian', 'emerald'];
 
+    this.createPlayerPieces('P1', materials[0]);
+    this.createPlayerPieces('P2', materials[1]);
+    this.createPlayerPieces('P3', materials[2]);
+    this.createPlayerPieces('P4', materials[3]);
+}
+
+Shiftago.prototype.createPlayerPieces = function(Player, Material) {
+    var texture = 'null';
+    var pos = 0;
+    var vec1;
+    var vec2;
+    if (Player == 'P1') {
+        vec1 = [-6.5, 1, pos];
+        vec2 = [-5.5, 1, pos];
+    } else if (Player == 'P2') {
+        vec1 = [6.5, 1, pos];
+        vec2 = [5.5, 1, pos];
+    } else if (Player == 'P3') {
+        vec1 = [pos, 1, 6.5];
+        vec2 = [pos, 1, 5.5];
+    } else if (Player == 'P4') {
+        vec1 = [pos, 1, -6.5];
+        vec2 = [pos, 1, -5.5];
+    }
+
+    for (var i = 0; i < 12; i++) {
+        if (Player == 'P1' || Player == 'P2') {
+            vec1[2] = i - 5.5;
+        } else if (Player == 'P3' || Player == 'P4') {
+            vec1[0] = i - 5.5;
+        }
+        var node = new MyGraphNode(this.graph, Player + i);
+        node.textureID = texture;
+        node.materialID = Material;
+        mat4.translate(node.transformMatrix, node.transformMatrix, vec1);
+        node.addLeaf(new MyLeaf(this.graph));
+        this.addChild(node.nodeID);
+        this.graph.nodes[node.nodeID] = node;
+    }
+    for (var i = 12; i < 22; i++) {
+        if (Player == 'P1' || Player == 'P2') {
+            vec2[2] = i - 12 - 4.5;
+        } else if (Player == 'P3' || Player == 'P4') {
+            vec2[0] = i - 12 - 4.5;
+        }
+        var node = new MyGraphNode(this.graph, Player + i);
+        node.materialID = Material;
+        node.textureID = texture;
+        mat4.translate(node.transformMatrix, node.transformMatrix, vec2);
+        node.addLeaf(new MyLeaf(this.graph));
+        this.addChild(node.nodeID);
+        this.graph.nodes[node.nodeID] = node;
+    }
 }

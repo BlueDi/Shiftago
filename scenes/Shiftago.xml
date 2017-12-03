@@ -16,7 +16,7 @@
     <LIGHTS>
         <LIGHT id="light0">
             <enable value="1"/>
-            <position x="0" y="10" z="0" w="1"/>
+            <position x="0" y="50" z="0" w="1"/>
             <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
             <specular r="1.0" g="1.0" b="1.0" a="1.0"/>
@@ -39,7 +39,7 @@
         </LIGHT>
 
         <LIGHT id="light3">
-            <enable value="1"/>
+            <enable value="0"/>
             <position x="25" y="17.5" z="20" w="1"/>
             <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
@@ -47,7 +47,7 @@
         </LIGHT>
 
         <LIGHT id="light4">
-            <enable value="1"/>
+            <enable value="0"/>
             <position x="0" y="0" z="0" w="1"/>
             <ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
@@ -82,11 +82,51 @@
             <emission r="0.0" g="0.0" b="0.0" a="1"/>
         </MATERIAL>
 
-        <MATERIAL id="latao">
-            <shininess value="0.21794872"/>
-            <specular r="0.992157" g="0.941176" b="0.807843" a="1"/>
-            <diffuse r="0.780392" g="0.568627" b="0.113725" a="1"/>
-            <ambient r="0.329412" g="0.223529" b="0.027451" a="1"/>
+        <MATERIAL id="saphire">
+            <shininess value="1"/>
+            <specular r="0.63" g="0.63" b="0.73" a="1"/>
+            <diffuse r="0.04" g="0.04" b="0.61" a="1"/>
+            <ambient r="0.01" g="0.01" b="0.17" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
+        <MATERIAL id="ruby">
+            <shininess value="1"/>
+            <specular r="0.73" g="0.63" b="0.63" a="1"/>
+            <diffuse r="0.61" g="0.04" b="0.04" a="1"/>
+            <ambient r="0.17" g="0.01" b="0.01" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
+        <MATERIAL id="obsidian">
+            <shininess value="1"/>
+            <specular r="0.63" g="0.63" b="0.63" a="1"/>
+            <diffuse r="0.04" g="0.04" b="0.04" a="1"/>
+            <ambient r="0.01" g="0.01" b="0.01" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
+        <MATERIAL id="emerald">
+            <shininess value="1"/>
+            <specular r="0.63" g="0.73" b="0.63" a="1"/>
+            <diffuse r="0.04" g="0.61" b="0.04" a="1"/>
+            <ambient r="0.01" g="0.17" b="0.01" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
+        <MATERIAL id="pearl">
+            <shininess value="1"/>
+            <specular r="0.296648" g="0.296648" b="0.296648" a="1"/>
+            <diffuse r="1" g="0.829" b="0.829" a="1"/>
+            <ambient r="0.25" g="0.20725" b="0.20725" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
+        <MATERIAL id="red_plastic">
+            <shininess value="0.25"/>
+            <specular r="0.7" g="0.6" b="0.6" a="1"/>
+            <diffuse r="0.5" g="0" b="0" a="1"/>
+            <ambient r="0" g="0" b="0" a="1"/>
             <emission r="0.0" g="0.0" b="0.0" a="1"/>
         </MATERIAL>
 
@@ -132,7 +172,7 @@
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
-            <SCALE sx="7" sy="1" sz="7"/>
+            <SCALE sx="15" sy="1" sz="15"/>
             <TRANSLATION x="-0.5" y="-0.5" z="-0.5"/>
 
             <DESCENDANTS>
