@@ -104,11 +104,20 @@
             <TEXTURE id="null"/>
 
             <DESCENDANTS>
+                <NODEREF id="shiftago"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <NODE id="shiftago" dimension="7">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <DESCENDANTS>
                 <NODEREF id="board"/>
             </DESCENDANTS>
         </NODE>
 
-        <NODE id="board" dimension="7">
+        <NODE id="board">
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
@@ -116,7 +125,6 @@
                 <NODEREF id="paralelo"/>
                 <NODEREF id="positions"/>
             </DESCENDANTS>
-
         </NODE>
 
         <!-- BEGIN paralelo -->

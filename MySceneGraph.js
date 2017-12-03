@@ -1312,7 +1312,12 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             this.log("Processing node " + nodeID);
 
             // Creates node.
-            this.nodes[nodeID] = new MyGraphNode(this, nodeID, selectableNode);
+            if (nodeID == 'shiftago') {
+                var dimension = this.reader.getFloat(children[i], 'dimension');
+                this.nodes[nodeID] = new Shiftago(this, nodeID, selectableNode, dimension);
+            } else {
+                this.nodes[nodeID] = new MyGraphNode(this, nodeID, selectableNode);
+            }
 
             if (selectableNode)
                 this.scene.selFolder.add(this.nodes[nodeID], 'selectable').name(nodeID);
