@@ -59,8 +59,12 @@ close_stream(Stream) :- flush_output(Stream), close(Stream).
 % Handles parsed HTTP requests
 % Returns 200 OK on successful aplication of parse_input on request
 % Returns 400 Bad Request on syntax error (received from parser) or on failure of parse_input
-handle_request(Request, MyReply, '200 OK') :- catch(parse_input(Request, MyReply),error(_,_),fail), !.
-handle_request(syntax_error, 'Syntax Error', '400 Bad Request') :- !.
+handle_request(Request, MyReply, '200 OK') :- 
+	catch(parse_input(Request, MyReply),
+	error(_,_),fail), 
+	!.
+handle_request(syntax_error, 'Syntax Error', '400 Bad Request') :- 
+	!.
 handle_request(_, 'Bad Request', '400 Bad Request').
 
 % Reads first Line of HTTP Header and parses request

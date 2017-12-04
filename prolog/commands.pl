@@ -1,3 +1,5 @@
+:- dynamic board/1.
+
 parse_input(shiftagoPL, 'CC'):-
 	write('ok'),
 	board(Board),
@@ -27,4 +29,20 @@ parse_input(shiftago, 'CC'):-
 	).
 parse_input(display, Board):-
 	board(Board),
+	asserta(current_board(Board)),
 	display_board(Board).
+parse_input(cturn1, NewBoard):-
+	current_board(Board),
+	length(Board, BoardSize),
+	process_turn('cc', 2, 'hard', p1, Board, BoardSize, Cardinal, Position),
+	place_piece(Board, p1, Cardinal, Position, NewBoard),
+	asserta(current_board(NewBoard)).
+parse_input(cturn2, NewBoard):-
+	current_board(Board),
+	length(Board, BoardSize),
+	process_turn('cc', 2, 'hard', p2, Board, BoardSize, Cardinal, Position),
+	place_piece(Board, p2, Cardinal, Position, NewBoard),
+	asserta(current_board(NewBoard)).
+parse_input(winner, Winner):-
+	current_board(Board),
+	winner(Board, Winner).

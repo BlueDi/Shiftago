@@ -162,6 +162,8 @@ XMLscene.prototype.update = function(currTime) {
         normScale: this.glow ? 0 : (Math.cos(Math.PI * 2 * currTime / 1000) + 1.) / 2
     });
 
+    this.graph.nodes["shiftago"].update(currTime);
+
     for (var animation in this.graph.animations) {
         this.graph.animations[animation].update(currTime);
     }
