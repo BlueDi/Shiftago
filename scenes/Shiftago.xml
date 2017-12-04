@@ -172,7 +172,7 @@
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
-            <SCALE sx="15" sy="1" sz="15"/>
+            <SCALE sx="18" sy="1" sz="18"/>
             <TRANSLATION x="-0.5" y="-0.5" z="-0.5"/>
 
             <DESCENDANTS>

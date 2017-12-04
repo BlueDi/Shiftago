@@ -39,11 +39,12 @@ function Shiftago(graph, nodeID, selectable, dim) {
         p3: 'obsidian',
         p4: 'emerald'
     };
-
     this.response;
     this.board;
+    this.numberPlayers = 4;
     this.player = 'p1';
     this.winner = 'none';
+    this.nomoves = 'false';
 
     this.initializeBoard();
 
@@ -96,8 +97,12 @@ Shiftago.prototype.getPrologRequest = function(requestString, onSuccess, onError
 Shiftago.prototype.handleReply = function(response, requestString) {
     if (requestString == 'winner') {
         this.winner = response;
-    } else if (requestString == 'display' || requestString == 'cturn1' || requestString == 'cturn2') {
+    } else if (requestString == 'display' || requestString.substring(0, 5) == 'cturn') {
         this.board = response;
+    } else if (requestString.substring(0, 13) == 'switch_player') {
+        this.player = response;
+    } else if (requestString == 'nomoves') {
+        this.nomoves = response;
     }
     this.response = response;
 }
@@ -176,7 +181,6 @@ Shiftago.prototype.createPlayerPieces = function(Player, Material) {
 
 Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
     var node = new MyGraphNode(this.graph, nodeID);
-    console.log(node.nodeID);
     node.materialID = Material;
     node.textureID = Texture;
     mat4.translate(node.transformMatrix, node.transformMatrix, Vector);
@@ -186,7 +190,7 @@ Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
 }
 
 Shiftago.prototype.update = function(currTime) {
-    if (this.winner == 'none') {
+    if (this.winner == 'none' && this.nomoves == 'false') {
         if (this.time == 0) {
             this.time = currTime;
         } else if (currTime - this.time > 1000) {
@@ -194,14 +198,13 @@ Shiftago.prototype.update = function(currTime) {
             if (typeof this.board !== 'undefined') {
                 this.updateBoard();
             }
-            if (this.player == 'p1') {
-                this.getPrologRequest('cturn1');
-                this.player = 'p2';
-            } else if (this.player == 'p2') {
-                this.getPrologRequest('cturn2');
-                this.player = 'p1';
-            }
+            this.getPrologRequest('cturn' + this.player + this.numberPlayers);
             this.getPrologRequest('winner');
+            if (this.winner != 'none') {
+                console.log(this.winner);
+            }
+            this.getPrologRequest('nomoves');
+            this.getPrologRequest('switch_player' + this.player + this.numberPlayers);
         }
     } else {
         this.updateBoard();
