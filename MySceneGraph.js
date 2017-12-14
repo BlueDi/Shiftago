@@ -1631,6 +1631,10 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
     }
 
     if (typeof leaves != 'undefined' && leaves.length > 0) {
+        this.idForPick = 'none';
+        if (nodeID.substring(0, 8) == 'position') {
+            this.idForPick = parseInt(nodeID.substring(8, 10));
+        }
         for (leaf of leaves) {
             this.displayLeaf(leaf);
         }
@@ -1674,6 +1678,10 @@ MySceneGraph.prototype.displayLeaf = function(leaf) {
     }
 
     materialToApply.apply();
+
+    if (this.idForPick != 'none') {
+        this.scene.registerForPick(this.idForPick, leaf.object);
+    }
 
     leaf.object.display();
 
