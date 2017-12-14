@@ -189,7 +189,7 @@ Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
     this.graph.nodes[node.nodeID] = node;
 }
 
-Shiftago.prototype.update = function(currTime) {
+Shiftago.prototype.update = function(currTime, environment) {
     if (this.winner == 'none' && this.nomoves == 'false') {
         if (this.time == 0) {
             this.time = currTime;
@@ -209,6 +209,8 @@ Shiftago.prototype.update = function(currTime) {
     } else {
         this.updateBoard();
     }
+
+    this.updateEnvironment(environment);
 }
 
 Shiftago.prototype.updateBoard = function() {
@@ -225,5 +227,23 @@ Shiftago.prototype.updateBoard = function() {
                 mat4.translate(node.transformMatrix, matI, [i - 3, 1, -j + 3]);
             }
         }
+    }
+}
+
+Shiftago.prototype.updateEnvironment = function(environment) {
+    if (environment == 'simple') {
+        this.textureID = 'null';
+        this.materialID = 'null';
+    } else if (environment == 'furr') {
+        this.textureID = 'fluffy';
+        this.materialID = 'obsidian';
+    } else if (environment == 'blue') {
+        this.textureID = 'rust';
+        this.materialID = 'saphire';
+    } else if (environment == 'polka dot') {
+        this.textureID = 'polkadot';
+        this.materialID = 'pearl';
+    } else {
+        this.textureID == null;
     }
 }

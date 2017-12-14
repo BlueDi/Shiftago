@@ -98,6 +98,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 
     // Adds lights group.
     this.interface.addLightsGroup(this.graph.lights);
+    this.interface.addScenesGroup(this.graph);
 
     this.setUpdatePeriod(1000 / 60);
 }
@@ -162,7 +163,7 @@ XMLscene.prototype.update = function(currTime) {
         normScale: this.glow ? 0 : (Math.cos(Math.PI * 2 * currTime / 1000) + 1.) / 2
     });
 
-    this.graph.nodes["shiftago"].update(currTime);
+    this.graph.nodes["shiftago"].update(currTime, this.graph.environment);
 
     for (var animation in this.graph.animations) {
         this.graph.animations[animation].update(currTime);

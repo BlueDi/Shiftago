@@ -25,7 +25,7 @@ MyInterface.prototype.init = function(application) {
 
     // add a group of controls (and open/expand by defult)
 
-	this.scene.selFolder = this.gui.addFolder("Selectables");
+    this.scene.selFolder = this.gui.addFolder("Selectables");
     return true;
 };
 
@@ -45,4 +45,11 @@ MyInterface.prototype.addLightsGroup = function(lights) {
             group.add(this.scene.lightValues, key);
         }
     }
+};
+
+/**
+ * Adds a folder containing the IDs of the lights passed as parameter.
+ */
+MyInterface.prototype.addScenesGroup = function(graph) {
+    this.gui.add(graph, 'environment', ['simple', 'furr', 'blue', 'polka dot']);
 };

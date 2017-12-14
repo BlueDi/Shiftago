@@ -64,6 +64,16 @@
             <amplif_factor s="1" t="1"/>
         </TEXTURE>
 
+        <TEXTURE id="polkadot">
+            <file path="images_nier_robot/polkadot.png"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
+        <TEXTURE id="fluffy">
+            <file path="images_nier_robot/fluffy.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
         <TEXTURE id="rust">
             <file path="images_nier_robot/normalrust.jpg"/>
             <amplif_factor s="1" t="1"/>
