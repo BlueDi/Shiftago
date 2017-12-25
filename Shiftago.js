@@ -41,7 +41,7 @@ function Shiftago(graph, nodeID, selectable, dim) {
     };
     this.response;
     this.board;
-    this.numberPlayers = 4;
+    this.numberPlayers = 2;
     this.player = 'p1';
     this.winner = 'none';
     this.nomoves = 'false';
@@ -97,7 +97,7 @@ Shiftago.prototype.getPrologRequest = function(requestString, onSuccess, onError
 Shiftago.prototype.handleReply = function(response, requestString) {
     if (requestString == 'winner') {
         this.winner = response;
-    } else if (requestString == 'display' || requestString.substring(0, 5) == 'cturn') {
+    } else if (requestString == 'display' || requestString.substring(0, 5) == 'cturn' || requestString.substring(0, 5) == 'hturn') {
         this.board = response;
     } else if (requestString.substring(0, 13) == 'switch_player') {
         this.player = response;
@@ -189,7 +189,7 @@ Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
     this.graph.nodes[node.nodeID] = node;
 }
 
-Shiftago.prototype.update = function(currTime, environment) {
+Shiftago.prototype.update = function(currTime, environment, side, position) {
     if (this.winner == 'none' && this.nomoves == 'false') {
         if (this.time == 0) {
             this.time = currTime;
@@ -198,7 +198,7 @@ Shiftago.prototype.update = function(currTime, environment) {
             if (typeof this.board !== 'undefined') {
                 this.updateBoard();
             }
-            this.getPrologRequest('cturn' + this.player + this.numberPlayers);
+            this.getPrologRequest('hturn' + '-' + this.player + '-' + this.numberPlayers + '-' + side + '-' + position);
             this.getPrologRequest('winner');
             if (this.winner != 'none') {
                 console.log(this.winner);

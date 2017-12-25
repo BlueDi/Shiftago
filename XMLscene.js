@@ -113,6 +113,7 @@ XMLscene.prototype.logPicking = function() {
                 if (obj) {
                     var customId = this.pickResults[i][1];
                     console.log("Picked object: " + obj + ", with pick id " + customId);
+                    this.picked.push(customId);
                 }
             }
             this.pickResults.splice(0, this.pickResults.length);
@@ -124,6 +125,7 @@ XMLscene.prototype.logPicking = function() {
  * Displays the scene.
  */
 XMLscene.prototype.display = function() {
+    this.picked = [];
     this.logPicking();
     this.clearPickRegistration();
 
@@ -177,13 +179,26 @@ XMLscene.prototype.display = function() {
 };
 
 XMLscene.prototype.update = function(currTime) {
-
     var currTime = currTime - this.initialTime;
     this.graph.selectableShader.setUniformsValues({
         //normScale: this.glow ? 0 : (Math.cos(Math.PI * 2 * currTime / 1000) + 1.) / 2
     });
 
-    this.graph.nodes["shiftago"].update(currTime, this.graph.environment);
+    if (this.picked != null && this.picked.length > 0) {
+        var customId = this.picked[0];
+        var cardinal = ("" + customId).substring(0, 1);
+        var pos = ("" + customId).substring(1, customId.length);
+        if (cardinal == 1) {
+            cardinal = 'N';
+        } else if (cardinal == 2) {
+            cardinal = 'E';
+        } else if (cardinal == 3) {
+            cardinal = 'S';
+        } else if (cardinal == 4) {
+            cardinal = 'O';
+        }
+        this.graph.nodes["shiftago"].update(currTime, this.graph.environment, cardinal, pos);
+    }
 
     for (var animation in this.graph.animations) {
         this.graph.animations[animation].update(currTime);

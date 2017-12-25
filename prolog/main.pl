@@ -19,35 +19,35 @@ shiftago(Winner):-
 	write('Please pick a board to play [normal, big, mini]'), nl,
 	read(BoardName),
 	((BoardName = 'normal', board(Board)); (BoardName = 'big', bigboard(Board)); (BoardName = 'mini', miniboard(Board))),
-	
+
 	write('Please pick a game mode: CPU vs CPU, Human vs CPU, Human vs Human [cc, hc, hh]'), nl,
 	read(GameMode),
 	(GameMode = 'cc'; GameMode = 'hc'; GameMode = 'hh'),
-	
+
 	write('Please pick the number of players [2, 3, 4]'), nl,
 	read(NPlayers),
 	(NPlayers = 2; NPlayers = 3; NPlayers = 4),
-	
+
 	((GameMode == 'hh', Difficulty = 'easy');
 	write('Please pick difficulty level: Hard or Easy [hard, easy]'), nl,
 	read(Difficulty),
 	(Difficulty = 'hard'; Difficulty = 'easy')),
 	nl,
-	
+
 	play(Board, GameMode, NPlayers, Difficulty, Winner, p1).
 
 % Start the game
 play(Board, GameMode, NPlayers, Difficulty, Winner, Player):-
 	display_board(Board),
-	
+
 	nl, write('Player '), write(Player), format("'s turn", []), nl,
 	length(Board, BoardSize),
-	
+
 	process_turn(GameMode, NPlayers, Difficulty, Player, Board, BoardSize, Cardinal, Position),
-	
+
 	write(Player), write(' placing at '), write(Cardinal), write(', '), write(Position), nl,
 	place_piece(Board, Player, Cardinal, Position, NewBoard),
-	
+
 	/* check end condition */
 	winner(NewBoard, TempWinner),
 	nl, write('Winner = '), write(TempWinner), nl, nl,
@@ -71,20 +71,15 @@ process_turn(hc, NPlayers, Difficulty, Player, Board, BoardSize, Cardinal, Posit
 	).
 process_turn(hh, _, _, Player, Board, BoardSize, Cardinal, Position):-
 	get_move(Player, Board, BoardSize, Cardinal, Position).
-	
+
 /* Human Turn */
 get_move(Player, Board, BoardSize, Cardinal, Position):-
 	cardinal_moves(AllCardinals),
 	get_moves(Board, Player, AllMoves),
-	show_all_moves(AllMoves),
 	repeat,
-		write('Please pick a side [top, left, right, bottom]'), nl,
-		read(Cardinal), 
-		write('Please pick a position [1, '), write(BoardSize), write(']'), nl,
-		read(Position),
-		valid_input(BoardSize, AllMoves, AllCardinals, Cardinal, Position);
-		(nl, write('Input ['), write(Cardinal-Position), write('] is not valid.'), nl, fail).
-			
+		valid_input(BoardSize, AllMoves, AllCardinals, Cardinal, Position)
+		; (nl, write('Input ['), write(Cardinal-Position), write('] is not valid.'), nl, fail).
+
 /* CPU Easy Turn */
 get_move(_, easy, Player, Board, BoardSize, Cardinal, Position):-
 	cardinal_moves(AllCardinals),
@@ -97,13 +92,13 @@ get_move(_, easy, Player, Board, BoardSize, Cardinal, Position):-
 /* CPU Hard Turn */
 get_move(NPlayers, hard, Player, Board, _, Cardinal, Position):-
 	highest_value_move(NPlayers, Player, Board, Cardinal, Position).
-	
+
 % Checks if the input was valid
 valid_input(BoardSize, AllMoves, AllCardinals, Cardinal, Position):-
-	member(Cardinal, AllCardinals), 
-	integer(Position), 
-	Position =< BoardSize, 
-	Position > 0, 
+	member(Cardinal, AllCardinals),
+	integer(Position),
+	Position =< BoardSize,
+	Position > 0,
 	member(Cardinal-Position, AllMoves).
 
 % Writes all the valid moves of the player

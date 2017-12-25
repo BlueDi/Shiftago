@@ -31,6 +31,15 @@ parse_input(display, Board):-
 	board(Board),
 	asserta(current_board(Board)),
 	display_board(Board).
+
+parse_input(PlayerTurn, NewBoard):-
+	PlayerTurn = hturn-Player-NPlayers-Cardinal-Position,
+	current_board(Board),
+	length(Board, BoardSize),
+	get_move(Player, Board, BoardSize, Cardinal, Position),
+	place_piece(Board, Player, Cardinal, Position, NewBoard),
+	asserta(current_board(NewBoard)).
+
 parse_input(cturnp12, NewBoard):-
 	current_board(Board),
 	length(Board, BoardSize),
@@ -85,12 +94,14 @@ parse_input(cturnp44, NewBoard):-
 	process_turn('cc', 4, 'hard', p4, Board, BoardSize, Cardinal, Position),
 	place_piece(Board, p4, Cardinal, Position, NewBoard),
 	asserta(current_board(NewBoard)).
+
 parse_input(winner, Winner):-
 	current_board(Board),
 	winner(Board, Winner).
 parse_input(nomoves, Has):-
 	current_board(Board),
 	((check_no_moves(Board), Has = 'true'); Has = 'false').
+
 parse_input(switch_playerp12, Player):-
 	switch_player(p1, Player, 2).
 parse_input(switch_playerp22, Player):-
