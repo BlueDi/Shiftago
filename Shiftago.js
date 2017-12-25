@@ -204,7 +204,7 @@ Shiftago.prototype.update = function(currTime, environment, side, position) {
                 console.log(this.winner);
             }
             this.getPrologRequest('nomoves');
-            this.getPrologRequest('switch_player' + this.player + this.numberPlayers);
+            this.getPrologRequest('switch_player-' + this.player + '-' + this.numberPlayers);
         }
     } else {
         this.updateBoard();
