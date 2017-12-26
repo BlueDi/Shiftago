@@ -52,4 +52,9 @@ MyInterface.prototype.addLightsGroup = function(lights) {
  */
 MyInterface.prototype.addScenesGroup = function(graph) {
     this.gui.add(graph, 'environment', ['simple', 'furr', 'blue', 'polka dot']);
+    var group = this.gui.addFolder("Game");
+    group.open();
+    group.add(graph, 'gameMode', ['Human vs Human', 'Human vs Computer', 'Computer vs Computer']);
+    group.add(graph, 'numberOfPlayers', [2, 3, 4]);
+    group.add(graph, 'difficulty', ['easy', 'hard']);
 };

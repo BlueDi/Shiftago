@@ -41,10 +41,10 @@ parse_input(PlayerTurn, NewBoard):-
 	asserta(current_board(NewBoard)).
 
 parse_input(ComputerTurn, NewBoard):-
-	ComputerTurn = cturn-Player-NPlayers,
+	ComputerTurn = cturn-Player-NPlayers-Difficulty,
 	current_board(Board),
 	length(Board, BoardSize),
-	process_turn('cc', NPlayers, 'hard', Player, Board, BoardSize, Cardinal, Position),
+	process_turn('cc', NPlayers, Difficulty, Player, Board, BoardSize, Cardinal, Position),
 	place_piece(Board, Player, Cardinal, Position, NewBoard),
 	asserta(current_board(NewBoard)).
 

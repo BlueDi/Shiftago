@@ -41,7 +41,9 @@ function Shiftago(graph, nodeID, selectable, dim) {
     };
     this.response;
     this.board;
-    this.numberPlayers = 2;
+    this.gameMode = this.graph.gameMode;
+    this.numberOfPlayers = this.graph.numberOfPlayers;
+    this.difficulty = this.graph.difficulty;
     this.player = 'p1';
     this.winner = 'none';
     this.nomoves = 'false';
@@ -99,6 +101,7 @@ Shiftago.prototype.handleReply = function(response, requestString) {
         this.winner = response;
     } else if (requestString == 'display' || requestString.substring(0, 5) == 'cturn' || requestString.substring(0, 5) == 'hturn') {
         this.board = response;
+        this.updateBoard();
     } else if (requestString.substring(0, 13) == 'switch_player') {
         this.player = response;
     } else if (requestString == 'nomoves') {
@@ -190,6 +193,8 @@ Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
 }
 
 Shiftago.prototype.update = function(currTime, environment, side, position) {
+    this.numberOfPlayers = this.graph.numberOfPlayers;
+    this.difficulty = this.graph.difficulty;
     if (this.winner == 'none' && this.nomoves == 'false') {
         if (this.time == 0) {
             this.time = currTime;
@@ -198,16 +203,18 @@ Shiftago.prototype.update = function(currTime, environment, side, position) {
             if (typeof this.board !== 'undefined') {
                 this.updateBoard();
             }
-            this.getPrologRequest('hturn' + '-' + this.player + '-' + this.numberPlayers + '-' + side + '-' + position);
+            if (this.gameMode == 'Human vs Human' || (this.gameMode == 'Human vs Computer' && this.player == 'p1')) {
+                this.getPrologRequest('hturn' + '-' + this.player + '-' + this.numberOfPlayers + '-' + side + '-' + position);
+            } else {
+                this.getPrologRequest('cturn' + '-' + this.player + '-' + this.numberOfPlayers + '-' + this.difficulty);
+            }
             this.getPrologRequest('winner');
             if (this.winner != 'none') {
                 console.log(this.winner);
             }
             this.getPrologRequest('nomoves');
-            this.getPrologRequest('switch_player-' + this.player + '-' + this.numberPlayers);
+            this.getPrologRequest('switch_player-' + this.player + '-' + this.numberOfPlayers);
         }
-    } else {
-        this.updateBoard();
     }
 
     this.updateEnvironment(environment);
