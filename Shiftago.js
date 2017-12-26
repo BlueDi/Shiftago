@@ -99,6 +99,9 @@ Shiftago.prototype.getPrologRequest = function(requestString, onSuccess, onError
 Shiftago.prototype.handleReply = function(response, requestString) {
     if (requestString == 'winner') {
         this.winner = response;
+        if (this.winner != 'none') {
+            console.log('The winner is', this.winner);
+        }
     } else if (requestString == 'display' || requestString.substring(0, 5) == 'cturn' || requestString.substring(0, 5) == 'hturn') {
         this.board = response;
         this.updateBoard();
@@ -209,9 +212,6 @@ Shiftago.prototype.update = function(currTime, environment, side, position) {
                 this.getPrologRequest('cturn' + '-' + this.player + '-' + this.numberOfPlayers + '-' + this.difficulty);
             }
             this.getPrologRequest('winner');
-            if (this.winner != 'none') {
-                console.log(this.winner);
-            }
             this.getPrologRequest('nomoves');
             this.getPrologRequest('switch_player-' + this.player + '-' + this.numberOfPlayers);
         }
@@ -228,10 +228,17 @@ Shiftago.prototype.updateBoard = function() {
             aux = this.dim * i + j;
             var piece = cleanResponse[aux];
             if (piece != 'e') {
-                var nodeID = piece + aux;
-                var node = this.graph.nodes[nodeID];
-                var matI = mat4.create();
-                mat4.translate(node.transformMatrix, matI, [i - 3, 1, -j + 3]);
+                for (var k = 1; k <= 4; k++) {
+                    var tempPlayer = 'p' + k;
+                    var nodeID = tempPlayer + aux;
+                    var node = this.graph.nodes[nodeID];
+                    var matI = mat4.create();
+                    if (tempPlayer == piece) {
+                        mat4.translate(node.transformMatrix, matI, [i - 3, 1, -j + 3]);
+                    } else {
+                        mat4.translate(node.transformMatrix, matI, [i - 3, 20, -j + 3]);
+                    }
+                }
             }
         }
     }
