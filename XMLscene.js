@@ -200,7 +200,7 @@ XMLscene.prototype.update = function(currTime) {
             }
             this.graph.nodes["shiftago"].update(currTime, cardinal, pos);
         }
-    } else {
+    } else if (this.graph.gameMode == 'Computer vs Computer' || (this.graph.gameMode == 'Human vs Computer' && this.graph.nodes["shiftago"].player != 'p1')) {
         this.graph.nodes["shiftago"].update(currTime);
     }
 
