@@ -189,13 +189,13 @@ XMLscene.prototype.update = function(currTime) {
         var cardinal = ("" + customId).substring(0, 1);
         var pos = ("" + customId).substring(1, customId.length);
         if (cardinal == 1) {
-            cardinal = 'N';
+            cardinal = 'top';
         } else if (cardinal == 2) {
-            cardinal = 'E';
+            cardinal = 'left';
         } else if (cardinal == 3) {
-            cardinal = 'S';
+            cardinal = 'bottom';
         } else if (cardinal == 4) {
-            cardinal = 'O';
+            cardinal = 'right';
         }
         this.graph.nodes["shiftago"].update(currTime, this.graph.environment, cardinal, pos);
     }
