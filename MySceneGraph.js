@@ -1605,6 +1605,10 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
             this.nodes[nodeID].actualAnimation = actualAnimationID;
             this.animations[animation[actualAnimationID]].stop = false;
         } else {
+            actualAnimationID = animation.length - 1;
+            var animationID = animation[actualAnimationID];
+            mat4.multiply(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, this.animations[animationID].animTranslateMatrix);
+            mat4.multiply(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, this.animations[animationID].animRotationMatrix);
             actualAnimationID = -1;
             this.nodes[nodeID].actualAnimation = -1;
         }
