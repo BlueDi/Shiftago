@@ -25,6 +25,8 @@ function MyGraphNode(graph, nodeID, selectable) {
     this.animationID = [];
     this.actualAnimation = -1;
 
+    this.position = [0, 0];
+
     this.transformMatrix = mat4.create();
     mat4.identity(this.transformMatrix);
 }

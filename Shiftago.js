@@ -125,6 +125,7 @@ Shiftago.prototype.handleReply = function(response, requestString) {
         this.playerCounter[player]++;
         var nodeID = player + this.playerCounter[player];
         this.insertPiece(nodeID, player, side, position);
+        this.updateLine(nodeID, side, position);
         this.getPrologRequest('place-' + this.player + '-' + side + '-' + position);
     } else if (requestString.substring(0, 13) == 'switch_player') {
         this.player = response;
@@ -150,12 +151,16 @@ Shiftago.prototype.insertPiece = function(nodeID, player, side, position) {
     var vec = [0, 0, 0];
     if (player == 'p1' || player == 'p2') {
         if (side == 'top') {
+            node.position = [1, position];
             vec = [-3 - node.vec[0], 0, -position - n + 13 - node.vec[2]];
         } else if (side == 'bottom') {
+            node.position = [this.dim, position];
             vec = [3 - node.vec[0], 0, -position - n + 13 - node.vec[2]];
         } else if (side == 'left') {
+            node.position = [position, 1];
             vec = [position - 4 - node.vec[0], 0, -n + 12 - node.vec[2]];
         } else if (side == 'right') {
+            node.position = [position, this.dim];
             vec = [position - 4 - node.vec[0], 0, -n + 6 - node.vec[2]];
         }
     } else if (player == 'p3' || player == 'p4') {
@@ -177,9 +182,84 @@ Shiftago.prototype.insertPiece = function(nodeID, player, side, position) {
         [0, 0, 0],
         vec
     ]);
-    this.graph.nodes[nodeID].animationID.push(nodeID);
-    this.graph.nodes[nodeID].actualAnimation = 0;
-    this.graph.animations[this.graph.nodes[nodeID].animationID[0]].stop = false;
+    node.animationID.push(nodeID);
+    node.actualAnimation = 0;
+    this.graph.animations[node.animationID[0]].stop = false;
+}
+
+Shiftago.prototype.updateLine = function(nodeName, side, position) {
+    var line = this.getLineElements(nodeName, side, position);
+    this.sortLine(line, side);
+    this.pushLine(line, side, position);
+}
+
+Shiftago.prototype.getLineElements = function(nodeName, side, position) {
+    var line = [];
+    for (var i = 1; i <= this.numberOfPlayers; i++) {
+        var player = 'p' + i;
+        for (var j = 0; j <= this.playerCounter[player]; j++) {
+            var nodeID = player + j;
+            var node = this.graph.nodes[nodeID];
+
+            if (side == 'top' || side == 'bottom') {
+                if (nodeName != nodeID && node.position[1] == position) {
+                    line.push(node);
+                }
+            } else if (side == 'left' || side == 'right') {
+                if (nodeName != nodeID && node.position[0] == position) {
+                    line.push(node);
+                }
+            }
+        }
+    }
+    return line;
+}
+
+Shiftago.prototype.sortLine = function(line, side) {
+    if (side == 'top') {
+        line.sort(function(a, b) {
+            return a.position[0] - b.position[0];
+        });
+    } else if (side == 'bottom') {
+        line.sort(function(a, b) {
+            return b.position[0] - a.position[0];
+        });
+    } else if (side == 'left') {
+        line.sort(function(a, b) {
+            return a.position[1] - b.position[1];
+        });
+    } else if (side == 'right') {
+        line.sort(function(a, b) {
+            return b.position[1] - a.position[1];
+        });
+    }
+}
+
+Shiftago.prototype.pushLine = function(line, side, position) {
+    for (var counter = 0; counter < line.length; counter++) {
+        if (line[counter] != null) {
+            var node = line[counter];
+            if (side == 'top' && node.position[0] == counter + 1) {
+                node.position[0]++;
+                var matI = mat4.create();
+                mat4.translate(node.transformMatrix, matI, [node.position[0] - 4, 1, -node.position[1] + 4]);
+            } else if (side == 'bottom' && node.position[0] == this.dim - counter) {
+                node.position[0]--;
+                var matI = mat4.create();
+                mat4.translate(node.transformMatrix, matI, [node.position[0] - 4, 1, -node.position[1] + 4]);
+            } else if (side == 'left' && node.position[1] == counter + 1) {
+                node.position[1]++;
+                var matI = mat4.create();
+                mat4.translate(node.transformMatrix, matI, [node.position[0] - 4, 1, -node.position[1] + 4]);
+            } else if (side == 'right' && node.position[1] == this.dim - counter) {
+                node.position[1]--;
+                var matI = mat4.create();
+                mat4.translate(node.transformMatrix, matI, [node.position[0] - 4, 1, -node.position[1] + 4]);
+            } else {
+                break;
+            }
+        }
+    }
 }
 
 Shiftago.prototype.initializeBoard = function() {
