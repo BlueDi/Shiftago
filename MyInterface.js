@@ -53,10 +53,15 @@ MyInterface.prototype.addLightsGroup = function(lights) {
 MyInterface.prototype.addScenesGroup = function(shiftago) {
     var customization = this.gui.addFolder("Customization");
     customization.open();
-    customization.add(shiftago, 'environment', ['simple', 'furr', 'blue', 'polka dot']);
+    customization.add(shiftago, 'environment', ['simple', 'furr', 'blue', 'polka dot']).name('Environment');
+    customization.add(shiftago, 'camera', ['default', 'topdown']).name('Camera')
+        .onChange(function() {
+            shiftago.updateCamera();
+        });
     var game = this.gui.addFolder("Game");
     game.open();
-    game.add(shiftago, 'gameMode', ['Human vs Human', 'Human vs Computer', 'Computer vs Computer']);
-    game.add(shiftago, 'numberOfPlayers', [2, 3, 4]);
-    game.add(shiftago, 'difficulty', ['easy', 'hard']);
+    game.add(shiftago, 'repair').name('Repair');
+    game.add(shiftago, 'gameMode', ['Human vs Human', 'Human vs Computer', 'Computer vs Computer']).name('Game Mode');
+    game.add(shiftago, 'numberOfPlayers', [2, 3, 4]).name('Number of Players');
+    game.add(shiftago, 'difficulty', ['easy', 'hard']).name('Difficulty');
 };

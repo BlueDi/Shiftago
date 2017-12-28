@@ -34,10 +34,14 @@ function Shiftago(graph, nodeID, selectable, dim) {
 
     this.time = 0;
 
+    this.camera = [];
+    this.environment = [];
+    this.repair = function() {
+        this.updateBoard();
+    };
     this.gameMode = [];
     this.numberOfPlayers = [];
     this.difficulty = [];
-    this.environment = [];
 
     this.materials = {
         p1: 'saphire',
@@ -85,6 +89,18 @@ Shiftago.prototype.addChild = function(nodeID) {
 Shiftago.prototype.addLeaf = function(leaf) {
     this.leaves.push(leaf);
 };
+
+Shiftago.prototype.updateCamera = function() {
+    var init = mat4.create();
+    if (this.camera == 'default') {
+        mat4.translate(this.graph.initialTransforms, init, [-10, -10, -10]);
+    } else if (this.camera == 'topdown') {
+        mat4.rotate(this.graph.initialTransforms, init, -Math.PI / 3, [0, 0, 1]);
+        mat4.rotate(this.graph.initialTransforms, this.graph.initialTransforms, -Math.PI / 7, [0, 1, 0]);
+        mat4.rotate(this.graph.initialTransforms, this.graph.initialTransforms, Math.PI / 5, [1, 0, 0]);
+        mat4.translate(this.graph.initialTransforms, this.graph.initialTransforms, [-2.5, -40, 0]);
+    }
+}
 
 Shiftago.prototype.getPrologRequest = function(requestString, onSuccess, onError, port) {
     var requestPort = port || 8081
