@@ -27,6 +27,7 @@ function Shiftago(graph, nodeID, selectable, dim) {
     // The animation ID.
     this.animationID = [];
     this.actualAnimation = -1;
+    this.animationSpeed = 10;
 
     this.transformMatrix = mat4.create();
     mat4.identity(this.transformMatrix);
@@ -47,6 +48,7 @@ function Shiftago(graph, nodeID, selectable, dim) {
     this.response;
     this.board;
     this.player = 'p1';
+    this.playerCounter = [-1, -1, -1, -1];
     this.winner = 'none';
     this.nomoves = 'false';
 
@@ -104,9 +106,74 @@ Shiftago.prototype.handleReply = function(response, requestString) {
         if (this.winner != 'none') {
             console.log('The winner is', this.winner);
         }
-    } else if (requestString == 'display' || requestString.substring(0, 5) == 'cturn' || requestString.substring(0, 5) == 'hturn') {
+    } else if (requestString == 'display') {
         this.board = response;
         this.updateBoard();
+    } else if (requestString.substring(0, 5) == 'place') {
+        this.board = response;
+        this.updateBoard();
+    } else if (requestString.substring(0, 5) == 'hturn' || requestString.substring(0, 5) == 'cturn') {
+        var cleanResponse = response.split('-');
+        var player = cleanResponse[0];
+        var side = cleanResponse[1];
+        var position = cleanResponse[2];
+        var n;
+        if (player == 'p1') {
+            this.playerCounter[0]++;
+            n = this.playerCounter[0];
+        } else if (player == 'p2') {
+            this.playerCounter[1]++;
+            n = this.playerCounter[1];
+        } else if (player == 'p3') {
+            this.playerCounter[2]++;
+            n = this.playerCounter[2];
+        } else if (player == 'p4') {
+            this.playerCounter[3]++;
+            n = this.playerCounter[3];
+        }
+        var nodeID = player + n;
+        var node = this.graph.nodes[nodeID];
+        var x = n;
+        if (n >= 10 && n < 22) {
+            x -= 12;
+        } else if (n >= 22 && n < 36) {
+            x -= 26;
+        } else if (n >= 36) {
+            x -= 42;
+        }
+        var vec = [0, 0, 0];
+
+        if (player == 'p1' || player == 'p2') {
+            if (side == 'top') {
+                vec = [-3 - node.vec[0], 0, -x + 9 - node.vec[2]];
+            } else if (side == 'bottom') {
+                vec = [3 - node.vec[0], 0, -x + 9 - node.vec[2]];
+            } else if (side == 'left') {
+                vec = [-node.vec[0], 0, -x + 12 - node.vec[2]];
+            } else if (side == 'right') {
+                vec = [-node.vec[0], 0, -x + 6 - node.vec[2]];
+            }
+        } else if (player == 'p3' || player == 'p4') {
+            if (side == 'top') {
+                vec = [-x + 6 - node.vec[0], 0, -node.vec[2]];
+            } else if (side == 'bottom') {
+                vec = [-x + 12 - node.vec[0], 0, -node.vec[2]];
+            } else if (side == 'left') {
+                vec = [-x + 9 - node.vec[0], 0, 3 - node.vec[2]];
+            } else if (side == 'right') {
+                vec = [-x + 9 - node.vec[0], 0, -3 - node.vec[2]];
+            }
+        }
+        console.log(nodeID, node.vec, vec);
+        this.graph.animations[nodeID] = new LinearAnimation(this.animationSpeed, [
+            [0, 0, 0],
+            vec
+        ]);
+        this.graph.nodes[nodeID].animationID.push(nodeID);
+        this.graph.nodes[nodeID].actualAnimation = 0;
+        this.graph.animations[this.graph.nodes[nodeID].animationID[0]].stop = false;
+
+        this.getPrologRequest('place-' + this.player + '-' + side + '-' + position);
     } else if (requestString.substring(0, 13) == 'switch_player') {
         this.player = response;
     } else if (requestString == 'nomoves') {
@@ -135,40 +202,40 @@ Shiftago.prototype.createPlayerPieces = function(Player, Material) {
     var vec3;
     var vec4;
     if (Player == 'p1') {
-        vec2 = [-5.5, 1, pos];
-        vec1 = [-6.5, 1, pos];
+        vec1 = [-5.5, 1, pos];
+        vec2 = [-6.5, 1, pos];
         vec3 = [-7.5, 1, pos];
         vec4 = [-8.5, 1, pos];
     } else if (Player == 'p2') {
-        vec2 = [5.5, 1, pos];
-        vec1 = [6.5, 1, pos];
+        vec1 = [5.5, 1, pos];
+        vec2 = [6.5, 1, pos];
         vec3 = [7.5, 1, pos];
         vec4 = [8.5, 1, pos];
     } else if (Player == 'p3') {
-        vec2 = [pos, 1, 5.5];
-        vec1 = [pos, 1, 6.5];
+        vec1 = [pos, 1, 5.5];
+        vec2 = [pos, 1, 6.5];
         vec3 = [pos, 1, 7.5];
         vec4 = [pos, 1, 8.5];
     } else if (Player == 'p4') {
-        vec2 = [pos, 1, -5.5];
-        vec1 = [pos, 1, -6.5];
+        vec1 = [pos, 1, -5.5];
+        vec2 = [pos, 1, -6.5];
         vec3 = [pos, 1, -7.5];
         vec4 = [pos, 1, -8.5];
     }
 
-    for (var i = 0; i < 12; i++) {
+    for (var i = 0; i < 10; i++) {
         if (Player == 'p1' || Player == 'p2') {
-            vec1[2] = i - 5.5;
+            vec1[2] = i - 4.5;
         } else if (Player == 'p3' || Player == 'p4') {
-            vec1[0] = i - 5.5;
+            vec1[0] = i - 4.5;
         }
         this.addBall(Player + i, Material, texture, vec1);
     }
-    for (var i = 12; i < 22; i++) {
+    for (var i = 10; i < 22; i++) {
         if (Player == 'p1' || Player == 'p2') {
-            vec2[2] = i - 12 - 4.5;
+            vec2[2] = i - 10 - 5.5;
         } else if (Player == 'p3' || Player == 'p4') {
-            vec2[0] = i - 12 - 4.5;
+            vec2[0] = i - 10 - 5.5;
         }
         this.addBall(Player + i, Material, texture, vec2);
     }
@@ -195,6 +262,7 @@ Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
     node.materialID = Material;
     node.textureID = Texture;
     mat4.translate(node.transformMatrix, node.transformMatrix, Vector);
+    node.vec = Vector;
     node.addLeaf(new MyLeaf(this.graph));
     this.addChild(node.nodeID);
     this.graph.nodes[node.nodeID] = node;
@@ -237,9 +305,9 @@ Shiftago.prototype.updateBoard = function() {
                     var node = this.graph.nodes[nodeID];
                     var matI = mat4.create();
                     if (tempPlayer == piece) {
-                        mat4.translate(node.transformMatrix, matI, [i - 3, 1, -j + 3]);
+                        //mat4.translate(node.transformMatrix, matI, [i - 3, 1, -j + 3]);
                     } else {
-                        mat4.translate(node.transformMatrix, matI, [i - 3, 20, -j + 3]);
+                        //mat4.translate(node.transformMatrix, matI, [i - 3, 20, -j + 3]);
                     }
                 }
             }

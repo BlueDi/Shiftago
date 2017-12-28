@@ -32,19 +32,23 @@ parse_input(display, Board):-
 	asserta(current_board(Board)),
 	display_board(Board).
 
-parse_input(PlayerTurn, NewBoard):-
+parse_input(PlayerTurn, PieceToPlace):-
 	PlayerTurn = hturn-Player-NPlayers-Cardinal-Position,
 	current_board(Board),
 	length(Board, BoardSize),
 	get_move(Player, Board, BoardSize, Cardinal, Position),
-	place_piece(Board, Player, Cardinal, Position, NewBoard),
-	asserta(current_board(NewBoard)).
+	PieceToPlace = Player-Cardinal-Position.
 
-parse_input(ComputerTurn, NewBoard):-
+parse_input(ComputerTurn, PieceToPlace):-
 	ComputerTurn = cturn-Player-NPlayers-Difficulty,
 	current_board(Board),
 	length(Board, BoardSize),
 	process_turn('cc', NPlayers, Difficulty, Player, Board, BoardSize, Cardinal, Position),
+	PieceToPlace = Player-Cardinal-Position.
+
+parse_input(PlacePiece, NewBoard):-
+	PlacePiece = place-Player-Cardinal-Position,
+	current_board(Board),
 	place_piece(Board, Player, Cardinal, Position, NewBoard),
 	asserta(current_board(NewBoard)).
 
