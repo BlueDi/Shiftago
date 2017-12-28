@@ -89,6 +89,8 @@ class BezierAnimation extends Animation {
             if (t >= 1) {
                 this.state = 'end';
                 t = 1;
+                this.animTranslateMatrix = mat4.create();
+                mat4.translate(this.animTranslateMatrix, this.animTranslateMatrix, this.bezier(t));
             }
 
             var B = this.bezier(t);

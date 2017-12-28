@@ -1583,26 +1583,26 @@ MySceneGraph.prototype.displayScene = function() {
  */
 MySceneGraph.prototype.displayNode = function(nodeID) {
     var transformation = this.transformationStack[this.transformationStack.length - 1];
-    var nodeTransformation = this.nodes[nodeID].transformMatrix;
-    var animation = this.nodes[nodeID].animationID;
-    var actualAnimationID = this.nodes[nodeID].actualAnimation;
-    var material = this.nodes[nodeID].materialID;
-    var texture = this.nodes[nodeID].textureID;
-    var children = this.nodes[nodeID].children;
-    var leaves = this.nodes[nodeID].leaves;
+    var node = this.nodes[nodeID];
+    var nodeTransformation = node.transformMatrix;
+    var animation = node.animationID;
+    var actualAnimationID = node.actualAnimation;
+    var material = node.materialID;
+    var texture = node.textureID;
+    var children = node.children;
+    var leaves = node.leaves;
 
     var matrixtrans = mat4.create();
     mat4.multiply(matrixtrans, transformation, nodeTransformation);
     if (actualAnimationID != -1 && this.animations[animation[actualAnimationID]].state == 'end') {
         if (actualAnimationID < animation.length - 1) {
             actualAnimationID += 1;
-            this.nodes[nodeID].actualAnimation = actualAnimationID;
+            node.actualAnimation = actualAnimationID;
             this.animations[animation[actualAnimationID]].stop = false;
         } else {
             actualAnimationID = animation.length - 1;
             var animationID = animation[actualAnimationID];
-            mat4.multiply(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, this.animations[animationID].animTranslateMatrix);
-            mat4.multiply(this.nodes[nodeID].transformMatrix, this.nodes[nodeID].transformMatrix, this.animations[animationID].animRotationMatrix);
+            mat4.multiply(node.transformMatrix, node.transformMatrix, this.animations[animationID].animTranslateMatrix);
             actualAnimationID = -1;
             this.nodes[nodeID].actualAnimation = -1;
         }
@@ -1615,7 +1615,7 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
     this.transformationStack.push(matrixtrans);
 
     var isMarker = false;
-    if (this.isMarking == false && this.nodes[nodeID].selectable == true) {
+    if (this.isMarking == false && node.selectable == true) {
         this.isMarking = true;
         isMarker = true;
         this.scene.setActiveShader(this.selectableShader);
