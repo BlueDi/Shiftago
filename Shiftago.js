@@ -48,7 +48,12 @@ function Shiftago(graph, nodeID, selectable, dim) {
     this.response;
     this.board;
     this.player = 'p1';
-    this.playerCounter = [-1, -1, -1, -1];
+    this.playerCounter = {
+        p1: -1,
+        p2: -1,
+        p3: -1,
+        p4: -1
+    };
     this.winner = 'none';
     this.nomoves = 'false';
 
@@ -117,62 +122,9 @@ Shiftago.prototype.handleReply = function(response, requestString) {
         var player = cleanResponse[0];
         var side = cleanResponse[1];
         var position = cleanResponse[2];
-        var n;
-        if (player == 'p1') {
-            this.playerCounter[0]++;
-            n = this.playerCounter[0];
-        } else if (player == 'p2') {
-            this.playerCounter[1]++;
-            n = this.playerCounter[1];
-        } else if (player == 'p3') {
-            this.playerCounter[2]++;
-            n = this.playerCounter[2];
-        } else if (player == 'p4') {
-            this.playerCounter[3]++;
-            n = this.playerCounter[3];
-        }
-        var nodeID = player + n;
-        var node = this.graph.nodes[nodeID];
-        var x = n;
-        if (n >= 10 && n < 22) {
-            x -= 12;
-        } else if (n >= 22 && n < 36) {
-            x -= 26;
-        } else if (n >= 36) {
-            x -= 42;
-        }
-        var vec = [0, 0, 0];
-
-        if (player == 'p1' || player == 'p2') {
-            if (side == 'top') {
-                vec = [-3 - node.vec[0], 0, -position - x + 13 - node.vec[2]];
-            } else if (side == 'bottom') {
-                vec = [3 - node.vec[0], 0, -position - x + 13 - node.vec[2]];
-            } else if (side == 'left') {
-                vec = [position - 4 - node.vec[0], 0, -x + 12 - node.vec[2]];
-            } else if (side == 'right') {
-                vec = [position - 4 - node.vec[0], 0, -x + 6 - node.vec[2]];
-            }
-        } else if (player == 'p3' || player == 'p4') {
-            if (side == 'top') {
-                vec = [-x + 6 - node.vec[0], 0, -position + 4 - node.vec[2]];
-            } else if (side == 'bottom') {
-                vec = [-x + 12 - node.vec[0], 0, -position + 4 - node.vec[2]];
-            } else if (side == 'left') {
-                vec = [position - x + 5 - node.vec[0], 0, 3 - node.vec[2]];
-            } else if (side == 'right') {
-                vec = [position - x + 5 - node.vec[0], 0, -3 - node.vec[2]];
-            }
-        }
-        console.log(nodeID, node.vec, vec);
-        this.graph.animations[nodeID] = new LinearAnimation(this.animationSpeed, [
-            [0, 0, 0],
-            vec
-        ]);
-        this.graph.nodes[nodeID].animationID.push(nodeID);
-        this.graph.nodes[nodeID].actualAnimation = 0;
-        this.graph.animations[this.graph.nodes[nodeID].animationID[0]].stop = false;
-
+        this.playerCounter[player]++;
+        var nodeID = player + this.playerCounter[player];
+        this.insertPiece(nodeID, player, side, position);
         this.getPrologRequest('place-' + this.player + '-' + side + '-' + position);
     } else if (requestString.substring(0, 13) == 'switch_player') {
         this.player = response;
@@ -183,6 +135,51 @@ Shiftago.prototype.handleReply = function(response, requestString) {
         }
     }
     this.response = response;
+}
+
+Shiftago.prototype.insertPiece = function(nodeID, player, side, position) {
+    var node = this.graph.nodes[nodeID];
+    var n = this.playerCounter[player];
+    if (n >= 10 && n < 22) {
+        n -= 12;
+    } else if (n >= 22 && n < 36) {
+        n -= 26;
+    } else if (n >= 36) {
+        n -= 42;
+    }
+    var vec = [0, 0, 0];
+    if (player == 'p1' || player == 'p2') {
+        if (side == 'top') {
+            vec = [-3 - node.vec[0], 0, -position - n + 13 - node.vec[2]];
+        } else if (side == 'bottom') {
+            vec = [3 - node.vec[0], 0, -position - n + 13 - node.vec[2]];
+        } else if (side == 'left') {
+            vec = [position - 4 - node.vec[0], 0, -n + 12 - node.vec[2]];
+        } else if (side == 'right') {
+            vec = [position - 4 - node.vec[0], 0, -n + 6 - node.vec[2]];
+        }
+    } else if (player == 'p3' || player == 'p4') {
+        if (side == 'top') {
+            node.position = [1, position];
+            vec = [-n + 6 - node.vec[0], 0, -position + 4 - node.vec[2]];
+        } else if (side == 'bottom') {
+            node.position = [this.dim, position];
+            vec = [-n + 12 - node.vec[0], 0, -position + 4 - node.vec[2]];
+        } else if (side == 'left') {
+            node.position = [position, 1];
+            vec = [position - n + 5 - node.vec[0], 0, 3 - node.vec[2]];
+        } else if (side == 'right') {
+            node.position = [position, this.dim];
+            vec = [position - n + 5 - node.vec[0], 0, -3 - node.vec[2]];
+        }
+    }
+    this.graph.animations[nodeID] = new LinearAnimation(this.animationSpeed, [
+        [0, 0, 0],
+        vec
+    ]);
+    this.graph.nodes[nodeID].animationID.push(nodeID);
+    this.graph.nodes[nodeID].actualAnimation = 0;
+    this.graph.animations[this.graph.nodes[nodeID].animationID[0]].stop = false;
 }
 
 Shiftago.prototype.initializeBoard = function() {
