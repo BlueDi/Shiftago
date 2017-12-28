@@ -48,13 +48,15 @@ MyInterface.prototype.addLightsGroup = function(lights) {
 };
 
 /**
- * Adds a folder containing the IDs of the lights passed as parameter.
+ * Adds folders for the game customization.
  */
-MyInterface.prototype.addScenesGroup = function(graph) {
-    this.gui.add(graph, 'environment', ['simple', 'furr', 'blue', 'polka dot']);
-    var group = this.gui.addFolder("Game");
-    group.open();
-    group.add(graph, 'gameMode', ['Human vs Human', 'Human vs Computer', 'Computer vs Computer']);
-    group.add(graph, 'numberOfPlayers', [2, 3, 4]);
-    group.add(graph, 'difficulty', ['easy', 'hard']);
+MyInterface.prototype.addScenesGroup = function(shiftago) {
+    var customization = this.gui.addFolder("Customization");
+    customization.open();
+    customization.add(shiftago, 'environment', ['simple', 'furr', 'blue', 'polka dot']);
+    var game = this.gui.addFolder("Game");
+    game.open();
+    game.add(shiftago, 'gameMode', ['Human vs Human', 'Human vs Computer', 'Computer vs Computer']);
+    game.add(shiftago, 'numberOfPlayers', [2, 3, 4]);
+    game.add(shiftago, 'difficulty', ['easy', 'hard']);
 };

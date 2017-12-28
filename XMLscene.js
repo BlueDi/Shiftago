@@ -100,7 +100,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 
     // Adds lights group.
     this.interface.addLightsGroup(this.graph.lights);
-    this.interface.addScenesGroup(this.graph);
+    this.interface.addScenesGroup(this.graph.nodes["shiftago"]);
 
     this.setUpdatePeriod(1000 / 60);
 }
@@ -180,11 +180,11 @@ XMLscene.prototype.display = function() {
 
 XMLscene.prototype.update = function(currTime) {
     var currTime = currTime - this.initialTime;
-    this.graph.selectableShader.setUniformsValues({
-        //normScale: this.glow ? 0 : (Math.cos(Math.PI * 2 * currTime / 1000) + 1.) / 2
-    });
+    /*this.graph.selectableShader.setUniformsValues({
+        normScale: this.glow ? 0 : (Math.cos(Math.PI * 2 * currTime / 1000) + 1.) / 2
+    });*/
 
-    if (this.graph.gameMode == 'Human vs Human' || (this.graph.gameMode == 'Human vs Computer' && this.graph.nodes["shiftago"].player == 'p1')) {
+    if (this.graph.nodes["shiftago"].gameMode == 'Human vs Human' || (this.graph.nodes["shiftago"].gameMode == 'Human vs Computer' && this.graph.nodes["shiftago"].player == 'p1')) {
         if (this.picked != null && this.picked.length > 0) {
             var customId = this.picked[0];
             var cardinal = ("" + customId).substring(0, 1);
@@ -200,8 +200,10 @@ XMLscene.prototype.update = function(currTime) {
             }
             this.graph.nodes["shiftago"].update(currTime, cardinal, pos);
         }
-    } else if (this.graph.gameMode == 'Computer vs Computer' || (this.graph.gameMode == 'Human vs Computer' && this.graph.nodes["shiftago"].player != 'p1')) {
+    } else if (this.graph.nodes["shiftago"].gameMode == 'Computer vs Computer' || (this.graph.nodes["shiftago"].gameMode == 'Human vs Computer' && this.graph.nodes["shiftago"].player != 'p1')) {
         this.graph.nodes["shiftago"].update(currTime);
+    } else {
+        this.graph.nodes["shiftago"].updateEnvironment();
     }
 
     for (var animation in this.graph.animations) {

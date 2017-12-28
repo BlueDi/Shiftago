@@ -31,12 +31,6 @@ function MySceneGraph(filename, scene) {
 
     this.selectableShader = new CGFshader(this.scene.gl, "shaders/selectable.vert", "shaders/selectable.frag");
 
-    //Shiftago Parameters
-    this.environment = [];
-    this.gameMode = [];
-    this.numberOfPlayers = [];
-    this.difficulty = [];
-
     // File reading
     this.reader = new CGFXMLreader();
 

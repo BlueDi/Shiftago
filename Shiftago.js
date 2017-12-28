@@ -33,6 +33,11 @@ function Shiftago(graph, nodeID, selectable, dim) {
 
     this.time = 0;
 
+    this.gameMode = [];
+    this.numberOfPlayers = [];
+    this.difficulty = [];
+    this.environment = [];
+
     this.materials = {
         p1: 'saphire',
         p2: 'ruby',
@@ -41,9 +46,6 @@ function Shiftago(graph, nodeID, selectable, dim) {
     };
     this.response;
     this.board;
-    this.gameMode = this.graph.gameMode;
-    this.numberOfPlayers = this.graph.numberOfPlayers;
-    this.difficulty = this.graph.difficulty;
     this.player = 'p1';
     this.winner = 'none';
     this.nomoves = 'false';
@@ -109,6 +111,9 @@ Shiftago.prototype.handleReply = function(response, requestString) {
         this.player = response;
     } else if (requestString == 'nomoves') {
         this.nomoves = response;
+        if (response == 'true') {
+            console.log('No more moves available');
+        }
     }
     this.response = response;
 }
@@ -195,9 +200,7 @@ Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
     this.graph.nodes[node.nodeID] = node;
 }
 
-Shiftago.prototype.update = function(currTime, environment, side, position) {
-    this.numberOfPlayers = this.graph.numberOfPlayers;
-    this.difficulty = this.graph.difficulty;
+Shiftago.prototype.update = function(currTime, side, position) {
     if (this.winner == 'none' && this.nomoves == 'false') {
         if (this.time == 0) {
             this.time = currTime;
@@ -217,7 +220,7 @@ Shiftago.prototype.update = function(currTime, environment, side, position) {
         }
     }
 
-    this.updateEnvironment(environment);
+    this.updateEnvironment();
 }
 
 Shiftago.prototype.updateBoard = function() {
@@ -244,17 +247,17 @@ Shiftago.prototype.updateBoard = function() {
     }
 }
 
-Shiftago.prototype.updateEnvironment = function(environment) {
-    if (environment == 'simple') {
+Shiftago.prototype.updateEnvironment = function() {
+    if (this.environment == 'simple') {
         this.textureID = 'null';
         this.materialID = 'null';
-    } else if (environment == 'furr') {
+    } else if (this.environment == 'furr') {
         this.textureID = 'fluffy';
         this.materialID = 'obsidian';
-    } else if (environment == 'blue') {
+    } else if (this.environment == 'blue') {
         this.textureID = 'rust';
         this.materialID = 'saphire';
-    } else if (environment == 'polka dot') {
+    } else if (this.environment == 'polka dot') {
         this.textureID = 'polkadot';
         this.materialID = 'pearl';
     } else {
