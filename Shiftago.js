@@ -145,23 +145,23 @@ Shiftago.prototype.handleReply = function(response, requestString) {
 
         if (player == 'p1' || player == 'p2') {
             if (side == 'top') {
-                vec = [-3 - node.vec[0], 0, -x + 9 - node.vec[2]];
+                vec = [-3 - node.vec[0], 0, -position - x + 13 - node.vec[2]];
             } else if (side == 'bottom') {
-                vec = [3 - node.vec[0], 0, -x + 9 - node.vec[2]];
+                vec = [3 - node.vec[0], 0, -position - x + 13 - node.vec[2]];
             } else if (side == 'left') {
-                vec = [-node.vec[0], 0, -x + 12 - node.vec[2]];
+                vec = [position - 4 - node.vec[0], 0, -x + 12 - node.vec[2]];
             } else if (side == 'right') {
-                vec = [-node.vec[0], 0, -x + 6 - node.vec[2]];
+                vec = [position - 4 - node.vec[0], 0, -x + 6 - node.vec[2]];
             }
         } else if (player == 'p3' || player == 'p4') {
             if (side == 'top') {
-                vec = [-x + 6 - node.vec[0], 0, -node.vec[2]];
+                vec = [-x + 6 - node.vec[0], 0, -position + 4 - node.vec[2]];
             } else if (side == 'bottom') {
-                vec = [-x + 12 - node.vec[0], 0, -node.vec[2]];
+                vec = [-x + 12 - node.vec[0], 0, -position + 4 - node.vec[2]];
             } else if (side == 'left') {
-                vec = [-x + 9 - node.vec[0], 0, 3 - node.vec[2]];
+                vec = [position - x + 5 - node.vec[0], 0, 3 - node.vec[2]];
             } else if (side == 'right') {
-                vec = [-x + 9 - node.vec[0], 0, -3 - node.vec[2]];
+                vec = [position - x + 5 - node.vec[0], 0, -3 - node.vec[2]];
             }
         }
         console.log(nodeID, node.vec, vec);
