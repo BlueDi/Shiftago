@@ -178,8 +178,10 @@ Shiftago.prototype.insertPiece = function(nodeID, player, side, position) {
             vec = [position - n + 5 - node.vec[0], 0, -3 - node.vec[2]];
         }
     }
-    this.graph.animations[nodeID] = new LinearAnimation(this.animationSpeed, [
+    this.graph.animations[nodeID] = new BezierAnimation(this.animationSpeed, [
         [0, 0, 0],
+        [0, 3, 0],
+        [vec[0], 3, vec[2]],
         vec
     ]);
     node.animationID.push(nodeID);
