@@ -27,12 +27,13 @@ function Shiftago(graph, nodeID, selectable, dim) {
     // The animation ID.
     this.animationID = [];
     this.actualAnimation = -1;
-    this.animationSpeed = 10;
+    this.animationSpeed = 15;
 
     this.transformMatrix = mat4.create();
     mat4.identity(this.transformMatrix);
 
     this.time = 0;
+    this.waitingFor;
 
     this.camera = [];
     this.environment = [];
@@ -140,9 +141,12 @@ Shiftago.prototype.handleReply = function(response, requestString) {
         var position = cleanResponse[2];
         this.playerCounter[player]++;
         var nodeID = player + this.playerCounter[player];
-        this.insertPiece(nodeID, player, side, position);
-        this.updateLine(nodeID, side, position);
-        this.getPrologRequest('place-' + this.player + '-' + side + '-' + position);
+        var line = this.getLineElements(nodeID, side, position);
+        if (line.length < this.dim) {
+            this.insertPiece(nodeID, player, side, position);
+            this.updateLine(line, side, position);
+            this.getPrologRequest('place-' + this.player.slice(-1).pop() + '-' + side + '-' + position);
+        }
     } else if (requestString.substring(0, 13) == 'switch_player') {
         this.player = response;
     } else if (requestString == 'nomoves') {
@@ -196,8 +200,8 @@ Shiftago.prototype.insertPiece = function(nodeID, player, side, position) {
     }
     this.graph.animations[nodeID] = new BezierAnimation(this.animationSpeed, [
         [0, 0, 0],
-        [0, 3, 0],
-        [vec[0], 3, vec[2]],
+        [0, 4, 0],
+        [vec[0], 4, vec[2]],
         vec
     ]);
     node.animationID.push(nodeID);
@@ -205,8 +209,7 @@ Shiftago.prototype.insertPiece = function(nodeID, player, side, position) {
     this.graph.animations[node.animationID[0]].stop = false;
 }
 
-Shiftago.prototype.updateLine = function(nodeName, side, position) {
-    var line = this.getLineElements(nodeName, side, position);
+Shiftago.prototype.updateLine = function(line, side, position) {
     this.sortLine(line, side);
     this.pushLine(line, side, position);
 }
@@ -364,6 +367,10 @@ Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
 }
 
 Shiftago.prototype.update = function(currTime, side, position) {
+    if (this.waitingFor != null && this.waitingFor.state != 'end') {
+        return;
+    }
+
     if (this.winner == 'none' && this.nomoves == 'false') {
         if (this.time == 0) {
             this.time = currTime;
