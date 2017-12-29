@@ -36,7 +36,7 @@ function Shiftago(graph, nodeID, selectable, dim) {
     this.waitingFor;
 
     this.camera = [];
-    this.environment = ['wood'];
+    this.environment = ['In a Ship'];
     this.repair = function() {
         this.updateBoard();
     };
@@ -63,6 +63,7 @@ function Shiftago(graph, nodeID, selectable, dim) {
     this.winner = 'none';
     this.nomoves = 'false';
 
+    this.allPieces = [];
     this.initializeBoard();
 
     this.NBALLS = Math.pow(dim, 2);
@@ -417,6 +418,7 @@ Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
     node.addLeaf(new PlayerPiece(this.graph));
     this.addChild(node.nodeID);
     this.graph.nodes[node.nodeID] = node;
+    this.allPieces.push(node);
 }
 
 Shiftago.prototype.update = function(currTime, side, position) {
@@ -471,21 +473,36 @@ Shiftago.prototype.updateBoard = function() {
 }
 
 Shiftago.prototype.updateEnvironment = function() {
-    if (this.environment == 'simple') {
+    if (this.environment == 'Simple') {
         this.textureID = 'null';
         this.materialID = 'null';
-    } else if (this.environment == 'furr') {
+        for (var i = 0; i < this.allPieces.length; i++) {
+            this.allPieces[i].textureID = 'null';
+        }
+    } else if (this.environment == 'Fur') {
         this.textureID = 'fluffy';
         this.materialID = 'obsidian';
-    } else if (this.environment == 'blue') {
-        this.textureID = 'rust';
+        for (var i = 0; i < this.allPieces.length; i++) {
+            this.allPieces[i].textureID = 'fluffy';
+        }
+    } else if (this.environment == 'Midnight Desert') {
+        this.textureID = 'sand';
         this.materialID = 'saphire';
-    } else if (this.environment == 'polka dot') {
+        for (var i = 0; i < this.allPieces.length; i++) {
+            this.allPieces[i].textureID = 'sand';
+        }
+    } else if (this.environment == 'Polka Dot') {
         this.textureID = 'polkadot';
         this.materialID = 'pearl';
-    } else if (this.environment == 'wood') {
+        for (var i = 0; i < this.allPieces.length; i++) {
+            this.allPieces[i].textureID = 'stripes';
+        }
+    } else if (this.environment == 'In a Ship') {
         this.textureID = 'wood';
         this.materialID = 'wood';
+        for (var i = 0; i < this.allPieces.length; i++) {
+            this.allPieces[i].textureID = 'jewel';
+        }
     } else {
         this.textureID == null;
     }

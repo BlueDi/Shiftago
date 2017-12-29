@@ -53,7 +53,10 @@ MyInterface.prototype.addLightsGroup = function(lights) {
 MyInterface.prototype.addScenesGroup = function(shiftago) {
     var customization = this.gui.addFolder("Customization");
     customization.open();
-    customization.add(shiftago, 'environment', ['simple', 'furr', 'blue', 'polka dot', 'wood']).name('Environment');
+    customization.add(shiftago, 'environment', ['Simple', 'Fur', 'Midnight Desert', 'Polka Dot', 'In a Ship']).name('Environment')
+        .onChange(function() {
+            shiftago.updateEnvironment();
+        });
     customization.add(shiftago, 'camera', ['default', 'topdown']).name('Camera')
         .onChange(function() {
             shiftago.updateCamera();

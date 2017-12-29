@@ -77,9 +77,14 @@
             <amplif_factor s="1" t="1"/>
         </TEXTURE>
 
+        <TEXTURE id="stripes">
+            <file path="images/stripes.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
         <TEXTURE id="fluffy">
             <file path="images_nier_robot/fluffy.jpg"/>
-            <amplif_factor s="1" t="1"/>
+            <amplif_factor s="1.5" t="1.5"/>
         </TEXTURE>
 
         <TEXTURE id="rust">
@@ -87,8 +92,18 @@
             <amplif_factor s="1" t="1"/>
         </TEXTURE>
 
+        <TEXTURE id="sand">
+            <file path="images/sand.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
         <TEXTURE id="wood">
             <file path="images/wood.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
+        <TEXTURE id="jewel">
+            <file path="images/jewel.jpg"/>
             <amplif_factor s="1" t="1"/>
         </TEXTURE>
 
