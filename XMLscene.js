@@ -112,7 +112,7 @@ XMLscene.prototype.logPicking = function() {
                 var obj = this.pickResults[i][0];
                 if (obj) {
                     var customId = this.pickResults[i][1];
-                    console.log("Picked object: " + obj + ", with pick id " + customId);
+                    console.log("Selected position " + customId);
                     this.picked.push(customId);
                 }
             }

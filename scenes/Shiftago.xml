@@ -79,6 +79,11 @@
             <amplif_factor s="1" t="1"/>
         </TEXTURE>
 
+        <TEXTURE id="wood">
+            <file path="images/wood.jpg"/>
+            <amplif_factor s="1" t="1"/>
+        </TEXTURE>
+
     </TEXTURES>
 
     <!-- Materials -->
@@ -140,6 +145,14 @@
             <emission r="0.0" g="0.0" b="0.0" a="1"/>
         </MATERIAL>
 
+        <MATERIAL id="wood">
+            <shininess value="0.25"/>
+            <specular r="0.5" g="0.5" b="0.5" a="1"/>
+            <diffuse r="0.8" g="0.8" b="0.8" a="1"/>
+            <ambient r="1" g="1" b="1" a="1"/>
+            <emission r="0.0" g="0.0" b="0.0" a="1"/>
+        </MATERIAL>
+
     </MATERIALS>
 
     <ANIMATIONS></ANIMATIONS>
@@ -172,8 +185,21 @@
             <TEXTURE id="null"/>
 
             <DESCENDANTS>
-                <NODEREF id="paralelo"/>
+                <NODEREF id="board_bottom"/>
                 <NODEREF id="positions"/>
+            </DESCENDANTS>
+        </NODE>
+
+        <!-- BEGIN paralelo -->
+        <NODE id="board_bottom">
+            <MATERIAL id="null"/>
+            <TEXTURE id="null"/>
+
+            <SCALE sx="18" sy="1" sz="18"/>
+            <TRANSLATION x="-0.5" y="-0.5" z="-0.5"/>
+
+            <DESCENDANTS>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
 
@@ -181,9 +207,6 @@
         <NODE id="paralelo">
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
-
-            <SCALE sx="18" sy="1" sz="18"/>
-            <TRANSLATION x="-0.5" y="-0.5" z="-0.5"/>
 
             <DESCENDANTS>
                 <NODEREF id="faceCubo1"/>
@@ -269,8 +292,8 @@
             <MATERIAL id="null"/>
             <TEXTURE id="null"/>
 
+            <TRANSLATION x="0" y="0.5" z="0"/>
             <ROTATION axis="x" angle="-90"/>
-            <TRANSLATION x="0" y="0" z="1"/>
 
             <DESCENDANTS>
                 <NODEREF id="position11"/>
@@ -307,227 +330,227 @@
 
         <NODE id="position11">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-4.5" y="-3.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position12">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-4.5" y="-2.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position13">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-4.5" y="-1.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position14">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-4.5" y="-0.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position15">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-4.5" y="0.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position16">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-4.5" y="1.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position17">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-4.5" y="2.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
 
         <NODE id="position21">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-3.5" y="-4.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position22">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-2.5" y="-4.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position23">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-1.5" y="-4.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position24">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="-0.5" y="-4.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position25">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="0.5" y="-4.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position26">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="1.5" y="-4.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position27">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="2.5" y="-4.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position31">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="2.5" y="-3.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="3.5" y="-3.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position32">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="2.5" y="-2.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="3.5" y="-2.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position33">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="2.5" y="-1.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="3.5" y="-1.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position34">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="2.5" y="-0.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="3.5" y="-0.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position35">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="2.5" y="0.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="3.5" y="0.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position36">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="2.5" y="1.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="3.5" y="1.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position37">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="2.5" y="2.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="3.5" y="2.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 2 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position41">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="-3.5" y="2.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="-3.5" y="3.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position42">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="-2.5" y="2.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="-2.5" y="3.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position43">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="-1.5" y="2.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="-1.5" y="3.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position44">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="-0.5" y="2.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="-0.5" y="3.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position45">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="0.5" y="2.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="0.5" y="3.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position46">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
-            <TRANSLATION x="1.5" y="2.5" z="0"/>
+            <TEXTURE id="null"/>
+            <TRANSLATION x="1.5" y="3.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 2 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
         <NODE id="position47">
             <MATERIAL id="null"/>
-            <TEXTURE id="rust"/>
+            <TEXTURE id="null"/>
             <TRANSLATION x="2.5" y="3.5" z="0"/>
             <DESCENDANTS>
-                <LEAF type="rectangle" args="0 1 1 0"/>
+                <NODEREF id="paralelo"/>
             </DESCENDANTS>
         </NODE>
 

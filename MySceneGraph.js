@@ -1299,11 +1299,8 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             if (this.nodes[nodeID] != null)
                 return "node ID must be unique (conflict: ID = " + nodeID + ")";
 
-
-            var selectableNode = false;
-
             //Checks if node is selectable
-
+            var selectableNode = false;
             if (this.reader.hasAttribute(children[i], 'selectable')) {
                 selectableNode = this.reader.getBoolean(children[i], 'selectable');
             }
@@ -1557,6 +1554,7 @@ MySceneGraph.prototype.displayScene = function() {
     this.animationStack = [];
     this.materialStack = [];
     this.textureStack = [];
+    this.pickerStack = [];
 
     var temptrans = mat4.create();
     var tempanim = mat4.create();
@@ -1564,6 +1562,7 @@ MySceneGraph.prototype.displayScene = function() {
     mat4.identity(tempanim);
     this.transformationStack.push(temptrans);
     this.animationStack.push(tempanim);
+    this.pickerStack.push('none');
 
     this.displayNode(this.idRoot);
 
@@ -1626,16 +1625,21 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
     if (texture != 'null')
         this.textureStack.push(texture);
 
+    var idForPick = 'null';
     if (typeof children != 'undefined' && children.length > 0) {
+        if (nodeID.substring(0, 8) == 'position') {
+            idForPick = parseInt(nodeID.substring(8, 10));
+            this.pickerStack.push(idForPick);
+        }
         for (child of children) {
             this.displayNode(child);
         }
     }
 
     if (typeof leaves != 'undefined' && leaves.length > 0) {
-        this.idForPick = 'none';
         if (nodeID.substring(0, 8) == 'position') {
-            this.idForPick = parseInt(nodeID.substring(8, 10));
+            idForPick = parseInt(nodeID.substring(8, 10));
+            this.pickerStack.push(idForPick);
         }
         for (leaf of leaves) {
             this.displayLeaf(leaf);
@@ -1649,6 +1653,8 @@ MySceneGraph.prototype.displayNode = function(nodeID) {
         this.materialStack.pop();
     if (texture != 'null')
         this.textureStack.pop();
+    if (idForPick != 'null')
+        this.pickerStack.pop();
 };
 
 /**
@@ -1681,8 +1687,9 @@ MySceneGraph.prototype.displayLeaf = function(leaf) {
 
     materialToApply.apply();
 
-    if (this.idForPick != 'none') {
-        this.scene.registerForPick(this.idForPick, leaf.object);
+    var idForPick = this.pickerStack[this.pickerStack.length - 1];
+    if (idForPick != 'null') {
+        this.scene.registerForPick(idForPick, leaf.object);
     }
 
     leaf.object.display();

@@ -48,7 +48,8 @@ function Shiftago(graph, nodeID, selectable, dim) {
         p1: 'saphire',
         p2: 'ruby',
         p3: 'obsidian',
-        p4: 'emerald'
+        p4: 'emerald',
+        board: 'wood'
     };
     this.response;
     this.board;
@@ -73,8 +74,12 @@ function Shiftago(graph, nodeID, selectable, dim) {
 
 Shiftago.prototype.constructor = Shiftago;
 
-function MyLeaf(graph) {
+function PlayerPiece(graph) {
     this.object = new Sphere(graph.scene, 0.5, 20, 20);
+}
+
+function BoardTile(graph) {
+    this.object = new Cylinder(graph.scene, 0.24, 0.4, 0.5, 2, 20, 1, 0);
 }
 
 /**
@@ -204,6 +209,7 @@ Shiftago.prototype.insertPiece = function(nodeID, player, side, position) {
         [vec[0], 4, vec[2]],
         vec
     ]);
+    this.waitingFor = this.graph.animations[nodeID];
     node.animationID.push(nodeID);
     node.actualAnimation = 0;
     this.graph.animations[node.animationID[0]].stop = false;
@@ -286,10 +292,33 @@ Shiftago.prototype.pushLine = function(line, side, position) {
 Shiftago.prototype.initializeBoard = function() {
     this.getPrologRequest('display');
 
+    this.createBoardPieces(this.materials['board']);
+
     this.createPlayerPieces('p1', this.materials['p1']);
     this.createPlayerPieces('p2', this.materials['p2']);
     this.createPlayerPieces('p3', this.materials['p3']);
     this.createPlayerPieces('p4', this.materials['p4']);
+}
+
+Shiftago.prototype.createBoardPieces = function(Material) {
+    var texture = 'null';
+    for (var i = 0; i < this.dim; i++) {
+        for (var j = 0; j < this.dim; j++) {
+            this.addTile('t' + (this.dim * i + j), Material, texture, [-3 + j, 0.5, -3 + i]);
+        }
+    }
+}
+
+Shiftago.prototype.addTile = function(nodeID, Material, Texture, Vector) {
+    var node = new MyGraphNode(this.graph, nodeID);
+    node.materialID = Material;
+    node.textureID = Texture;
+    mat4.translate(node.transformMatrix, node.transformMatrix, Vector);
+    mat4.rotate(node.transformMatrix, node.transformMatrix, -Math.PI / 2, [1, 0, 0]);
+    node.vec = Vector;
+    node.addLeaf(new BoardTile(this.graph));
+    this.addChild(node.nodeID);
+    this.graph.nodes[node.nodeID] = node;
 }
 
 Shiftago.prototype.createPlayerPieces = function(Player, Material) {
@@ -361,7 +390,7 @@ Shiftago.prototype.addBall = function(nodeID, Material, Texture, Vector) {
     node.textureID = Texture;
     mat4.translate(node.transformMatrix, node.transformMatrix, Vector);
     node.vec = Vector;
-    node.addLeaf(new MyLeaf(this.graph));
+    node.addLeaf(new PlayerPiece(this.graph));
     this.addChild(node.nodeID);
     this.graph.nodes[node.nodeID] = node;
 }
@@ -430,6 +459,9 @@ Shiftago.prototype.updateEnvironment = function() {
     } else if (this.environment == 'polka dot') {
         this.textureID = 'polkadot';
         this.materialID = 'pearl';
+    } else if (this.environment == 'wood') {
+        this.textureID = 'wood';
+        this.materialID = 'wood';
     } else {
         this.textureID == null;
     }
