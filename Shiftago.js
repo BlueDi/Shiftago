@@ -36,13 +36,13 @@ function Shiftago(graph, nodeID, selectable, dim) {
     this.waitingFor;
 
     this.camera = [];
-    this.environment = [];
+    this.environment = ['wood'];
     this.repair = function() {
         this.updateBoard();
     };
     this.gameMode = [];
     this.numberOfPlayers = [];
-    this.difficulty = [];
+    this.difficulty = ['easy'];
 
     this.materials = {
         p1: 'saphire',
@@ -106,6 +106,30 @@ Shiftago.prototype.updateCamera = function() {
         mat4.rotate(this.graph.initialTransforms, this.graph.initialTransforms, Math.PI / 5, [1, 0, 0]);
         mat4.translate(this.graph.initialTransforms, this.graph.initialTransforms, [-2.5, -40, 0]);
     }
+}
+
+Shiftago.prototype.selectGameLight = function() {
+    var lights = this.graph.scene.lightValues;
+    lights['Main'] = true;
+    for (var i = 1; i <= 4; i++) {
+        lights['Player ' + i] = false;
+    }
+}
+
+Shiftago.prototype.selectPlayerLights = function() {
+    var lights = this.graph.scene.lightValues;
+    lights['Main'] = false;
+    for (var i = 1; i <= 4; i++) {
+        if (i <= this.numberOfPlayers) {
+            lights['Player ' + i] = true;
+        } else {
+            lights['Player ' + i] = false;
+        }
+    }
+}
+
+Shiftago.prototype.alternateDifficultyLight = function() {
+    this.graph.scene.lightValues['Difficulty'] = !this.graph.scene.lightValues['Difficulty'];
 }
 
 Shiftago.prototype.getPrologRequest = function(requestString, onSuccess, onError, port) {

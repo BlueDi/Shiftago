@@ -42,7 +42,7 @@ MyInterface.prototype.addLightsGroup = function(lights) {
     for (var key in lights) {
         if (lights.hasOwnProperty(key)) {
             this.scene.lightValues[key] = lights[key][0];
-            group.add(this.scene.lightValues, key);
+            group.add(this.scene.lightValues, key).listen();
         }
     }
 };
@@ -61,7 +61,16 @@ MyInterface.prototype.addScenesGroup = function(shiftago) {
     var game = this.gui.addFolder("Game");
     game.open();
     game.add(shiftago, 'repair').name('Repair');
-    game.add(shiftago, 'gameMode', ['Human vs Human', 'Human vs Computer', 'Computer vs Computer']).name('Game Mode');
-    game.add(shiftago, 'numberOfPlayers', [2, 3, 4]).name('Number of Players');
-    game.add(shiftago, 'difficulty', ['easy', 'hard']).name('Difficulty');
+    game.add(shiftago, 'gameMode', ['Human vs Human', 'Human vs Computer', 'Computer vs Computer']).name('Game Mode')
+        .onChange(function() {
+            shiftago.selectGameLight();
+        });
+    game.add(shiftago, 'numberOfPlayers', [2, 3, 4]).name('Number of Players')
+        .onChange(function() {
+            shiftago.selectPlayerLights();
+        });
+    game.add(shiftago, 'difficulty', ['easy', 'hard']).name('Difficulty')
+        .onChange(function() {
+            shiftago.alternateDifficultyLight();
+        });
 };
