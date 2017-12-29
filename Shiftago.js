@@ -444,8 +444,6 @@ Shiftago.prototype.update = function(currTime, side, position) {
             this.getPrologRequest('switch_player-' + this.player + '-' + this.numberOfPlayers);
         }
     }
-
-    this.updateEnvironment();
 }
 
 Shiftago.prototype.updateBoard = function() {
