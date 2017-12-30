@@ -63,7 +63,8 @@ MyInterface.prototype.addScenesGroup = function(shiftago) {
         });
     var game = this.gui.addFolder("Game");
     game.open();
-    game.add(shiftago, 'repair').name('Repair');
+    game.add(shiftago, 'restart').name('Restart');
+    game.add(shiftago, 'undo').name('Undo');
     game.add(shiftago, 'gameMode', ['Human vs Human', 'Human vs Computer', 'Computer vs Computer']).name('Game Mode')
         .onChange(function() {
             shiftago.selectGameLight();

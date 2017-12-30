@@ -76,9 +76,8 @@ process_turn(hh, _, _, Player, Board, BoardSize, Cardinal, Position):-
 get_move(Player, Board, BoardSize, Cardinal, Position):-
 	cardinal_moves(AllCardinals),
 	get_moves(Board, Player, AllMoves),
-	repeat,
-		valid_input(BoardSize, AllMoves, AllCardinals, Cardinal, Position)
-		; (nl, write('Input ['), write(Cardinal-Position), write('] is not valid.'), nl, fail).
+	valid_input(BoardSize, AllMoves, AllCardinals, Cardinal, Position)
+	; (nl, write('Input ['), write(Cardinal-Position), write('] is not valid.'), nl).
 
 /* CPU Easy Turn */
 get_move(_, easy, Player, Board, BoardSize, Cardinal, Position):-

@@ -1,9 +1,9 @@
-:- dynamic board/1.
+:- dynamic current_board/1.
 
 parse_input(shiftagoPL, 'CC'):-
 	write('ok'),
 	board(Board),
-	play(Board, 'cc', 2, 'hard', Winner, p1).
+	play(Board, 'cc', 2, 'hard', _, p1).
 parse_input(shiftago, 'CC'):-
 	display_board(Board),
 
@@ -32,8 +32,13 @@ parse_input(display, Board):-
 	asserta(current_board(Board)),
 	display_board(Board).
 
+parse_input(Update, Board):-
+	Update = update-Board,
+	asserta(current_board(Board)),
+	display_board(Board).
+
 parse_input(PlayerTurn, PieceToPlace):-
-	PlayerTurn = hturn-Player-NPlayers-Cardinal-Position,
+	PlayerTurn = hturn-Player-Cardinal-Position,
 	current_board(Board),
 	length(Board, BoardSize),
 	get_move(Player, Board, BoardSize, Cardinal, Position),
