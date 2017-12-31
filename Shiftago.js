@@ -40,13 +40,16 @@ function Shiftago(graph, nodeID, selectable, dim) {
     this.restart = function() {
         this.getPrologRequest('display');
         this.resetBoard();
+        this.init();
     };
     this.undo = function() {
-        this.player.pop();
+        this.player.pop()
+        var undoPlayer = this.player.slice(-1).pop();
         this.board.pop();
-        var board = this.board.slice(-1).pop()
+        var board = this.board.slice(-1).pop();
         this.getPrologRequest('update-' + board);
         this.applyUndo();
+        this.playerCounter[undoPlayer.substring(1)]--;
     };
     this.gameMode = [];
     this.numberOfPlayers = [];
@@ -59,14 +62,8 @@ function Shiftago(graph, nodeID, selectable, dim) {
         p4: 'emerald',
         board: 'wood'
     };
-    this.response;
-    this.board = [];
-    this.turn = [];
-    this.player = ['p1'];
-    this.playerCounter = [-1, -1, -1, -1, -1];
-    this.winner = 'none';
-    this.nomoves = 'false';
 
+    this.init();
     this.allPieces = [];
     this.initializeBoard();
 
@@ -100,6 +97,16 @@ Shiftago.prototype.addChild = function(nodeID) {
 Shiftago.prototype.addLeaf = function(leaf) {
     this.leaves.push(leaf);
 };
+
+Shiftago.prototype.init = function() {
+    this.response;
+    this.board = [];
+    this.turn = [];
+    this.player = ['p1'];
+    this.playerCounter = [-1, -1, -1, -1, -1];
+    this.winner = 'none';
+    this.nomoves = 'false';
+}
 
 Shiftago.prototype.updateCamera = function() {
     var init = mat4.create();
