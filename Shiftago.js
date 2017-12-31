@@ -170,7 +170,7 @@ Shiftago.prototype.handleReply = function(response, requestString) {
         var cleanResponse = response.split('-');
         var player = cleanResponse[0];
         var side = cleanResponse[1];
-        var position = cleanResponse[2];
+        var position = parseInt(cleanResponse[2]);
         this.playerCounter[player.substring(1)]++;
         var nodeID = player + this.playerCounter[player.substring(1)];
         var line = this.getLineElements(nodeID, side, position);
@@ -195,19 +195,19 @@ Shiftago.prototype.insertPiece = function(nodeID, player, side, position) {
     var vec = [0, 0, 0];
     var piecePosition = node.vec[node.vec.length - 1];
     if (side == 'top') {
-        node.position = [1, position];
+        positionAbs = [-3, 1, 4 - position];
         vec = [-3 - piecePosition[0], 0, 4 - position - piecePosition[2]];
     } else if (side == 'bottom') {
-        node.position = [this.dim, position];
+        positionAbs = [3, 1, 4 - position];
         vec = [3 - piecePosition[0], 0, 4 - position - piecePosition[2]];
     } else if (side == 'left') {
-        node.position = [position, 1];
+        positionAbs = [-4 + position, 1, 3];
         vec = [position - 4 - piecePosition[0], 0, 3 - piecePosition[2]];
     } else if (side == 'right') {
-        node.position = [position, this.dim];
+        positionAbs = [-4 + position, 1, -3];
         vec = [position - 4 - piecePosition[0], 0, -3 - piecePosition[2]];
     }
-    node.vec.push(vec);
+    node.vec.push(positionAbs);
     this.turn.push([nodeID]);
     this.graph.animations[nodeID] = new BezierAnimation(this.animationSpeed, [
         [0, 0, 0],
@@ -233,13 +233,14 @@ Shiftago.prototype.getLineElements = function(nodeName, side, position) {
         for (var j = 0; j <= this.playerCounter[player.substring(1)]; j++) {
             var nodeID = player + j;
             var node = this.graph.nodes[nodeID];
+            var vec = node.vec[node.vec.length - 1];
 
             if (side == 'top' || side == 'bottom') {
-                if (nodeName != nodeID && node.position[1] == position) {
+                if (nodeName != nodeID && vec[2] == 4 - position) {
                     line.push(node);
                 }
             } else if (side == 'left' || side == 'right') {
-                if (nodeName != nodeID && node.position[0] == position) {
+                if (nodeName != nodeID && vec[0] == position - 4) {
                     line.push(node);
                 }
             }
@@ -251,19 +252,27 @@ Shiftago.prototype.getLineElements = function(nodeName, side, position) {
 Shiftago.prototype.sortLine = function(line, side) {
     if (side == 'top') {
         line.sort(function(a, b) {
-            return a.position[0] - b.position[0];
+            var vecA = a.vec[a.vec.length - 1];
+            var vecB = b.vec[b.vec.length - 1];
+            return vecA[0] - vecB[0];
         });
     } else if (side == 'bottom') {
         line.sort(function(a, b) {
-            return b.position[0] - a.position[0];
+            var vecA = a.vec[a.vec.length - 1];
+            var vecB = b.vec[b.vec.length - 1];
+            return vecB[0] - vecA[0];
         });
     } else if (side == 'left') {
         line.sort(function(a, b) {
-            return a.position[1] - b.position[1];
+            var vecA = a.vec[a.vec.length - 1];
+            var vecB = b.vec[b.vec.length - 1];
+            return vecB[2] - vecA[2];
         });
     } else if (side == 'right') {
         line.sort(function(a, b) {
-            return b.position[1] - a.position[1];
+            var vecA = a.vec[a.vec.length - 1];
+            var vecB = b.vec[b.vec.length - 1];
+            return vecA[2] - vecB[2];
         });
     }
 }
@@ -272,22 +281,23 @@ Shiftago.prototype.pushLine = function(line, side, position) {
     for (var counter = 0; counter < line.length; counter++) {
         if (line[counter] != null) {
             var node = line[counter];
-            if (side == 'top' && node.position[0] == counter + 1) {
-                node.position[0]++;
-            } else if (side == 'bottom' && node.position[0] == this.dim - counter) {
-                node.position[0]--;
-            } else if (side == 'left' && node.position[1] == counter + 1) {
-                node.position[1]++;
-            } else if (side == 'right' && node.position[1] == this.dim - counter) {
-                node.position[1]--;
+            var position = node.vec[node.vec.length - 1];
+            var newposition = [position[0], position[1], position[2]];
+            if (side == 'top' && position[0] == counter - Math.ceil(this.dim / 2) + 1) {
+                newposition[0]++;
+            } else if (side == 'bottom' && position[0] == this.dim - counter - Math.floor(this.dim / 2) - 1) {
+                newposition[0]--;
+            } else if (side == 'left' && position[2] == Math.ceil(this.dim / 2) - counter - 1) {
+                newposition[2]--;
+            } else if (side == 'right' && position[2] == counter - this.dim + Math.floor(this.dim / 2) + 1) {
+                newposition[2]++;
             } else {
                 break;
             }
-            var vec = [node.position[0] - 4, 1, -node.position[1] + 4];
             this.turn[this.turn.length - 1].push(node.nodeID);
             var matI = mat4.create();
-            mat4.translate(node.transformMatrix, matI, vec);
-            node.vec.push(vec);
+            mat4.translate(node.transformMatrix, matI, newposition);
+            node.vec.push(newposition);
         }
     }
 }
