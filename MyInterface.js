@@ -61,6 +61,7 @@ MyInterface.prototype.addScenesGroup = function(shiftago) {
         .onChange(function() {
             shiftago.updateCamera();
         });
+    customization.add(shiftago, 'animationSpeed', 5, 30).name('Animation Speed');
     var game = this.gui.addFolder("Game");
     game.open();
     game.add(shiftago, 'restart').name('Restart');
